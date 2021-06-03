@@ -21,7 +21,7 @@ public class scoreboard_cmd implements CommandExecutor{
 				s.sendMessage(designLine1);
 				s.sendMessage(Main.pr+ChatColor.YELLOW+"Your version: §3v"+Main.pl.getDescription().getVersion());
 				s.sendMessage(Main.pr+ChatColor.YELLOW+"Newest version: §3v"+Updater.getVersion());
-				s.sendMessage(Main.pr+ChatColor.YELLOW+"Author: §3Xitee");
+				s.sendMessage(Main.pr+ChatColor.YELLOW+"Author: §3Xitee TEST");
 				s.sendMessage(designLine2);
 			}else if(args[0].equalsIgnoreCase("update")) {
 				if(!(s instanceof Player) || (s instanceof Player && ((Player) s).hasPermission("scoreboard.update"))) {
