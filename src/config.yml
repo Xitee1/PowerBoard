@@ -1,0 +1,89 @@
+#####################################################################################################
+### Scoreboard + Tablist + Prefix + Chat | Animated --- plugin by Xitee                           ###
+###                                                                                               ###
+### You need some help? Have a look at our wiki: https://wiki.xitma.de/plugin.php?name=scoreboard ###
+### For bugreports and proposals join or Discord: https://discord.gg/p95cB9YQFJ                   ###
+###                                                                                               ###
+### You can find the source code at https://www.xitecraft.de/downloads/SRC-Scoreboard-Plugin/     ###
+#####################################################################################################
+
+
+#######################################
+### Which features you want to use? ###
+#######################################
+scoreboard: true # enable/disable the scoreboard
+
+tablist:
+  text:  true # enable/disable the header/footers
+  ranks: true # enable/disable the rank system (only tablist)
+
+chat:
+  ranks: true # enable/disable the chat system
+  colorperm: 'chat.color' # The permission to use colorcodes in chat. To disable set it to "none".
+  allowHexColors: true # Allow players to use hex colors in chat. It uses the 'colorperm' permission.
+
+###########################
+### Configure the ranks ###
+###########################
+ranks:
+  # You can use the following permission systems:
+  # - none (the player needs the specified permission)
+  # - PermissionsEx (Features: Seperate admin and owner rank's)
+  # - LuckPerms (Features: Seperate admin & owner rank's, auto update (no rejoin needed after group change), (optional) use prefixes you have set in luckperms)
+  # For more infos visit the wiki!
+  permissionsystem: 'none'
+  
+  # If you want to sync all your prefixes with all your servers or just want to use the prefixes that you have set for the groups in
+  # LuckPerms, enable this setting. But make sure you have configurated the LuckPerms groups properly! More infos are in the wiki.
+  luckperms-api:
+    enable: false
+    chat-layout: '%prefix% %name% &7> ' # Placeholders: %displayname% (the group's displayname), %prefix% (the player/group's prefix), %name% (The player name)
+  
+  ##########################################################################################
+  ### If you have luckperms api enabled, ignore everything in the config section "list"!
+  ### You can add as many ranks as you want.
+  ### Note: The limit of characters in prefix/suffix in the tab is 16 (MC v. 1.13+ the limit is 64!) included color codes (e.g. &6 is counted as 1 character).
+  ###       The chat prefix has no limits!
+  list:
+    owner: # It doesn't matter what you like to call it. It doesn't affect anything at all.
+      permission: 'rank.owner' # If the permission system above is not "none", replace the permission with the name of the group - more infos in the wiki
+      prefix: '&4Owner &7| &4'
+      suffix: ' &7[&eTeam&7]'
+      nameColor: '4' # This is the color of the player's name in the tablist. It only works for the version 1.13+
+      chatPrefix: '&7[&cOwner&7] &7%name% > '
+      placeholder-name: 'Owner' # This will replace the %rank% placeholder
+    admin:
+      permission: 'rank.admin'
+      prefix: '&cAdmin &7| &c'
+      suffix: ' &7[&eTeam&7]'
+      nameColor: 'c'
+      chatPrefix: '&7[&4Admin&7] &7%name% > '
+      placeholder-name: 'Admin'
+    player:
+      permission: 'rank.player'
+      prefix: '&7Player | '
+      suffix: ''
+      nameColor: '7'
+      chatPrefix: '&7[&aPlayer&7] &7%name% > '
+      placeholder-name: 'Player'
+
+##########################################
+### Some settings for the placeholders ###
+##########################################
+placeholder:
+  time-format: 'HH:mm' # If you don't know what to set here, have a look at this: https://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
+  date-format: 'dd.MM.yyyy'
+  money-decimals: 2 # The maximal decimals for the placeholder %money%.
+  preferLastPrefixColor: false # If you use ranks with luckperms-api, prefer the last colors from the prefix instead of the group-displayname to set the name-color
+
+#########################################################################################
+### Select if you want automatic updates and/or messages if a new update is available ###
+#########################################################################################
+update:
+  notification: true # Send a message to all Admins on join if a new update is available
+  autoupdater: false # With this option, the plugin will be automaticaly updatet
+
+#############################################################################################################
+#### If you have problems with the plugin, set this to true and maybe it will help you to find the error. ###
+#############################################################################################################
+debug: false

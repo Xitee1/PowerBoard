@@ -1,0 +1,11 @@
+name: Scoreboard
+version: 3.4.1
+author: Xitee
+softdepend: [PermissionsEx, Vault, PlaceholderAPI, LuckPerms]
+main: de.xite.scoreboard.main.Main
+api-version: 1.13
+commands:
+   sb:
+      description: Open the Scoreboard Menu
+   scoreboard:
+      description: Open the Scoreboard Menu
