@@ -34,5 +34,8 @@ ScoreboardAPI.getPlayer(p).setScoreboardTitle(title, true);
 
 // After that we can set the scores
 // The index is the red number of the right side from the scoreboard
-ScoreboardAPI.getPlayer(p).setScoreboardScore(score, index, true);
+ScoreboardAPI.getPlayer(p).setScoreboardScore("score1", 2, true);
+ScoreboardAPI.getPlayer(p).setScoreboardScore("score2", 1, true);
+ScoreboardAPI.getPlayer(p).setScoreboardScore("score3", 0, true);
+// And so on
 ```
