@@ -21,13 +21,13 @@ CustomPlaceholders ph = new CustomPlaceholders() {
     }
 };
 ScoreboardAPI.registerCustomPlaceholders(ph);
-
-
+```
+```java
 // Enable/Disable the scoreboard for a specified player
 ScoreboardAPI.getPlayer(p).enableScoreboard();
 ScoreboardAPI.getPlayer(p).disableScoreboard();
-
-
+```
+```java
 // Set a complete custom Scoreboard
 // The boolean indicates if the placeholders should be replaced
 ScoreboardAPI.getPlayer(p).setScoreboardTitle(title, true);
