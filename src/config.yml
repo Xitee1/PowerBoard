@@ -8,9 +8,9 @@
 #####################################################################################################
 
 
-#######################################
-### Which features you want to use? ###
-#######################################
+###############
+### Modules ###
+###############
 scoreboard: true # enable/disable the scoreboard
 
 tablist:
@@ -22,9 +22,9 @@ chat:
   colorperm: 'chat.color' # The permission to use colorcodes in chat. To disable set it to "none".
   allowHexColors: true # Allow players to use hex colors in chat. It uses the 'colorperm' permission.
 
-###########################
-### Configure the ranks ###
-###########################
+#############
+### Ranks ###
+#############
 ranks:
   # You can use the following permission systems:
   # - none (the player needs the specified permission)
@@ -34,7 +34,7 @@ ranks:
   permissionsystem: 'none'
   
   # If you want to sync all your prefixes with all your servers or just want to use the prefixes that you have set for the groups in
-  # LuckPerms, enable this setting. But make sure you have configurated the LuckPerms groups properly! More infos are in the wiki.
+  # LuckPerms, enable this setting. But make sure that you have configured the LuckPerms groups properly! More infos are in the wiki.
   luckperms-api:
     enable: false
     chat-layout: '%prefix% %name% &7> ' # Placeholders: %displayname% (the group's displayname), %prefix% (the player/group's prefix), %name% (The player name)
@@ -42,7 +42,7 @@ ranks:
   ##########################################################################################
   ### If you have luckperms api enabled, ignore everything in the config section "list"!
   ### You can add as many ranks as you want.
-  ### Note: The limit of characters in prefix/suffix in the tab is 16 (MC v. 1.13+ the limit is 64!) included color codes (e.g. &6 is counted as 1 character).
+  ### Note: The limit of characters in prefix/suffix in the tab is 16 (MC v1.13+ the limit is 64!) included color codes (e.g. &6 is counted as 1 character).
   ###       The chat prefix has no limits!
   list:
     owner: # It doesn't matter what you like to call it. It doesn't affect anything at all.
@@ -67,23 +67,23 @@ ranks:
       chatPrefix: '&7[&aPlayer&7] &7%name% > '
       placeholder-name: 'Player'
 
-##########################################
-### Some settings for the placeholders ###
-##########################################
+####################
+### Placeholders ###
+####################
 placeholder:
   time-format: 'HH:mm' # If you don't know what to set here, have a look at this: https://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
   date-format: 'dd.MM.yyyy'
   money-decimals: 2 # The maximal decimals for the placeholder %money%.
   preferLastPrefixColor: false # If you use ranks with luckperms-api, prefer the last colors from the prefix instead of the group-displayname to set the name-color
 
-#########################################################################################
-### Select if you want automatic updates and/or messages if a new update is available ###
-#########################################################################################
+######################
+### Plugin Updater ###
+######################
 update:
   notification: true # Send a message to all Admins on join if a new update is available
   autoupdater: false # With this option, the plugin will be automatically updatet
 
-#############################################################################################################
-#### If you have problems with the plugin, set this to true and maybe it will help you to find the error. ###
-#############################################################################################################
+#################################################
+#### The dubug may helps you to find problems ###
+#################################################
 debug: false

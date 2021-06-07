@@ -108,8 +108,7 @@ public class Config {
 				cfg.addDefault("4.speed", 99999);
 				cfg.addDefault("4.scores", score_5);
 			
-				score_6.add("&bmax. players:");
-				score_6.add("&bonline players:");
+				score_6.add("&bPlayers:");
 				score_6.add("&bYour rank:");
 				score_6.add("&bYour name:");
 				score_6.add("&bTime:");
@@ -124,14 +123,13 @@ public class Config {
 				cfg.addDefault("5.speed", 30);
 				cfg.addDefault("5.scores", score_6);
 			
-				score_7.add("&a%playermax%");
-				score_7.add("&a%playeronline% Spieler");
-				score_7.add("&a%rank%");
-				score_7.add("&a%name%");
+				score_7.add("&a%server_online_players%&7/&a%server_max_players%");
+				score_7.add("&a%player_rank%");
+				score_7.add("&a%player_name%");
 				score_7.add("&a%time%");
 				score_7.add("&a%date%");
-				score_7.add("&a%world%");
-				score_7.add("&a%ping%");
+				score_7.add("&a%player_world%");
+				score_7.add("&a%player_ping%");
 				score_7.add("&a%player_food%");
 				score_7.add("&a%player_saturation%");
 				score_7.add("&a%player_health%");
@@ -164,7 +162,7 @@ public class Config {
 				ArrayList<String> header1 = new ArrayList<>();
 				ArrayList<String> header2 = new ArrayList<>();
 				//Line1
-				header1.add("&bLocation: &aX: %loc_x%; Y: %loc_y%; Z: %loc_z%");
+				header1.add("&bLocation: &aX: %player_loc_x%; Y: %player_loc_y%; Z: %player_loc_z%");
 				cfg.set("header.1.speed", 5);
 				cfg.set("header.1.lines", header1);
 				//Line2
@@ -186,8 +184,7 @@ public class Config {
 				cfg.set("footer.2.speed", 99999);
 				cfg.set("footer.2.lines", footer2);
 				//Line3
-				footer3.add("&bmax. players:");
-				footer3.add("&bOnline players:");
+				footer3.add("&bPlayers:");
 				footer3.add("&bYour rank:");
 				footer3.add("&bYour name:");
 				footer3.add("&bTime:");
@@ -201,14 +198,13 @@ public class Config {
 				cfg.set("footer.3.speed", 30);
 				cfg.set("footer.3.lines", footer3);
 				//Line4
-				footer4.add("&a%playermax%");
-				footer4.add("&a%playeronline% Players");
-				footer4.add("&a%rank%");
-				footer4.add("&a%name%");
+				footer4.add("&a%server_online_players%&7/&a%server_max_players%");
+				footer4.add("&a%player_rank%");
+				footer4.add("&a%player_name%");
 				footer4.add("&a%time%");
 				footer4.add("&a%date%");
-				footer4.add("&a%world%");
-				footer4.add("&a%ping%");
+				footer4.add("&a%player_world%");
+				footer4.add("&a%player_ping%");
 				footer4.add("&a%player_food%");
 				footer4.add("&a%player_saturation%");
 				footer4.add("&a%player_health%");
