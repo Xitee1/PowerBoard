@@ -76,21 +76,21 @@ public class Main extends JavaPlugin implements Listener{
 	    
 	    registerScoreboards();
 		
-		// Check for compatible plugins
-		if(Bukkit.getPluginManager().isPluginEnabled("Vault"))
+		// ---- Check for compatible plugins ---- //
+		if(Bukkit.getPluginManager().isPluginEnabled("Vault")) {
 			if(debug)
 				pl.getLogger().info("Loading Vault...");
-		try{
-			if(setupEconomy()) {
-				hasVault = true;
-				if(debug)
-					pl.getLogger().info("Successfully loaded Vault!");
-			}else
+			try{
+				if(setupEconomy()) {
+					hasVault = true;
+					if(debug)
+						pl.getLogger().info("Successfully loaded Vault!");
+				}else
+					pl.getLogger().severe("There was an error while loading Vault! Make sure that you have a money Plugin on your server that also supports Vault.");
+			}catch (NoClassDefFoundError  e) {
 				pl.getLogger().severe("There was an error while loading Vault! Make sure that you have a money Plugin on your server that also supports Vault.");
-		}catch (NoClassDefFoundError  e) {
-			pl.getLogger().severe("There was an error while loading Vault! Make sure that you have a money Plugin on your server that also supports Vault.");
+			}
 		}
-			
 	    if(Bukkit.getPluginManager().isPluginEnabled("PermissionsEx"))
 	        hasPex = true;
 	    if(Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI"))
@@ -104,7 +104,7 @@ public class Main extends JavaPlugin implements Listener{
 			new LuckPermsEvent(pl, luckPerms);
 	    }
 	    
-	    // Start the self checker
+	    // start the self check
 	    if(SelfCheck.check()) {
 	    	pl.getLogger().severe("self-check -> Fatal errors were found! Please fix you config! Disabling Plugin...");
 	    	Bukkit.getPluginManager().disablePlugin(pl);
@@ -124,28 +124,28 @@ public class Main extends JavaPlugin implements Listener{
 				}
 			}
 		}, 30);
-		
-		//BStats
-        int pluginId = 6722; // <-- Replace with the id of your plugin!
-        BStatsMetrics metrics = new BStatsMetrics(this, pluginId);
-        //Costom charts
-        metrics.addCustomChart(new BStatsMetrics.SimplePie("update_auto_update", () -> pl.getConfig().getBoolean("update.autoupdater") ? "Aktiviert" : "Deaktiviert"));
-        metrics.addCustomChart(new BStatsMetrics.SimplePie("update_notifications", () -> pl.getConfig().getBoolean("update.notification") ? "Aktiviert" : "Deaktiviert"));
-        
-        metrics.addCustomChart(new BStatsMetrics.SimplePie("setting_use_scoreboard", () -> pl.getConfig().getBoolean("scoreboard") ? "Aktiviert" : "Deaktiviert"));
-        metrics.addCustomChart(new BStatsMetrics.SimplePie("setting_use_tablist_text", () -> pl.getConfig().getBoolean("tablist.text") ? "Aktiviert" : "Deaktiviert"));
-        metrics.addCustomChart(new BStatsMetrics.SimplePie("setting_use_tablist_ranks", () -> pl.getConfig().getBoolean("tablist.ranks") ? "Aktiviert" : "Deaktiviert"));
-        metrics.addCustomChart(new BStatsMetrics.SimplePie("setting_use_chat", () -> pl.getConfig().getBoolean("chat.ranks") ? "Atktiviert" : "Deaktiviert"));
-        metrics.addCustomChart(new BStatsMetrics.SimplePie("setting_permsystem", () -> pl.getConfig().getString("ranks.permissionsystem").toLowerCase()));
-        if(Main.debug)
-        	pl.getLogger().info("Analytics sent to BStats");
+		// BStats analytics
+		if(getBukkitVersion() > 17) {
+	        int pluginId = 6722; // <-- Replace with the id of your plugin!
+	        BStatsMetrics metrics = new BStatsMetrics(this, pluginId);
+	        //Costom charts
+	        metrics.addCustomChart(new BStatsMetrics.SimplePie("update_auto_update", () -> pl.getConfig().getBoolean("update.autoupdater") ? "Aktiviert" : "Deaktiviert"));
+	        metrics.addCustomChart(new BStatsMetrics.SimplePie("update_notifications", () -> pl.getConfig().getBoolean("update.notification") ? "Aktiviert" : "Deaktiviert"));
+	        
+	        metrics.addCustomChart(new BStatsMetrics.SimplePie("setting_use_scoreboard", () -> pl.getConfig().getBoolean("scoreboard") ? "Aktiviert" : "Deaktiviert"));
+	        metrics.addCustomChart(new BStatsMetrics.SimplePie("setting_use_tablist_text", () -> pl.getConfig().getBoolean("tablist.text") ? "Aktiviert" : "Deaktiviert"));
+	        metrics.addCustomChart(new BStatsMetrics.SimplePie("setting_use_tablist_ranks", () -> pl.getConfig().getBoolean("tablist.ranks") ? "Aktiviert" : "Deaktiviert"));
+	        metrics.addCustomChart(new BStatsMetrics.SimplePie("setting_use_chat", () -> pl.getConfig().getBoolean("chat.ranks") ? "Atktiviert" : "Deaktiviert"));
+	        metrics.addCustomChart(new BStatsMetrics.SimplePie("setting_permsystem", () -> pl.getConfig().getString("ranks.permissionsystem").toLowerCase()));
+	        if(Main.debug)
+	        	pl.getLogger().info("Analytics sent to BStats");
+		}
 	}
 	@Override
 	public void onDisable() {
-		if(pl.getConfig().getBoolean("update.autoupdater")) {
+		if(pl.getConfig().getBoolean("update.autoupdater"))
 			if(Updater.checkVersion())
 				Updater.downloadFile();
-		}
 		Main.unregisterScoreboards();
 		if(pl.getConfig().getBoolean("scoreboard"))
 			for(Player all : ScoreboardPlayer.getAllPlayers())
@@ -173,7 +173,7 @@ public class Main extends JavaPlugin implements Listener{
 		String v = "";
 		boolean pointCounter = true;
 		while(s.length() > 1) {
-			if(v.endsWith(".") || v.endsWith("-")) {//Allow only one point. example: from '1.8.8-R0.1-SNAPSHOT' extract to '1.8'. The pointcounter is needed for version 1.10+ because of more decimales.
+			if(v.endsWith(".") || v.endsWith("-")) {// Allow only one point. example: from '1.8.8-R0.1-SNAPSHOT' extract to '1.8'. The pointcounter is needed for version 1.10+ because of more decimales.
 				if(pointCounter) {
 					pointCounter = false;
 				}else {
@@ -218,17 +218,13 @@ public class Main extends JavaPlugin implements Listener{
 
         while(m.find()) { // Searches the message for something that matches the pattern
             String color = message.substring(m.start(), m.end()); // Extracts the color from the message
-            System.out.println("Start: "+m.end());
-            System.out.println("End: "+m.end());
-            System.out.println("Message: "+message);
-            System.out.println("Farbe: "+color);
             message = message.replace(color, "" + ChatColor.of(color)); // Places the color in the message
         }
 
         return message; // Returns the message
     }
 	public static String translateHexColor_(String message) {
-		//Sourced from this post by imDaniX: https://github.com/SpigotMC/BungeeCord/pull/2883#issuecomment-653955600
+		// Sourced from this post by imDaniX: https://github.com/SpigotMC/BungeeCord/pull/2883#issuecomment-653955600
 		Pattern pattern = Pattern.compile("(?<!\\\\)(#[a-fA-F0-9]{6})");
 		Matcher matcher = pattern.matcher(message);
 		char c = ChatColor.COLOR_CHAR;

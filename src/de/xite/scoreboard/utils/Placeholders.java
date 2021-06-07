@@ -44,33 +44,33 @@ public class Placeholders {
 			s = s.replace("%tps%", ""+Main.round(TPS.currentTPS, 1));
 		}
 		// Players on server
-		if(s.contains("%playeronline%"))
-  			s = s.replace("%playeronline%", ""+Bukkit.getOnlinePlayers().size());
+		if(s.contains("%server_online_players%"))
+  			s = s.replace("%server_online_players%", ""+Bukkit.getOnlinePlayers().size());
 		// Max players on server
-  		if(s.contains("%playermax%"))
-  			s = s.replace("%playermax%", ""+Bukkit.getMaxPlayers());
+  		if(s.contains("%server_max_players%"))
+  			s = s.replace("%server_max_players%", ""+Bukkit.getMaxPlayers());
   		// Player name
-  		if(s.contains("%name%"))
-  			s = s.replace("%name%", p.getName());
+  		if(s.contains("%player_name%"))
+  			s = s.replace("%player_name%", p.getName());
   		// World from the player
-  		if(s.contains("%world%")) {
+  		if(s.contains("%player_world%")) {
   			String name = p.getWorld().getName();
   			if(name.equals("world")) {
-  				s = s.replace("%world%", "Overworld");
+  				s = s.replace("%player_world%", "Overworld");
   			}else if(name.equals("world_nether")) {
-  				s = s.replace("%world%", "Nether");
+  				s = s.replace("%player_world%", "Nether");
   			}else if(name.equals("world_the_end")) {
-  				s = s.replace("%world%", "The End");
+  				s = s.replace("%player_world%", "The End");
   			}else
-  				s = s.replace("%world%", name);
+  				s = s.replace("%player_world%", name);
   		}
   		// Location
-  		if(s.contains("%loc_x%"))
-  			s = s.replace("%loc_x%", p.getLocation().getBlockX()+"");
-  		if(s.contains("%loc_y%"))
-  			s = s.replace("%loc_y%", p.getLocation().getBlockY()+"");
-  		if(s.contains("%loc_z%"))
-  			s = s.replace("%loc_z%", p.getLocation().getBlockZ()+"");
+  		if(s.contains("%player_loc_x%"))
+  			s = s.replace("%player_loc_x%", p.getLocation().getBlockX()+"");
+  		if(s.contains("%player_loc_y%"))
+  			s = s.replace("%player_loc_y%", p.getLocation().getBlockY()+"");
+  		if(s.contains("%player_loc_z%"))
+  			s = s.replace("%player_loc_z%", p.getLocation().getBlockZ()+"");
   		// Player food level
   		if(s.contains("%player_food%"))
   			s = s.replace("%player_food%", ""+(int)p.getFoodLevel());
@@ -105,19 +105,19 @@ public class Placeholders {
   				s = s.replace("%date%", new SimpleDateFormat("dd.MM.yyyy").format(new Date()));
   		}
   		// Rank displayname
-  		if(s.contains("%rank%")) {
+  		if(s.contains("%player_rank%")) {
   			Teams teams = Teams.get(p);
   			if(teams != null) {
   				if(teams.getPlaceholderName() == null) {
-  					s = s.replace("%rank%", teams.getPrefix());
+  					s = s.replace("%player_rank%", teams.getPrefix());
   				}else {
-  					s = s.replace("%rank%", teams.getPlaceholderName());
+  					s = s.replace("%player_rank%", teams.getPlaceholderName());
   				}
   				
   			}
   		}
   		// Money
-  		if(s.contains("%money%")) {
+  		if(s.contains("%player_money%")) {
   			if(Main.hasVault == true) {
   				double balance = Main.econ.getBalance(p);
   				//config name changed from money-digits to money-decimals - support will drop in v.4.0
@@ -127,9 +127,9 @@ public class Placeholders {
   					balance = Main.round(balance, pl.getConfig().getInt("placeholder.money-digits"));
   				}
   				
-  				s = s.replace("%money%", ""+balance);
+  				s = s.replace("%player_money%", ""+balance);
   			}else {
-  				s = s.replace("%money%", "Vault is not installed!");
+  				s = s.replace("%player_money%", "Vault is not installed!");
   			}
   		}
   		// Memory
@@ -151,6 +151,59 @@ public class Placeholders {
 		}
 
   		// Ping
+  		if(s.contains("%player_ping%")) {
+  			int ping = 0;
+  			if(Main.getBukkitVersion() <= 18) {
+  				ping = version_1_08.getPing(p);
+  			}else if(Main.getBukkitVersion() <= 19) {
+  				ping = version_1_09.getPing(p);
+  			}else if(Main.getBukkitVersion() <= 110) {
+  				ping = version_1_10.getPing(p);
+  			}else if(Main.getBukkitVersion() <= 111) {
+  				ping = version_1_11.getPing(p);
+  			}else if(Main.getBukkitVersion() <= 112) {
+  				ping = version_1_12.getPing(p);
+  			}else if(Main.getBukkitVersion() <= 113) {
+  				ping = version_1_13.getPing(p);
+  			}else if(Main.getBukkitVersion() <= 114) {
+  				ping = version_1_14.getPing(p);
+  			}else if(Main.getBukkitVersion() <= 115) {
+  				ping = version_1_15.getPing(p);
+  			}else {
+  				ping = version_1_16.getPing(p);
+  			}
+  			if(ping > 999) {
+  				s = s.replace("%player_ping%", ChatColor.RED+"999+");
+  			}else {
+  				s = s.replace("%player_ping%", ping+"");
+  			}
+  		}
+  		
+  		
+  		// ---- Deprecated ---- //
+  		if(s.contains("%geld%")) {
+  			if(Main.hasVault == true) {
+  				double balance = Main.econ.getBalance(p);
+  				Main.round(balance, pl.getConfig().getInt("placeholder.money-digits"));
+  				s = s.replace("%geld%", ""+balance);
+  			}else {
+  				s = s.replace("%geld%", "Vault is not installed!");
+  			}
+  		}
+  		if(s.contains("%rang%")) {
+  			Teams teams = Teams.get(p);
+  			if(teams != null) {
+  				if(teams.getPlaceholderName() == null) {
+  					s = s.replace("%rang%", teams.getPrefix());
+  				}else {
+  					s = s.replace("%rang%", teams.getPlaceholderName());
+  				}
+  				
+  			}
+  		}
+  		if(s.contains("%welt%"))
+  			s = s.replace("%welt%", p.getWorld().getName());
+  		
   		if(s.contains("%ping%")) {
   			int ping = 0;
   			if(Main.getBukkitVersion() <= 18) {
@@ -178,32 +231,56 @@ public class Placeholders {
   				s = s.replace("%ping%", ping+"");
   			}
   		}
-  		
-  		
-  		// ---- Will be removed in version 4.5 ---- //
-  		if(s.contains("%geld%")) {
+  		if(s.contains("%money%")) {
   			if(Main.hasVault == true) {
   				double balance = Main.econ.getBalance(p);
-  				Main.round(balance, pl.getConfig().getInt("placeholder.money-digits"));
-  				s = s.replace("%geld%", ""+balance);
+  				//config name changed from money-digits to money-decimals - support will drop in v.4.0
+  				if(pl.getConfig().getInt("placeholder.money-digits") == 0 && pl.getConfig().getInt("placeholder.money-decimals") != 0) {
+  					balance = Main.round(balance, pl.getConfig().getInt("placeholder.money-decimals"));
+  				}else {
+  					balance = Main.round(balance, pl.getConfig().getInt("placeholder.money-digits"));
+  				}
+  				
+  				s = s.replace("%money%", ""+balance);
   			}else {
-  				s = s.replace("%geld%", "Vault is not installed!");
+  				s = s.replace("%money%", "Vault is not installed!");
   			}
   		}
-  		if(s.contains("%rang%")) {
+  		if(s.contains("%rank%")) {
   			Teams teams = Teams.get(p);
   			if(teams != null) {
   				if(teams.getPlaceholderName() == null) {
-  					s = s.replace("%rang%", teams.getPrefix());
+  					s = s.replace("%rank%", teams.getPrefix());
   				}else {
-  					s = s.replace("%rang%", teams.getPlaceholderName());
+  					s = s.replace("%rank%", teams.getPlaceholderName());
   				}
   				
   			}
   		}
-  		if(s.contains("%welt%"))
-  			s = s.replace("%welt%", p.getWorld().getName());
-  		
+  		if(s.contains("%name%"))
+  			s = s.replace("%name%", p.getName());
+  		if(s.contains("%loc_x%"))
+  			s = s.replace("%loc_x%", p.getLocation().getBlockX()+"");
+  		if(s.contains("%loc_y%"))
+  			s = s.replace("%loc_y%", p.getLocation().getBlockY()+"");
+  		if(s.contains("%loc_z%"))
+  			s = s.replace("%loc_z%", p.getLocation().getBlockZ()+"");
+  		if(s.contains("%world%")) {
+  			String name = p.getWorld().getName();
+  			if(name.equals("world")) {
+  				s = s.replace("%world%", "Overworld");
+  			}else if(name.equals("world_nether")) {
+  				s = s.replace("%world%", "Nether");
+  			}else if(name.equals("world_the_end")) {
+  				s = s.replace("%world%", "The End");
+  			}else
+  				s = s.replace("%world%", name);
+  		}
+		if(s.contains("%playeronline%"))
+  			s = s.replace("%playeronline%", ""+Bukkit.getOnlinePlayers().size());
+		// Max players on server
+  		if(s.contains("%playermax%"))
+  			s = s.replace("%playermax%", ""+Bukkit.getMaxPlayers());
   		// -------------------------------------//
   		// Replace colors (MC colorcodes)
   		s = ChatColor.translateAlternateColorCodes('&', s);

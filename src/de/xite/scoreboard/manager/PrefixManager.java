@@ -42,8 +42,6 @@ public class PrefixManager {
 					String chatPrefix = pl.getConfig().getString("ranks.list."+line+".chatPrefix");
 					String placeholderName = pl.getConfig().getString("ranks.list."+line+".placeholder-name");
 					String team;
-					if(Main.debug)
-						pl.getLogger().info("rank prefix: "+prefix);
 					
 					//---PEX---//
 					if(Main.hasPex && (pl.getConfig().getString("ranks.permissionsystem").equalsIgnoreCase("PermissionsEx") || pl.getConfig().getString("ranks.permissionsystem").equalsIgnoreCase("pex"))) {

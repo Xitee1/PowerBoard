@@ -88,13 +88,13 @@ public class ScoreboardManager {
 	int currentTitleStep; // animation id
 	private void startTitleAnimation(int speed) {
 		// check if scheduler is needed (don't schedule if higher than '9999')
-		if(speed >= 9999) {
+		if(speed >= 9999 || speed < 0) {
 			if(Main.debug)
-				Main.pl.getLogger().info("Scoreboard-Title (Name: "+name+"): no animation needed");
+				Main.pl.getLogger().info("Scoreboard-Title (Name: "+name+"): no animation needed (speed higher than 9999 or negative)");
 			return;
 		}else
 			if(Main.debug)
-				Main.pl.getLogger().info("Scoreboard-Score (Name: "+name+"): animation started");
+				Main.pl.getLogger().info("Scoreboard-Title (Name: "+name+"): animation started");
 		
 		currentTitleStep = 0;
 		// Start animation scheduler
@@ -103,9 +103,8 @@ public class ScoreboardManager {
 				@Override
 				public void run() {
 					String s = title.get(currentTitleStep); // get the current score (text)
-					for(Player p : ScoreboardPlayer.getAllPlayers()) {
+					for(Player p : ScoreboardPlayer.getAllPlayers())
 						ScoreboardPlayer.setTitle(p, p.getScoreboard(), s, true, get(name)); // set the score
-					}
 					if(currentTitleStep >= title.size()-1) {
 						currentTitleStep = 0;
 					}else
@@ -134,16 +133,16 @@ public class ScoreboardManager {
 				@Override
 				public void run() {
 					String s = scores.get(id).get(currentScoreStep.get(id)); // get the current score (text)
-					for(Player p : ScoreboardPlayer.getAllPlayers()) {
+					for(Player p : ScoreboardPlayer.getAllPlayers())
 						ScoreboardPlayer.setScore(p, p.getScoreboard(), s, scores.size()-id-1, true, get(name)); // set the score
-					}
+					
 					if(currentScoreStep.get(id) >= scores.get(id).size()-1) {
 						currentScoreStep.replace(id, 0);
 					}else
 						currentScoreStep.replace(id, currentScoreStep.get(id)+1);
-				}
-			}, 20, speed)
-		);
+					}
+				}, 20, speed)
+			);
 	}
 	
 	public String getCurrentTitle() {

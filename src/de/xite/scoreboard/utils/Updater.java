@@ -8,6 +8,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Scanner;
 
+import org.bukkit.Bukkit;
+
 import de.xite.scoreboard.main.Main;
 
 public class Updater {
@@ -21,16 +23,26 @@ public class Updater {
             	version = d;
                 return d;
             }
-        } catch (IOException exception) {
-            pl.getLogger().info("Updater -> Cannot look for updates: " + exception.getMessage());
+        } catch (IOException e) {
+            pl.getLogger().info("Updater -> Cannot look for updates: " + e.getMessage());
         }
-        return null;
+        return "Could not check for updates! You probably restarted your server to often, so SpigotMC blocked your IP.";
     }
+    
     public static boolean checkVersion() {
-    	if(getVersion().equals(pl.getDescription().getVersion())) {
-    		return false;
+    	if(version == null) {
+    		version = getVersion();
+    		// Set it to null again after an hour to check again
+    		Bukkit.getScheduler().runTaskLater(Main.pl, new Runnable() {
+				@Override
+				public void run() {
+					version = null;
+				}
+			}, 20*60*60);
     	}
-    	pl.getLogger().info("Updater -> A new version is available!");
+    	
+    	if(version.equals(pl.getDescription().getVersion()))
+    		return false;
     	return true;
     }
 	public static boolean downloadFile() {

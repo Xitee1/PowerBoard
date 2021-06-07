@@ -62,6 +62,7 @@ public class ScoreboardPlayer {
 				Main.pl.getLogger().info("Scores amount for "+sm.getName()+": "+sm.getCurrentScore().size());
 		}
 		// ---- Set the scoreboard ---- //
+		boards.add(p);
 		p.setScoreboard(board);
 		
 		// Debug
@@ -153,19 +154,19 @@ public class ScoreboardPlayer {
 			obj.getScore(colorcode).setScore(ScoreID);
 		}
 		
-		if(usePlaceholders)
-			score = Placeholders.replace(p, score);
 		if(score.length() == 0) // If lenght == 0 set to " " for free space in scoreboard
 			score = " ";
+		if(!score.equals(" ") && usePlaceholders)
+			score = Placeholders.replace(p, score);
 		
 		// ---- Set all scores ---- //
 		if(Main.getBukkitVersion() < 113) {//Under version 1.13+ you can just use up to 16 chars.
-			// Set the score for 1.13-
+			// Set the score for 1.12-
 			String[] s = getScorePrefixSuffix(score, 16, 30);
 			if(s == null) {
 				team.setPrefix(ChatColor.RED+"-too long-");
 				Main.pl.getLogger().warning(" ");
-				Main.pl.getLogger().warning("-> The scoreboard-score is too long! The limit is 126 chars!");
+				Main.pl.getLogger().warning("-> The scoreboard-score is too long! The limit is 30 chars!");
 				Main.pl.getLogger().warning("-> Scoreboard: "+sm.getName());
 				Main.pl.getLogger().warning("-> Score: \""+score+"\", chars: "+score.length());
 				Main.pl.getLogger().warning("-> Player: "+p.getName());
@@ -209,9 +210,8 @@ public class ScoreboardPlayer {
 				lastColor = "§f";
 			
 			s[1] = lastColor+score.substring(limit);// Get last color + everything in the string after 16 chars
-		}else {
+		}else
 			s[0] = score; // Set prefix
-		}
 		return s;
 	}
 	public static boolean hasScoreboard(Player p) {
