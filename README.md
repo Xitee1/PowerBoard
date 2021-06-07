@@ -24,18 +24,19 @@ ScoreboardAPI.registerCustomPlaceholders(ph);
 ```
 ```java
 // Enable/Disable the scoreboard for a specified player
-ScoreboardAPI.getPlayer(p).enableScoreboard();
-ScoreboardAPI.getPlayer(p).disableScoreboard();
+ScoreboardAPI.enableScoreboard(p);
+ScoreboardAPI.disableScoreboard(p);
 ```
 ```java
 // Set a complete custom Scoreboard
-// The boolean indicates if the placeholders should be replaced
-ScoreboardAPI.getPlayer(p).setScoreboardTitle(title, true);
+// You have to disable the scoreboard in the config.yml!
 
-// After that we can set the scores
-// The index is the red number of the right side from the scoreboard
-ScoreboardAPI.getPlayer(p).setScoreboardScore("score1", 2, true);
-ScoreboardAPI.getPlayer(p).setScoreboardScore("score2", 1, true);
-ScoreboardAPI.getPlayer(p).setScoreboardScore("score3", 0, true);
-// And so on
+// The boolean indicates if the placeholders should be replaced
+ScoreboardAPI.enableScoreboard(p); // Enable the scoreboard - Yes, we have disabled it in the config.yml, but now we have to enable it again with the API
+ScoreboardAPI.setScoreboardTitle(p, title, false);
+ScoreboardAPI.setScoreboardScore(p, score, 3, false);
+ScoreboardAPI.setScoreboardScore(p, score, 2, false);
+ScoreboardAPI.setScoreboardScore(p, score, 1, false);
+ScoreboardAPI.setScoreboardScore(p, score, 0, false);
+// and so on
 ```
