@@ -17,10 +17,9 @@ import de.xite.scoreboard.utils.Teams;
 
 public class ScoreboardPlayer {
 	static Main pl = Main.pl;
-	public static ArrayList<Player> boards = new ArrayList<>();
 	
 	@SuppressWarnings("deprecation")
-	public static void setScoreboard(Player p) {
+	public static void setScoreboard(Player p, String name) {
 		if(!pl.getConfig().getBoolean("scoreboard") && !pl.getConfig().getBoolean("tablist.ranks"))
 			return;
 		Scoreboard board = p.getScoreboard();
@@ -48,7 +47,7 @@ public class ScoreboardPlayer {
 			obj.setDisplaySlot(DisplaySlot.SIDEBAR);
 		}
 		if(pl.getConfig().getBoolean("scoreboard") && !ScoreboardAPI.useAPI) { // Check if scoreboard is enabled
-			ScoreboardManager sm = ScoreboardManager.get("scoreboard");
+			ScoreboardManager sm = ScoreboardManager.get(name);
 			
 			setTitle(p, board, sm.getCurrentTitle(), true, sm);// Get the current title and set it
 			
@@ -58,11 +57,11 @@ public class ScoreboardPlayer {
 				
 				setScore(p, board, scores.get(id), i, true, sm);
 			}
+			sm.addPlayer(p);
 			if(Main.debug) // Send debug message if enabled
 				Main.pl.getLogger().info("Scores amount for "+sm.getName()+": "+sm.getCurrentScore().size());
 		}
 		// ---- Set the scoreboard ---- //
-		boards.add(p);
 		p.setScoreboard(board);
 		
 		// Debug
@@ -74,9 +73,9 @@ public class ScoreboardPlayer {
 			PrefixManager.registerTeams(p, board);
 	}
 	public static void removeScoreboard(Player p, boolean removeTeams) {
-		if(!boards.contains(p))
+		if(!Main.players.containsKey(p))
 			return;
-		boards.remove(p);
+		Main.players.remove(p);
 		if(removeTeams) {
 			Objective obj = p.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
 			if(obj != null)
@@ -213,11 +212,5 @@ public class ScoreboardPlayer {
 		}else
 			s[0] = score; // Set prefix
 		return s;
-	}
-	public static boolean hasScoreboard(Player p) {
-		return boards.contains(p);
-	}
-	public static ArrayList<Player> getAllPlayers(){
-		return boards;
 	}
 }

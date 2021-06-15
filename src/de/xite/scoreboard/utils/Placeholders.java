@@ -19,6 +19,7 @@ import de.xite.scoreboard.versions.version_1_13;
 import de.xite.scoreboard.versions.version_1_14;
 import de.xite.scoreboard.versions.version_1_15;
 import de.xite.scoreboard.versions.version_1_16;
+import de.xite.scoreboard.versions.version_1_17;
 import me.clip.placeholderapi.PlaceholderAPI;
 
 public class Placeholders {
@@ -169,9 +170,10 @@ public class Placeholders {
   				ping = version_1_14.getPing(p);
   			}else if(Main.getBukkitVersion() <= 115) {
   				ping = version_1_15.getPing(p);
-  			}else {
+  			}else if(Main.getBukkitVersion() <= 116) {
   				ping = version_1_16.getPing(p);
-  			}
+  			}else
+  				ping = version_1_17.getPing(p);
   			if(ping > 999) {
   				s = s.replace("%player_ping%", ChatColor.RED+"999+");
   			}else {
@@ -222,9 +224,10 @@ public class Placeholders {
   				ping = version_1_14.getPing(p);
   			}else if(Main.getBukkitVersion() <= 115) {
   				ping = version_1_15.getPing(p);
-  			}else {
+  			}else if(Main.getBukkitVersion() <= 116) {
   				ping = version_1_16.getPing(p);
-  			}
+  			}else
+  				ping = version_1_17.getPing(p);
   			if(ping > 999) {
   				s = s.replace("%ping%", ChatColor.RED+"999+");
   			}else {

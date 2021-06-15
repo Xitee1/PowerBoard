@@ -15,6 +15,7 @@ import de.xite.scoreboard.versions.version_1_13;
 import de.xite.scoreboard.versions.version_1_14;
 import de.xite.scoreboard.versions.version_1_15;
 import de.xite.scoreboard.versions.version_1_16;
+import de.xite.scoreboard.versions.version_1_17;
 
 public class Tabpackage {
 	static Main pl = Main.pl;
@@ -38,19 +39,17 @@ public class Tabpackage {
 		footer = footer.substring(0,footer.length()-1);
 		
 		//Tablist senden
-		if(Bukkit.getBukkitVersion().contains("1.16")) {
+		if(Bukkit.getBukkitVersion().contains("1.17")) {
+			version_1_17.sendTab(p, header, footer);
+		}else if(Bukkit.getBukkitVersion().contains("1.16")) {
 			version_1_16.sendTab(p, header, footer);
-		}else
-		if(Bukkit.getBukkitVersion().contains("1.15")) {
+		}else if(Bukkit.getBukkitVersion().contains("1.15")) {
 			version_1_15.sendTab(p, header, footer);
-		}else
-		if(Bukkit.getBukkitVersion().contains("1.14")) {
+		}else if(Bukkit.getBukkitVersion().contains("1.14")) {
 			version_1_14.sendTab(p, header, footer);
-		}else
-		if(Bukkit.getBukkitVersion().contains("1.13")) {
+		}else if(Bukkit.getBukkitVersion().contains("1.13")) {
 			version_1_13.sendTab(p, header, footer);
-		}else
-		if(Bukkit.getBukkitVersion().contains("1.12")) {
+		}else if(Bukkit.getBukkitVersion().contains("1.12")) {
 			version_1_12.sendTab(p, header, footer);
 		}else if(Bukkit.getBukkitVersion().contains("1.11")) {
 		  version_1_11.sendTab(p, header, footer);
@@ -63,7 +62,7 @@ public class Tabpackage {
 		}else if(Bukkit.getBukkitVersion().contains("1.7")) {
 			version_1_08.sendTab(p, header, footer);
 		}else {
-			version_1_16.sendTab(p, header, footer);
+			version_1_17.sendTab(p, header, footer);
 		}
 	}
 }

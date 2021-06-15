@@ -50,6 +50,9 @@ public class Main extends JavaPlugin implements Listener{
 	// All registered scoreboards
 	public static HashMap<String, ScoreboardManager> scoreboards = new HashMap<>();
 	
+	// All registered scoreboards
+	public static HashMap<Player, String> players = new HashMap<>(); // Player; Scoreboard config file name
+	
 	// All registered custom placeholders
 	public static ArrayList<CustomPlaceholders> ph = new ArrayList<>();
 	
@@ -116,8 +119,8 @@ public class Main extends JavaPlugin implements Listener{
 			@Override
 			public void run() {
 				for(Player all : Bukkit.getOnlinePlayers())
-					if(!ScoreboardPlayer.hasScoreboard(all))
-						ScoreboardPlayer.setScoreboard(all);
+					if(!players.containsKey(all))
+						ScoreboardPlayer.setScoreboard(all, ScoreboardManager.getScoreboardName(all));
 				if(pl.getConfig().getBoolean("tablist.text")) {
 					TabConfig tab = new TabConfig();
 					tab.register();
@@ -148,15 +151,19 @@ public class Main extends JavaPlugin implements Listener{
 				Updater.downloadFile();
 		Main.unregisterScoreboards();
 		if(pl.getConfig().getBoolean("scoreboard"))
-			for(Player all : ScoreboardPlayer.getAllPlayers())
-				ScoreboardPlayer.removeScoreboard(all, true);
+			for(Entry<Player, String> all : Main.players.entrySet())
+				ScoreboardPlayer.removeScoreboard(all.getKey(), true);
 		ph.clear();
 	}
 
 	public static void registerScoreboards() {
+		ArrayList<String> boards = new ArrayList<>();
+		boards.add("scoreboard");
+		
 		if(pl.getConfig().getBoolean("scoreboard")) { // register the scoreboard if enabled
 			new ScoreboardPlayer(); // prepare the scoreboard
-			ScoreboardManager.register("scoreboard");
+			for(String board : boards)
+				ScoreboardManager.get(board);
 		}
 	}
 	public static void unregisterScoreboards() {

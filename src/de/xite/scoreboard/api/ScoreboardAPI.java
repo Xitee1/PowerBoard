@@ -13,9 +13,9 @@ public class ScoreboardAPI {
 	}
 	
 	// ---- API ---- //
-	public static void enableScoreboard(Player p) {
+	public static void enableScoreboard(Player p, String name) {
 		ScoreboardPlayer.removeScoreboard(p, true);
-		ScoreboardPlayer.setScoreboard(p);
+		ScoreboardPlayer.setScoreboard(p, name);
 	}
 	public static void disableScoreboard(Player p) {
 		ScoreboardPlayer.removeScoreboard(p, false);

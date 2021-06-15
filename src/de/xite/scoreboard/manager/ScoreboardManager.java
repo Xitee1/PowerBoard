@@ -24,6 +24,9 @@ public class ScoreboardManager {
 	// Store all schedulers to stop them later
 	ArrayList<Integer> scheduler = new ArrayList<>();
 	
+	// Store all players with this scoreboard
+	ArrayList<Player> players = new ArrayList<>();
+	
 	public ScoreboardManager(String name) {
 		this.name = name;
 		
@@ -34,13 +37,11 @@ public class ScoreboardManager {
 			return;
 		}
 		YamlConfiguration cfg = YamlConfiguration.loadConfiguration(f);
-		
 		importScores(cfg); // Import all scores
 		importTitle(cfg); // Import the title
 	}
-	
+	// Import
 	private void importScores(YamlConfiguration cfg) {
-		// Import
 		for(String s : cfg.getConfigurationSection("").getValues(false).keySet()) {
 			try {
 				int id = Integer.parseInt(s);
@@ -103,7 +104,7 @@ public class ScoreboardManager {
 				@Override
 				public void run() {
 					String s = title.get(currentTitleStep); // get the current score (text)
-					for(Player p : ScoreboardPlayer.getAllPlayers())
+					for(Player p : players)
 						ScoreboardPlayer.setTitle(p, p.getScoreboard(), s, true, get(name)); // set the score
 					if(currentTitleStep >= title.size()-1) {
 						currentTitleStep = 0;
@@ -133,7 +134,7 @@ public class ScoreboardManager {
 				@Override
 				public void run() {
 					String s = scores.get(id).get(currentScoreStep.get(id)); // get the current score (text)
-					for(Player p : ScoreboardPlayer.getAllPlayers())
+					for(Player p : players)
 						ScoreboardPlayer.setScore(p, p.getScoreboard(), s, scores.size()-id-1, true, get(name)); // set the score
 					
 					if(currentScoreStep.get(id) >= scores.get(id).size()-1) {
@@ -144,7 +145,14 @@ public class ScoreboardManager {
 				}, 20, speed)
 			);
 	}
-	
+	public void addPlayer(Player p) {
+		if(!players.contains(p))
+			players.add(p);
+	}
+	public void removePlayer(Player p) {
+		if(players.contains(p))
+			players.remove(p);
+	}
 	public String getCurrentTitle() {
 		return title.get(currentTitleStep);
 	}
@@ -160,24 +168,26 @@ public class ScoreboardManager {
 	public String getName() {
 		return this.name;
 	}
-	public ArrayList<Integer> getScheduler(){
-		return scheduler;
-	}
 	
-	
-	
-	public static void register(String name) {
-		Main.scoreboards.put(name, new ScoreboardManager(name));
-	}
 	public static void unregister(String name) {
 		ScoreboardManager sm = get(name);
-		for(int i : sm.getScheduler())
+		for(int i : sm.scheduler)
 			Bukkit.getScheduler().cancelTask(i);
+		sm.scores.clear();
+		sm.title.clear();
+		sm.currentScoreStep.clear();
+		sm.currentTitleStep = 0;
+		sm.name = null;
+		sm.players.clear();
 		Main.scoreboards.remove(name);
 	}
 	public static ScoreboardManager get(String name) {
 		if(!Main.scoreboards.containsKey(name))
-			register(name);
+			Main.scoreboards.put(name, new ScoreboardManager(name));
 		return Main.scoreboards.get(name);
+	}
+	
+	public static String getScoreboardName(Player p) {
+		return "scoreboard";
 	}
 }

@@ -18,7 +18,7 @@ public class Chat implements Listener{
 			if(teams != null) {
 				if(!teams.getChatPrefix().equals("noRank")) {
 					String message = teams.getChat(e.getMessage());
-					message = message.replace("%", "%%");//Fix the Chat % bug
+					message = message.replace("%", "%%"); //Fix the Chat % bug
 					e.setFormat(message);
 				}else {
 					pl.getLogger().warning("The player "+p.getName()+" has no Rank! Make sure that he has the correct permissions.");
