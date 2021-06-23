@@ -183,29 +183,6 @@ public class Placeholders {
   		
   		
   		// ---- Deprecated ---- //
-  		if(s.contains("%geld%")) {
-  			if(Main.hasVault == true) {
-  				double balance = Main.econ.getBalance(p);
-  				Main.round(balance, pl.getConfig().getInt("placeholder.money-digits"));
-  				s = s.replace("%geld%", ""+balance);
-  			}else {
-  				s = s.replace("%geld%", "Vault is not installed!");
-  			}
-  		}
-  		if(s.contains("%rang%")) {
-  			Teams teams = Teams.get(p);
-  			if(teams != null) {
-  				if(teams.getPlaceholderName() == null) {
-  					s = s.replace("%rang%", teams.getPrefix());
-  				}else {
-  					s = s.replace("%rang%", teams.getPlaceholderName());
-  				}
-  				
-  			}
-  		}
-  		if(s.contains("%welt%"))
-  			s = s.replace("%welt%", p.getWorld().getName());
-  		
   		if(s.contains("%ping%")) {
   			int ping = 0;
   			if(Main.getBukkitVersion() <= 18) {
@@ -233,6 +210,8 @@ public class Placeholders {
   			}else {
   				s = s.replace("%ping%", ping+"");
   			}
+  			pl.getLogger().warning("Please change your config: You are using the placeholder %ping%. This placeholder was changed. Please change it to %player_ping%."
+  					+ " Tip: Use Notepad++ to easily replace all of them.");
   		}
   		if(s.contains("%money%")) {
   			if(Main.hasVault == true) {
@@ -248,6 +227,8 @@ public class Placeholders {
   			}else {
   				s = s.replace("%money%", "Vault is not installed!");
   			}
+  			pl.getLogger().warning("Please change your config: You are using the placeholder %money%. This placeholder was changed. Please change it to %player_money%."
+  					+ " Tip: Use Notepad++ to easily replace all of them.");
   		}
   		if(s.contains("%rank%")) {
   			Teams teams = Teams.get(p);
@@ -259,15 +240,33 @@ public class Placeholders {
   				}
   				
   			}
+  			pl.getLogger().warning("Please change your config: You are using the placeholder %rank%. This placeholder was changed. Please change it to %player_rank%."
+  					+ " Tip: Use Notepad++ to easily replace all of them.");
   		}
-  		if(s.contains("%name%"))
+  		if(s.contains("%name%")) {
   			s = s.replace("%name%", p.getName());
-  		if(s.contains("%loc_x%"))
+  			pl.getLogger().warning("Please change your config: You are using the placeholder %name%. This placeholder was changed. Please change it to %player_name%."
+  					+ " Tip: Use Notepad++ to easily replace all of them.");
+  		}
+  			
+  		if(s.contains("%loc_x%")) {
   			s = s.replace("%loc_x%", p.getLocation().getBlockX()+"");
-  		if(s.contains("%loc_y%"))
+  			pl.getLogger().warning("Please change your config: You are using the placeholder %loc_x%. This placeholder was changed. Please change it to %player_loc_x%."
+  					+ " Tip: Use Notepad++ to easily replace all of them.");
+  		}
+  			
+  		if(s.contains("%loc_y%")) {
   			s = s.replace("%loc_y%", p.getLocation().getBlockY()+"");
-  		if(s.contains("%loc_z%"))
+  			pl.getLogger().warning("Please change your config: You are using the placeholder %loc_y%. This placeholder was changed. Please change it to %player_loc_y%."
+  					+ " Tip: Use Notepad++ to easily replace all of them.");
+  		}
+  			
+  		if(s.contains("%loc_z%")) {
   			s = s.replace("%loc_z%", p.getLocation().getBlockZ()+"");
+  			pl.getLogger().warning("Please change your config: You are using the placeholder %loc_z%. This placeholder was changed. Please change it to %player_loc_z%."
+  					+ " Tip: Use Notepad++ to easily replace all of them.");
+  		}
+  			
   		if(s.contains("%world%")) {
   			String name = p.getWorld().getName();
   			if(name.equals("world")) {
@@ -278,12 +277,20 @@ public class Placeholders {
   				s = s.replace("%world%", "The End");
   			}else
   				s = s.replace("%world%", name);
+  			pl.getLogger().warning("Please change your config: You are using the placeholder %world%. This placeholder was changed. Please change it to %player_world%."
+  					+ " Tip: Use Notepad++ to easily replace all of them.");
   		}
-		if(s.contains("%playeronline%"))
-  			s = s.replace("%playeronline%", ""+Bukkit.getOnlinePlayers().size());
-		// Max players on server
-  		if(s.contains("%playermax%"))
+		if(s.contains("%playeronline%")) {
+			s = s.replace("%playeronline%", ""+Bukkit.getOnlinePlayers().size());
+			pl.getLogger().warning("Please change your config: You are using the placeholder %playeronline%. This placeholder was changed. Please change it to %server_online_players%."
+  					+ " Tip: Use Notepad++ to easily replace all of them.");
+		}
+  		if(s.contains("%playermax%")) {
   			s = s.replace("%playermax%", ""+Bukkit.getMaxPlayers());
+  			pl.getLogger().warning("Please change your config: You are using the placeholder %playermax%. This placeholder was changed. Please change it to %server_max_players%."
+  					+ " Tip: Use Notepad++ to easily replace all of them.");
+  		}
+  			
   		// -------------------------------------//
   		// Replace colors (MC colorcodes)
   		s = ChatColor.translateAlternateColorCodes('&', s);

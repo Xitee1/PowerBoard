@@ -216,7 +216,7 @@ public class Config {
 				cfg.save(file);
 			} catch (IOException e) {
 				e.printStackTrace();
-				pl.getLogger().severe("Could not create the tablist.yml file. Has the Plugin/Server write permissions?");
+				pl.getLogger().severe("Could not create the tablist.yml file. Has the plugin/server write permissions?");
 			}
 		}
 	}
