@@ -30,8 +30,6 @@ public class EventListener implements Listener {
 						p.sendMessage(Main.pr+ChatColor.RED+"The auto-updater is disabled in your config.yml. Type §6/sb update §cto update to the newest version.");
 					}
 				}
-				pl.getLogger().info("-> A new version (v."+Updater.version+") is available! Your version: "+pl.getDescription().getVersion());
-				pl.getLogger().info("-> Update me! :)");
 			}
 		}
 		Bukkit.getScheduler().runTaskLater(pl, new Runnable() { // Wait 0.25 seconds; Set the scoreboard if enabled

@@ -16,7 +16,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import de.xite.scoreboard.api.CustomPlaceholders;
-import de.xite.scoreboard.commands.scoreboard_cmd;
+import de.xite.scoreboard.commands.ScoreboardCommand;
 import de.xite.scoreboard.files.Config;
 import de.xite.scoreboard.files.TabConfig;
 import de.xite.scoreboard.listeners.Chat;
@@ -64,8 +64,8 @@ public class Main extends JavaPlugin implements Listener{
 		pl = this;
 		
 		// Register commands and events
-		getCommand("sb").setExecutor(new scoreboard_cmd());
-		getCommand("scoreboard").setExecutor(new scoreboard_cmd());
+		getCommand("sb").setExecutor(new ScoreboardCommand());
+		getCommand("scoreboard").setExecutor(new ScoreboardCommand());
 		PluginManager pm = Bukkit.getPluginManager();
 		pm.registerEvents(new EventListener(), this);
 		pm.registerEvents(new Chat(), this);
@@ -112,6 +112,12 @@ public class Main extends JavaPlugin implements Listener{
 	    	pl.getLogger().severe("self-check -> Fatal errors were found! Please fix you config! Disabling Plugin...");
 	    	Bukkit.getPluginManager().disablePlugin(pl);
 	    	return;
+	    }
+	    
+	    // Updater
+	    if(Updater.checkVersion()) {
+	    	pl.getLogger().info("-> A new version (v."+Updater.version+") is available! Your version: "+pl.getDescription().getVersion());
+			pl.getLogger().info("-> Update me! :)");
 	    }
 	    
 	    // Set the scoreboard and prefixes for all online players

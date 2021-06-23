@@ -11,7 +11,7 @@ import de.xite.scoreboard.main.Main;
 import de.xite.scoreboard.utils.Updater;
 import net.md_5.bungee.api.ChatColor;
 
-public class scoreboard_cmd implements CommandExecutor{
+public class ScoreboardCommand implements CommandExecutor{
 	String designLine1 = Main.pr+"§7X§e§m-----§6Scoreboard§e§m-----§7X";
 	String designLine2 = Main.pr+"§7X§e§m-----§6Scoreboard§e§m-----§7X";
 	@Override
