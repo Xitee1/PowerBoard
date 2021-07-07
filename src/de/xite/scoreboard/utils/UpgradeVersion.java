@@ -9,7 +9,22 @@ import de.xite.scoreboard.main.Main;
 
 public class UpgradeVersion {
 	static Main pl = Main.pl;
-	
+	public static void updateMultipleScoreboards() {
+		pl.getLogger().info("Upgrading multiple scoreboard support..");
+		pl.getLogger().info("Move files..");
+		File file = new File(Main.pluginfolder+"/scoreboard.yml");
+		if(file.exists()) {
+			File folder = new File(Main.pluginfolder+"/scoreboards");
+			folder.mkdir();
+			file.renameTo(new File(Main.pluginfolder+"/scoreboards/scoreboard.yml"));
+		}
+		pl.getConfig().set("scoreboard-default", "scoreboard");
+		pl.getLogger().warning("--- WARNING ---");
+		pl.getLogger().warning("Please add the config option");
+		pl.getLogger().warning("\"scoreboard-default: 'scoreboard' # The scoreboard that will be set after a player joins the server\"");
+		pl.getLogger().warning("to your config.yml below \"scoreboard: true\"");
+		pl.getLogger().warning("--- WARNING ---");
+	}
 	public static void upgradeDoubleTabConfig(File file) {
 		//Migrate from tablist_footer.yml and tablist_header.yml 
 		

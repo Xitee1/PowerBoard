@@ -40,6 +40,12 @@ public class ScoreboardManager {
 		importScores(cfg); // Import all scores
 		importTitle(cfg); // Import the title
 	}
+	public static ScoreboardManager get(String name) {
+		if(!Main.scoreboards.containsKey(name))
+			Main.scoreboards.put(name, new ScoreboardManager(name));
+		return Main.scoreboards.get(name);
+	}
+	
 	// Import
 	private void importScores(YamlConfiguration cfg) {
 		for(String s : cfg.getConfigurationSection("").getValues(false).keySet()) {
@@ -180,14 +186,5 @@ public class ScoreboardManager {
 		sm.name = null;
 		sm.players.clear();
 		Main.scoreboards.remove(name);
-	}
-	public static ScoreboardManager get(String name) {
-		if(!Main.scoreboards.containsKey(name))
-			Main.scoreboards.put(name, new ScoreboardManager(name));
-		return Main.scoreboards.get(name);
-	}
-	
-	public static String getScoreboardName(Player p) {
-		return "scoreboard";
 	}
 }

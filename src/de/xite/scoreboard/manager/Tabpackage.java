@@ -2,7 +2,6 @@ package de.xite.scoreboard.manager;
 
 import java.util.Map.Entry;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import de.xite.scoreboard.files.TabConfig;
@@ -35,34 +34,34 @@ public class Tabpackage {
 		for(Entry<Integer, String> e : TabConfig.currentFooter.get(p).entrySet()) {
 			footer += e.getValue()+"\n";
 		}
-		header = header.substring(0,header.length()-1);//remove the empty line at the end
+		header = header.substring(0,header.length()-1); //remove the empty line at the end
 		footer = footer.substring(0,footer.length()-1);
 		
 		//Tablist senden
-		if(Bukkit.getBukkitVersion().contains("1.17")) {
+		String a = pl.getServer().getClass().getPackage().getName();
+		String version = a.substring(a.lastIndexOf('.') + 1);
+		if(version.equalsIgnoreCase("v1_17_R1")){
 			version_1_17.sendTab(p, header, footer);
-		}else if(Bukkit.getBukkitVersion().contains("1.16")) {
+		}else if(version.equalsIgnoreCase("v1_16_R3")){
 			version_1_16.sendTab(p, header, footer);
-		}else if(Bukkit.getBukkitVersion().contains("1.15")) {
+		}else if(version.equalsIgnoreCase("v1_15_R1")){
 			version_1_15.sendTab(p, header, footer);
-		}else if(Bukkit.getBukkitVersion().contains("1.14")) {
+		}else if(version.equalsIgnoreCase("v1_14_R1")){
 			version_1_14.sendTab(p, header, footer);
-		}else if(Bukkit.getBukkitVersion().contains("1.13")) {
+		}else if(version.equalsIgnoreCase("v1_13_R1")){
 			version_1_13.sendTab(p, header, footer);
-		}else if(Bukkit.getBukkitVersion().contains("1.12")) {
+		}else if(version.equalsIgnoreCase("v1_12_R1")){
 			version_1_12.sendTab(p, header, footer);
-		}else if(Bukkit.getBukkitVersion().contains("1.11")) {
+		}else if(version.equalsIgnoreCase("v1_11_R1")){
 		  version_1_11.sendTab(p, header, footer);
-		}else if(Bukkit.getBukkitVersion().contains("1.10")) {
+		}else if(version.equalsIgnoreCase("v1_10_R1")){
 			version_1_10.sendTab(p, header, footer);
-		}else if(Bukkit.getBukkitVersion().contains("1.9")) {
+		}else if(version.equalsIgnoreCase("v1_9_R2")){
 			version_1_08.sendTab(p, header, footer);
-		}else if(Bukkit.getBukkitVersion().contains("1.8")) {
-			version_1_08.sendTab(p, header, footer);
-		}else if(Bukkit.getBukkitVersion().contains("1.7")) {
+		}else if(version.equalsIgnoreCase("v1_8_R3")){
 			version_1_08.sendTab(p, header, footer);
 		}else {
-			version_1_17.sendTab(p, header, footer);
+			pl.getLogger().severe("You are using a version that is not supported! If you think this version should work, please report it to our discord server!");
 		}
 	}
 }

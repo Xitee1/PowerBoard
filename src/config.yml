@@ -12,6 +12,7 @@
 ### Modules ###
 ###############
 scoreboard: true # enable/disable the scoreboard
+scoreboard-default: 'scoreboard' # The scoreboard that will be set after a player joins the server
 
 tablist:
   text:  true # enable/disable the header/footers

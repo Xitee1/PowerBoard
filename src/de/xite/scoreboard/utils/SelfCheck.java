@@ -61,6 +61,14 @@ public class SelfCheck {
 	    	pl.getLogger().warning(r+"self-check -> The setting 'scoreboard' in the section '' is not valid!"+w);
 	    	hasErrors = true;
 	    }
+	    if(!cfg.isString("scoreboard-default")) {
+			pl.getLogger().warning("--- WARNING ---");
+			pl.getLogger().warning("Please add the config option");
+			pl.getLogger().warning("\"scoreboard-default: 'scoreboard' # The scoreboard that will be set after a player joins the server\"");
+			pl.getLogger().warning("to your config.yml below \"scoreboard: true\"");
+			pl.getLogger().warning("--- WARNING ---");
+	    	hasErrors = true;
+	    }
 	    if(!cfg.isBoolean("tablist.text")) {
 	    	pl.getLogger().warning(r+"self-check -> The setting 'text' in the section 'tablist' is not valid!"+w);
 	    	hasErrors = true;

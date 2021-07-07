@@ -2,6 +2,7 @@ package de.xite.scoreboard.utils;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import org.bukkit.Bukkit;
@@ -25,6 +26,7 @@ import me.clip.placeholderapi.PlaceholderAPI;
 public class Placeholders {
 	static Main pl = Main.pl;
 	static boolean tps = false;
+	public static ArrayList<String> deprecatedWarning = new ArrayList<>();
 	
 	public static String replace(Player p, String s) {
 		// Import placeholders from APIs
@@ -152,6 +154,7 @@ public class Placeholders {
 		}
 
   		// Ping
+  		
   		if(s.contains("%player_ping%")) {
   			int ping = 0;
   			if(Main.getBukkitVersion() <= 18) {
@@ -210,8 +213,12 @@ public class Placeholders {
   			}else {
   				s = s.replace("%ping%", ping+"");
   			}
-  			pl.getLogger().warning("Please change your config: You are using the placeholder %ping%. This placeholder was changed. Please change it to %player_ping%."
-  					+ " Tip: Use Notepad++ to easily replace all of them.");
+  			
+  			if(!deprecatedWarning.contains("ping")) {
+  				deprecatedWarning.add("ping");
+  				pl.getLogger().warning("Please change your config: You are using the placeholder %ping%. This placeholder has been changed. Please change it to %player_ping%."
+  	  					+ " Tip: Use Notepad++ to easily replace all of them.");
+  			}
   		}
   		if(s.contains("%money%")) {
   			if(Main.hasVault == true) {
@@ -227,8 +234,12 @@ public class Placeholders {
   			}else {
   				s = s.replace("%money%", "Vault is not installed!");
   			}
-  			pl.getLogger().warning("Please change your config: You are using the placeholder %money%. This placeholder was changed. Please change it to %player_money%."
-  					+ " Tip: Use Notepad++ to easily replace all of them.");
+  			
+  			if(!deprecatedWarning.contains("money")) {
+  				deprecatedWarning.add("money");
+  				pl.getLogger().warning("Please change your config: You are using the placeholder %money%. This placeholder has been changed. Please change it to %player_money%."
+  	  					+ " Tip: Use Notepad++ to easily replace all of them.");
+  			}
   		}
   		if(s.contains("%rank%")) {
   			Teams teams = Teams.get(p);
@@ -240,31 +251,50 @@ public class Placeholders {
   				}
   				
   			}
-  			pl.getLogger().warning("Please change your config: You are using the placeholder %rank%. This placeholder was changed. Please change it to %player_rank%."
-  					+ " Tip: Use Notepad++ to easily replace all of them.");
+  			if(!deprecatedWarning.contains("rank")) {
+  				deprecatedWarning.add("rank");
+  				pl.getLogger().warning("Please change your config: You are using the placeholder %rank%. This placeholder has been changed. Please change it to %player_rank%."
+  	  					+ " Tip: Use Notepad++ to easily replace all of them.");
+  			}
   		}
   		if(s.contains("%name%")) {
   			s = s.replace("%name%", p.getName());
-  			pl.getLogger().warning("Please change your config: You are using the placeholder %name%. This placeholder was changed. Please change it to %player_name%."
-  					+ " Tip: Use Notepad++ to easily replace all of them.");
+  			
+  			if(!deprecatedWarning.contains("name")) {
+  				deprecatedWarning.add("name");
+  				pl.getLogger().warning("Please change your config: You are using the placeholder %name%. This placeholder has been changed. Please change it to %player_name%."
+  	  					+ " Tip: Use Notepad++ to easily replace all of them.");
+  			}
   		}
   			
   		if(s.contains("%loc_x%")) {
   			s = s.replace("%loc_x%", p.getLocation().getBlockX()+"");
-  			pl.getLogger().warning("Please change your config: You are using the placeholder %loc_x%. This placeholder was changed. Please change it to %player_loc_x%."
-  					+ " Tip: Use Notepad++ to easily replace all of them.");
+  			
+  			if(!deprecatedWarning.contains("loc_x")) {
+  				deprecatedWarning.add("loc_x");
+  				pl.getLogger().warning("Please change your config: You are using the placeholder %loc_x%. This placeholder has been changed. Please change it to %player_loc_x%."
+  	  					+ " Tip: Use Notepad++ to easily replace all of them.");
+  			}
   		}
   			
   		if(s.contains("%loc_y%")) {
   			s = s.replace("%loc_y%", p.getLocation().getBlockY()+"");
-  			pl.getLogger().warning("Please change your config: You are using the placeholder %loc_y%. This placeholder was changed. Please change it to %player_loc_y%."
-  					+ " Tip: Use Notepad++ to easily replace all of them.");
+  			
+  			if(!deprecatedWarning.contains("loc_y")) {
+  				deprecatedWarning.add("loc_y");
+  				pl.getLogger().warning("Please change your config: You are using the placeholder %loc_y%. This placeholder has been changed. Please change it to %player_loc_y%."
+  	  					+ " Tip: Use Notepad++ to easily replace all of them.");
+  			}
   		}
   			
   		if(s.contains("%loc_z%")) {
   			s = s.replace("%loc_z%", p.getLocation().getBlockZ()+"");
-  			pl.getLogger().warning("Please change your config: You are using the placeholder %loc_z%. This placeholder was changed. Please change it to %player_loc_z%."
-  					+ " Tip: Use Notepad++ to easily replace all of them.");
+  			
+  			if(!deprecatedWarning.contains("loc_z")) {
+  				deprecatedWarning.add("loc_z");
+  				pl.getLogger().warning("Please change your config: You are using the placeholder %loc_z%. This placeholder has been changed. Please change it to %player_loc_z%."
+  	  					+ " Tip: Use Notepad++ to easily replace all of them.");
+  			}
   		}
   			
   		if(s.contains("%world%")) {
@@ -277,18 +307,30 @@ public class Placeholders {
   				s = s.replace("%world%", "The End");
   			}else
   				s = s.replace("%world%", name);
-  			pl.getLogger().warning("Please change your config: You are using the placeholder %world%. This placeholder was changed. Please change it to %player_world%."
-  					+ " Tip: Use Notepad++ to easily replace all of them.");
+  			if(!deprecatedWarning.contains("world")) {
+  				deprecatedWarning.add("world");
+  				pl.getLogger().warning("Please change your config: You are using the placeholder %world%. This placeholder has been changed. Please change it to %player_world%."
+  	  					+ " Tip: Use Notepad++ to easily replace all of them.");
+  			}
+  			
   		}
 		if(s.contains("%playeronline%")) {
 			s = s.replace("%playeronline%", ""+Bukkit.getOnlinePlayers().size());
-			pl.getLogger().warning("Please change your config: You are using the placeholder %playeronline%. This placeholder was changed. Please change it to %server_online_players%."
-  					+ " Tip: Use Notepad++ to easily replace all of them.");
+  			if(!deprecatedWarning.contains("playeronline")) {
+  				deprecatedWarning.add("playeronline");
+  				pl.getLogger().warning("Please change your config: You are using the placeholder %playeronline%. This placeholder has been changed. Please change it to %server_online_players%."
+  	  					+ " Tip: Use Notepad++ to easily replace all of them.");
+  			}
+			
 		}
   		if(s.contains("%playermax%")) {
   			s = s.replace("%playermax%", ""+Bukkit.getMaxPlayers());
-  			pl.getLogger().warning("Please change your config: You are using the placeholder %playermax%. This placeholder was changed. Please change it to %server_max_players%."
-  					+ " Tip: Use Notepad++ to easily replace all of them.");
+  			if(!deprecatedWarning.contains("playermax")) {
+  				deprecatedWarning.add("playermax");
+  				pl.getLogger().warning("Please change your config: You are using the placeholder %playermax%. This placeholder has been changed. Please change it to %server_max_players%."
+  	  					+ " Tip: Use Notepad++ to easily replace all of them.");
+  			}
+  			
   		}
   			
   		// -------------------------------------//

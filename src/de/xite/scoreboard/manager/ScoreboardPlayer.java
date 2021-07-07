@@ -46,7 +46,7 @@ public class ScoreboardPlayer {
 				
 			obj.setDisplaySlot(DisplaySlot.SIDEBAR);
 		}
-		if(pl.getConfig().getBoolean("scoreboard") && !ScoreboardAPI.useAPI) { // Check if scoreboard is enabled
+		if(pl.getConfig().getBoolean("scoreboard") && !ScoreboardAPI.useAPI) { // Check if the scoreboard is enabled
 			ScoreboardManager sm = ScoreboardManager.get(name);
 			
 			setTitle(p, board, sm.getCurrentTitle(), true, sm);// Get the current title and set it
@@ -72,16 +72,17 @@ public class ScoreboardPlayer {
 		if(pl.getConfig().getBoolean("tablist.ranks"))
 			PrefixManager.registerTeams(p, board);
 	}
+	
 	public static void removeScoreboard(Player p, boolean removeTeams) {
 		if(!Main.players.containsKey(p))
 			return;
 		Main.players.remove(p);
 		if(removeTeams) {
+			for(Team t : p.getScoreboard().getTeams())
+				t.unregister();
 			Objective obj = p.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
 			if(obj != null)
 				obj.unregister();
-			for(Team t : p.getScoreboard().getTeams())
-				t.unregister();
 			Teams.removePlayer(p);
 		}else {
 			Objective obj = p.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
@@ -91,6 +92,7 @@ public class ScoreboardPlayer {
 		if(Main.debug)
 			pl.getLogger().info("Removed "+p.getName()+"'s scoreboard");
 	}
+	
 	// ---- Set the scoreboard title ---- //
 	public static boolean setTitle(Player p, Scoreboard board, String title, boolean usePlaceholders, ScoreboardManager sm) {
 		Objective obj = board.getObjective(DisplaySlot.SIDEBAR);
@@ -212,5 +214,25 @@ public class ScoreboardPlayer {
 		}else
 			s[0] = score; // Set prefix
 		return s;
+	}
+	
+	public static void updateScoreboard(Player p) {
+		/* Config syntax: 
+		conditions:
+		  - world:world AND permission:some.permission
+		  - world:world AND permission:some.other.permission
+		  - world:world AND gamemode:creative
+		  - world:masterworld
+		*/
+		String newScoreboard = Main.players.get(p);
+		
+		
+		if(!Main.players.get(p).equals(newScoreboard)) {
+			ScoreboardManager.get(Main.players.get(p)).removePlayer(p);
+			ScoreboardManager.get(newScoreboard).addPlayer(p);
+			Main.players.replace(p, newScoreboard);
+			removeScoreboard(p, false);
+			setScoreboard(p, newScoreboard);
+		}
 	}
 }

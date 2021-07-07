@@ -126,7 +126,7 @@ public class Main extends JavaPlugin implements Listener{
 			public void run() {
 				for(Player all : Bukkit.getOnlinePlayers())
 					if(!players.containsKey(all))
-						ScoreboardPlayer.setScoreboard(all, ScoreboardManager.getScoreboardName(all));
+						ScoreboardPlayer.setScoreboard(all, pl.getConfig().getString("scoreboard-default"));
 				if(pl.getConfig().getBoolean("tablist.text")) {
 					TabConfig tab = new TabConfig();
 					tab.register();
@@ -134,8 +134,8 @@ public class Main extends JavaPlugin implements Listener{
 			}
 		}, 30);
 		// BStats analytics
-		if(getBukkitVersion() > 17) {
-	        int pluginId = 6722; // <-- Replace with the id of your plugin!
+		try {
+			int pluginId = 6722; // <-- Replace with the id of your plugin!
 	        BStatsMetrics metrics = new BStatsMetrics(this, pluginId);
 	        //Costom charts
 	        metrics.addCustomChart(new BStatsMetrics.SimplePie("update_auto_update", () -> pl.getConfig().getBoolean("update.autoupdater") ? "Aktiviert" : "Deaktiviert"));
@@ -148,6 +148,8 @@ public class Main extends JavaPlugin implements Listener{
 	        metrics.addCustomChart(new BStatsMetrics.SimplePie("setting_permsystem", () -> pl.getConfig().getString("ranks.permissionsystem").toLowerCase()));
 	        if(Main.debug)
 	        	pl.getLogger().info("Analytics sent to BStats");
+		} catch (Exception e) {
+			pl.getLogger().warning("Could not send analytics to BStats!");
 		}
 	}
 	@Override
@@ -221,8 +223,25 @@ public class Main extends JavaPlugin implements Listener{
         return bd.doubleValue();
     }
     
-	
-	public static String translateHexColor(String message) {
+    public final static char COLOR_CHAR = ChatColor.COLOR_CHAR;
+    public static String translateHexColor(String message) {
+    	String startTag = "#";
+    	String endTag = "";
+        final Pattern hexPattern = Pattern.compile(startTag + "([A-Fa-f0-9]{6})" + endTag);
+        Matcher matcher = hexPattern.matcher(message);
+        StringBuffer buffer = new StringBuffer(message.length() + 4 * 8);
+        while (matcher.find())
+        {
+            String group = matcher.group(1);
+            matcher.appendReplacement(buffer, COLOR_CHAR + "x"
+                    + COLOR_CHAR + group.charAt(0) + COLOR_CHAR + group.charAt(1)
+                    + COLOR_CHAR + group.charAt(2) + COLOR_CHAR + group.charAt(3)
+                    + COLOR_CHAR + group.charAt(4) + COLOR_CHAR + group.charAt(5)
+                    );
+        }
+        return matcher.appendTail(buffer).toString();
+    }
+	/*public static String translateHexColor(String message) {
 		if(Main.getBukkitVersion() < 116 || !message.contains("#"))
 			return message;
 		
@@ -251,5 +270,5 @@ public class Main extends JavaPlugin implements Listener{
 	        );
 	    }
 	    return matcher.appendTail(buffer).toString();
-	}
+	}*/
 }

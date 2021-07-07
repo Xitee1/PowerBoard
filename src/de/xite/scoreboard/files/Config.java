@@ -20,10 +20,25 @@ public class Config {
 		pl.saveDefaultConfig();
 		pl.reloadConfig();
 		
+		// migrate single scoreboard
+		//if(pl.getConfig().getString("scoreboard-default") == null)
+			//UpgradeVersion.updateMultipleScoreboards();
+		pl.getConfig().set("scoreboard-default", "scoreboard");
 		// scoreboard.yml
 		createDefaultScoreboard();
 	}
-	
+	/*
+	 
+ 	File file = new File(Main.pluginfolder+"/scoreboards/scoreboard.yml");
+	if(!file.exists()) {
+		try {
+			File folder = new File(Main.pluginfolder+"/scoreboards/");
+			if(!folder.exists() || !folder.isDirectory())
+				folder.mkdir();
+			file.createNewFile();
+	 
+	 
+	 */
 	public static void createDefaultScoreboard() {
 		File file = new File(Main.pluginfolder+"/scoreboard.yml");
 		if(!file.exists()) {
