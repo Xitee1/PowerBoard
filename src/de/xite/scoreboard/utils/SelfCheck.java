@@ -1,7 +1,9 @@
 package de.xite.scoreboard.utils;
 
+import java.io.File;
+
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.fusesource.jansi.Ansi;
 
 import de.xite.scoreboard.main.Main;
@@ -23,39 +25,40 @@ public class SelfCheck {
 			y = Ansi.ansi().fg(Ansi.Color.YELLOW).boldOff().toString();
 			g = Ansi.ansi().fg(Ansi.Color.GREEN).boldOff().toString();
 			w = Ansi.ansi().fg(Ansi.Color.WHITE).boldOff().toString();
-		}catch (NoClassDefFoundError  e) {
-		}
+		}catch (NoClassDefFoundError e) {}
 		
-		
-		FileConfiguration cfg = pl.getConfig();
+		File file = new File(Main.pluginfolder+"/config.yml");
+		YamlConfiguration cfg = YamlConfiguration.loadConfiguration(file);
 		
 		//---Begin the check---/
-		pl.getLogger().info(y+y+"self-check -> Checking for configuration errors.."+w);
+		pl.getLogger().info(y+"self-check -> Checking for configuration errors.."+w);
 		hasErrors = false; // reset if there were any errors in previos scan
 		
 		//Updated config warnings
-	    if(cfg.isInt("placeholder.money-digits")) {
-	    	pl.getLogger().warning(r+"self-check -> Your config.yml is out of date! Please change ->'money-digits' to 'money-decimals'<- in the ->'placeholder'<- section! Support for the old config will drop in version 4.5"+w);
+	    if(cfg.contains("placeholder.money-digits")) {
+	    	pl.getLogger().warning(r+"self-check -> Your config.yml is out of date! Please change ->'money-digits' to 'money-decimals'<- in the ->'placeholder'<- section!"+w);
 	    	hasErrors = true;
 	    }
-	    if(cfg.getConfigurationSection("ranks.luckperms") != null) {
-	    	pl.getLogger().warning(r+"self-check -> Your config.yml is out of date! Please change ->'luckperms' to 'luckperms-api'<- in the ->'ranks'<- section! Support for the old config will drop in version 4.5"+w);
+	    if(cfg.contains("ranks.luckperms")) {
+	    	pl.getLogger().warning(r+"self-check -> Your config.yml is out of date! Please change ->'luckperms' to 'luckperms-api'<- in the ->'ranks'<- section!"+w);
 	    	hasErrors = true;
 	    }
-	    if(cfg.isBoolean("chat.prefixes")) {
-	    	pl.getLogger().warning(r+"self-check -> Your config.yml is out of date! Please change ->'prefixes' to 'ranks'<- in the ->'chat'<- section! Support for the old config will drop in version 4.5"+w);
+	    if(cfg.contains("chat.prefixes")) {
+	    	pl.getLogger().warning(r+"self-check -> Your config.yml is out of date! Please change ->'prefixes' to 'ranks'<- in the ->'chat'<- section!"+w);
 	    	hasErrors = true;
 	    }
-	    if(cfg.isBoolean("chat.enable")) {
-	    	
-	    	pl.getLogger().warning(r+"self-check -> Your config.yml is out of date! Please change ->'enable' to 'ranks'<- in the ->'chat'<- section! Support for the old config will drop in version 4.5"+w);
+	    if(cfg.contains("chat.enable")) {
+	    	pl.getLogger().warning(r+"self-check -> Your config.yml is out of date! Please change ->'enable' to 'ranks'<- in the ->'chat'<- section!"+w);
 	    	hasErrors = true;
 	    }
-	    if(!cfg.isBoolean("chat.allowHexColors")) {
-	    	pl.getLogger().warning(r+"self-check -> Your config.yml is out of date! Please add ->'allowHexColors'<- in the ->'chat'<- section in your config.yml to allow players to use hex colors."+w);
+	    if(!cfg.contains("chat.allowHexColors")) {
+	    	pl.getLogger().warning(r+"self-check -> Your config.yml is out of date! Please add ->'allowHexColors: true'<- in the ->'chat'<- section in your config.yml to allow players to use hex colors."+w);
 	    	hasErrors = true;
 	    }
-	    
+	    if(!cfg.contains("placeholder.prefer-plugin-placeholders")) {
+	    	pl.getLogger().warning(r+"self-check -> Your config.yml is out of date! Please add ->'prefer-plugin-placeholders: true'<- in the ->'placeholder'<- section in your config.yml. More infos are in the changelog."+w);
+	    	hasErrors = true;
+	    }
 	    //Check for errors
 	    if(!cfg.isBoolean("scoreboard")) {
 	    	pl.getLogger().warning(r+"self-check -> The setting 'scoreboard' in the section '' is not valid!"+w);
@@ -103,7 +106,8 @@ public class SelfCheck {
 	    
 	    //Check ranks
 	    for(String s : cfg.getConfigurationSection("ranks.list").getValues(false).keySet()) {
-	    	pl.getLogger().info(y+"self-check -> Checking rank '"+s+"'"+w);
+	    	if(Main.debug)
+	    		pl.getLogger().info(y+"self-check -> Checking rank '"+s+"'"+w);
 	    	if(!cfg.isString("ranks.list."+s+".permission")) {
 	    		pl.getLogger().severe(r+"self-check -> Your rank named '"+s+"' has no valid permission set!"+w);
 	    		hasFatalErrors = true;
@@ -142,6 +146,10 @@ public class SelfCheck {
 	    		hasErrors = true;
 		    }
 	    }
+	    if(!cfg.isBoolean("placeholder.prefer-plugin-placeholders")) {
+	    	pl.getLogger().warning(r+"self-check -> The setting 'prefer-plugin-placeholders' in the section 'placeholder' is not valid!"+w);
+	    	hasErrors = true;
+	    }
 	    if(!cfg.isString("placeholder.time-format")) {
 	    	pl.getLogger().warning(r+"self-check -> The setting 'time-format' in the section 'placeholder' is not valid!"+w);
 	    	hasErrors = true;
@@ -161,7 +169,7 @@ public class SelfCheck {
 	    if(hasFatalErrors)
 	    	return true;
 		
-		// Send every 5 minutes the message that there are errors and you should fix them
+		// Send every 30 minutes the message that there are errors and you should fix them
 	    if(hasErrors) {
 	    	pl.getLogger().severe(r+"self-check -> Errors were found. These are no fatal errors, so normally the plugin should still work. But you should fix them soon!"+w);
 		    Bukkit.getScheduler().runTaskLater(pl, new Runnable() {
@@ -169,7 +177,7 @@ public class SelfCheck {
 				public void run() {
 					check();
 				}
-			}, 20*60*5);
+			}, 20*60*30);
 	    }
 
 	    return false;

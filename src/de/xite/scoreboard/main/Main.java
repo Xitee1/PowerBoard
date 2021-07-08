@@ -216,7 +216,7 @@ public class Main extends JavaPlugin implements Listener{
         return econ != null;
     }
     public static double round(double value, int places) {
-        if (places < 0) throw new IllegalArgumentException();
+    	if (places < 0) throw new IllegalArgumentException();
 
         BigDecimal bd = BigDecimal.valueOf(value);
         bd = bd.setScale(places, RoundingMode.HALF_UP);
@@ -241,34 +241,4 @@ public class Main extends JavaPlugin implements Listener{
         }
         return matcher.appendTail(buffer).toString();
     }
-	/*public static String translateHexColor(String message) {
-		if(Main.getBukkitVersion() < 116 || !message.contains("#"))
-			return message;
-		
-		Pattern pattern = Pattern.compile("(?<!\\\\)(#[a-fA-F0-9]{6})");
-		Matcher m = pattern.matcher(message); // Creates a matcher with the given pattern & message
-
-        while(m.find()) { // Searches the message for something that matches the pattern
-            String color = message.substring(m.start(), m.end()); // Extracts the color from the message
-            message = message.replace(color, "" + ChatColor.of(color)); // Places the color in the message
-        }
-
-        return message; // Returns the message
-    }
-	public static String translateHexColor_(String message) {
-		// Sourced from this post by imDaniX: https://github.com/SpigotMC/BungeeCord/pull/2883#issuecomment-653955600
-		Pattern pattern = Pattern.compile("(?<!\\\\)(#[a-fA-F0-9]{6})");
-		Matcher matcher = pattern.matcher(message);
-		char c = ChatColor.COLOR_CHAR;
-	    StringBuffer buffer = new StringBuffer(message.length() + 4 * 8);
-	    while(matcher.find()) {
-	    	String group = matcher.group(1);
-	    	matcher.appendReplacement(buffer, c + "x"
-	    			+ c + group.charAt(0) + c + group.charAt(1)
-	                + c + group.charAt(2) + c + group.charAt(3)
-	                + c + group.charAt(4) + c + group.charAt(5)
-	        );
-	    }
-	    return matcher.appendTail(buffer).toString();
-	}*/
 }

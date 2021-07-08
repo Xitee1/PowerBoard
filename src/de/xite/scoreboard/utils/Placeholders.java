@@ -32,7 +32,9 @@ public class Placeholders {
 		// Import placeholders from APIs
 		for(CustomPlaceholders ph : Main.ph)
 			s = ph.replace(p, s);
-		if(Main.hasPapi)
+		
+		// Placeholder API if PAPI prefered
+		if(Main.hasPapi && !pl.getConfig().getBoolean("prefer-plugin-placeholders"))
   			s = PlaceholderAPI.setPlaceholders(p, s);
 		
 		// ---- Placeholders from Scoreboard Plugin ---- //
@@ -122,33 +124,27 @@ public class Placeholders {
   		// Money
   		if(s.contains("%player_money%")) {
   			if(Main.hasVault == true) {
-  				double balance = Main.econ.getBalance(p);
-  				//config name changed from money-digits to money-decimals - support will drop in v.4.0
-  				if(pl.getConfig().getInt("placeholder.money-digits") == 0 && pl.getConfig().getInt("placeholder.money-decimals") != 0) {
-  					balance = Main.round(balance, pl.getConfig().getInt("placeholder.money-decimals"));
-  				}else {
-  					balance = Main.round(balance, pl.getConfig().getInt("placeholder.money-digits"));
-  				}
-  				
-  				s = s.replace("%player_money%", ""+balance);
+  				int decimals = pl.getConfig().getInt("placeholder.money-decimals");
+  				// If the decimals are set to 0, cast it to int to remove the '.0'
+  				if(decimals != 0) {
+  					s = s.replace("%player_money%", ""+Main.round(Main.econ.getBalance(p), decimals));
+  				}else
+  					s = s.replace("%player_money%", ""+((int) Main.econ.getBalance(p)));
   			}else {
-  				s = s.replace("%player_money%", "Vault is not installed!");
+  				pl.getLogger().severe("Could not get the player's money because you haven't Vault installed or set up! You need Vault and a money system that supports Vault on your server!");
+  				s = s.replace("%player_money%", "Error: See console");
   			}
   		}
   		// Memory
   		try {
-  	  		if(s.contains("%mem_total%")) {
+  	  		if(s.contains("%mem_total%"))
   	  			s = s.replace("%mem_total%", getReadableSize((int) getTotalMemory())+"");
-  	  		}
-  	  		if(s.contains("%mem_free%")) {
+  	  		if(s.contains("%mem_free%"))
   	  			s = s.replace("%mem_free%", getReadableSize((int) getFreeMemory())+"");
-  	  		}
-  	  		if(s.contains("%mem_used%")) {
+  	  		if(s.contains("%mem_used%"))
   	  			s = s.replace("%mem_used%", getReadableSize((int) getUsedMemory())+"");
-  	  		}
-  	  		if(s.contains("%mem_max%")) {
+  	  		if(s.contains("%mem_max%"))
   	  			s = s.replace("%mem_max%", getReadableSize((int) getMaxMemory())+"");
-  	  		}
   		}catch (Exception e) {
 			pl.getLogger().severe("Failed to get memory informations! This is not a bug with the plugin - please contact your server-hoster.");
 		}
@@ -179,9 +175,8 @@ public class Placeholders {
   				ping = version_1_17.getPing(p);
   			if(ping > 999) {
   				s = s.replace("%player_ping%", ChatColor.RED+"999+");
-  			}else {
+  			}else
   				s = s.replace("%player_ping%", ping+"");
-  			}
   		}
   		
   		
@@ -210,9 +205,8 @@ public class Placeholders {
   				ping = version_1_17.getPing(p);
   			if(ping > 999) {
   				s = s.replace("%ping%", ChatColor.RED+"999+");
-  			}else {
+  			}else
   				s = s.replace("%ping%", ping+"");
-  			}
   			
   			if(!deprecatedWarning.contains("ping")) {
   				deprecatedWarning.add("ping");
@@ -226,6 +220,7 @@ public class Placeholders {
   				//config name changed from money-digits to money-decimals - support will drop in v.4.0
   				if(pl.getConfig().getInt("placeholder.money-digits") == 0 && pl.getConfig().getInt("placeholder.money-decimals") != 0) {
   					balance = Main.round(balance, pl.getConfig().getInt("placeholder.money-decimals"));
+  					
   				}else {
   					balance = Main.round(balance, pl.getConfig().getInt("placeholder.money-digits"));
   				}
@@ -338,6 +333,9 @@ public class Placeholders {
   		s = ChatColor.translateAlternateColorCodes('&', s);
   		// Replace colors (HEX) - only 1.16+
   		s = Main.translateHexColor(s);
+  		// Replace PAPI if plugin prefered
+  		if(Main.hasPapi && pl.getConfig().getBoolean("prefer-plugin-placeholders"))
+  			s = PlaceholderAPI.setPlaceholders(p, s);
   		
 		return s;
 	}

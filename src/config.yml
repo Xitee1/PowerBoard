@@ -72,6 +72,7 @@ ranks:
 ### Placeholders ###
 ####################
 placeholder:
+  prefer-plugin-placeholders: true # Prefer replacing the placeholders by the plugin itself and not PAPI
   time-format: 'HH:mm' # If you don't know what to set here, have a look at this: https://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
   date-format: 'dd.MM.yyyy'
   money-decimals: 2 # The maximal decimals for the placeholder %money%.
