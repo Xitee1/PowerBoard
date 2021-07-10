@@ -1,5 +1,7 @@
 package de.xite.scoreboard.main;
 
+import java.io.File;
+import java.io.FilenameFilter;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -20,13 +22,14 @@ import de.xite.scoreboard.commands.ScoreboardCommand;
 import de.xite.scoreboard.files.Config;
 import de.xite.scoreboard.files.TabConfig;
 import de.xite.scoreboard.listeners.Chat;
-import de.xite.scoreboard.listeners.EventListener;
+import de.xite.scoreboard.listeners.JoinQuitListener;
 import de.xite.scoreboard.listeners.LuckPermsEvent;
 import de.xite.scoreboard.manager.ScoreboardManager;
 import de.xite.scoreboard.manager.ScoreboardPlayer;
 import de.xite.scoreboard.utils.BStatsMetrics;
 import de.xite.scoreboard.utils.SelfCheck;
 import de.xite.scoreboard.utils.Updater;
+import de.xite.scoreboard.utils.Version;
 import net.luckperms.api.LuckPerms;
 import net.md_5.bungee.api.ChatColor;
 import net.milkbowl.vault.economy.Economy;
@@ -56,29 +59,74 @@ public class Main extends JavaPlugin implements Listener{
 	// All registered custom placeholders
 	public static ArrayList<CustomPlaceholders> ph = new ArrayList<>();
 	
+	// Minecraft Version
+	public static Version version;
+	
 	// Debug enabled/disabled
 	public static boolean debug = false;
 	
 	@Override
 	public void onEnable() {
+		// ---- Load Plugin ----//
 		pl = this;
+		version = getBukkitVersion();
 		
-		// Register commands and events
+		Config.loadConfig(); // load the config.yml
+		if(SelfCheck.check()) { // start the self check
+	    	pl.getLogger().severe("self-check -> Fatal errors were found! Please fix you config! Disabling Plugin...");
+	    	Bukkit.getPluginManager().disablePlugin(pl);
+	    	return;
+		}
+		
+		if(pl.getConfig().getBoolean("debug")) // Check if the debug is enabled in the config.yml
+			debug = true;
+		
+		initializePlugins(); // Load all external plugin APIs
+	    
+		// Updater
+		if(Updater.checkVersion()) {
+			pl.getLogger().info("-> A new version (v."+Updater.version+") is available! Your version: "+pl.getDescription().getVersion());
+			pl.getLogger().info("-> Update me! :)");
+		}
+		// ---- Register commands and events ---- //
 		getCommand("sb").setExecutor(new ScoreboardCommand());
 		getCommand("scoreboard").setExecutor(new ScoreboardCommand());
 		PluginManager pm = Bukkit.getPluginManager();
-		pm.registerEvents(new EventListener(), this);
+		pm.registerEvents(new JoinQuitListener(), this);
 		pm.registerEvents(new Chat(), this);
 		pm.registerEvents(this, this);
 		
-		Config.loadConfig(); // load the config.yml
+		// ---- Load Modules ---- //
+		if(pl.getConfig().getBoolean("scoreboard"))
+			registerScoreboards(); // Register all Scoreboards
 		
-	    // Check if the debug is enabled in the config.yml
-	    if(pl.getConfig().getBoolean("debug"))
-	    	debug = true;
-	    
-	    registerScoreboards();
-		
+		// Set the scoreboard and prefixes for all online players
+		Bukkit.getScheduler().runTaskLater(pl, new Runnable() {
+			@Override
+			public void run() {
+				if(pl.getConfig().getBoolean("scoreboard") || pl.getConfig().getBoolean("tablist.ranks"))
+					players.clear();
+					for(Player all : Bukkit.getOnlinePlayers())
+						ScoreboardPlayer.setScoreboard(all, pl.getConfig().getString("scoreboard-default"));
+				if(pl.getConfig().getBoolean("tablist.text")) {
+					TabConfig tab = new TabConfig();
+					tab.register();
+				}
+			}
+		}, 30);
+	}
+	@Override
+	public void onDisable() {
+		if(pl.getConfig().getBoolean("update.autoupdater"))
+			if(Updater.checkVersion())
+				Updater.downloadFile();
+		Main.unregisterScoreboards();
+		if(pl.getConfig().getBoolean("scoreboard"))
+			for(Entry<Player, String> all : Main.players.entrySet())
+				ScoreboardPlayer.removeScoreboard(all.getKey(), true);
+		ph.clear();
+	}
+	public void initializePlugins() {
 		// ---- Check for compatible plugins ---- //
 		if(Bukkit.getPluginManager().isPluginEnabled("Vault")) {
 			if(debug)
@@ -106,33 +154,6 @@ public class Main extends JavaPlugin implements Listener{
 			}
 			new LuckPermsEvent(pl, luckPerms);
 	    }
-	    
-	    // start the self check
-	    if(SelfCheck.check()) {
-	    	pl.getLogger().severe("self-check -> Fatal errors were found! Please fix you config! Disabling Plugin...");
-	    	Bukkit.getPluginManager().disablePlugin(pl);
-	    	return;
-	    }
-	    
-	    // Updater
-	    if(Updater.checkVersion()) {
-	    	pl.getLogger().info("-> A new version (v."+Updater.version+") is available! Your version: "+pl.getDescription().getVersion());
-			pl.getLogger().info("-> Update me! :)");
-	    }
-	    
-	    // Set the scoreboard and prefixes for all online players
-		Bukkit.getScheduler().runTaskLater(pl, new Runnable() {
-			@Override
-			public void run() {
-				for(Player all : Bukkit.getOnlinePlayers())
-					if(!players.containsKey(all))
-						ScoreboardPlayer.setScoreboard(all, pl.getConfig().getString("scoreboard-default"));
-				if(pl.getConfig().getBoolean("tablist.text")) {
-					TabConfig tab = new TabConfig();
-					tab.register();
-				}
-			}
-		}, 30);
 		// BStats analytics
 		try {
 			int pluginId = 6722; // <-- Replace with the id of your plugin!
@@ -152,27 +173,32 @@ public class Main extends JavaPlugin implements Listener{
 			pl.getLogger().warning("Could not send analytics to BStats!");
 		}
 	}
-	@Override
-	public void onDisable() {
-		if(pl.getConfig().getBoolean("update.autoupdater"))
-			if(Updater.checkVersion())
-				Updater.downloadFile();
-		Main.unregisterScoreboards();
-		if(pl.getConfig().getBoolean("scoreboard"))
-			for(Entry<Player, String> all : Main.players.entrySet())
-				ScoreboardPlayer.removeScoreboard(all.getKey(), true);
-		ph.clear();
-	}
-
+    private boolean setupEconomy() {
+        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+        if(rsp == null)
+            return false;
+        econ = rsp.getProvider();
+        return econ != null;
+    }
 	public static void registerScoreboards() {
 		ArrayList<String> boards = new ArrayList<>();
-		boards.add("scoreboard");
+		// Get all scoreboards from the scoreboard folder
+		File f = new File(pluginfolder+"/scoreboards/");
+		FilenameFilter filter = new FilenameFilter() {
+			@Override
+			public boolean accept(File f, String name) {
+				return name.endsWith(".yml");
+			}
+		};
+		File[] files = f.listFiles(filter);
 		
-		if(pl.getConfig().getBoolean("scoreboard")) { // register the scoreboard if enabled
-			new ScoreboardPlayer(); // prepare the scoreboard
-			for(String board : boards)
-				ScoreboardManager.get(board);
+		for(int i = 0; i < files.length; i++) {
+			String s = files[i].getName();
+			boards.add(s.substring(0, s.lastIndexOf(".yml")));
 		}
+		new ScoreboardPlayer(); // prepare the scoreboard
+		for(String board : boards)
+			ScoreboardManager.get(board);
 	}
 	public static void unregisterScoreboards() {
 		for(Entry<String, ScoreboardManager> sm : Main.scoreboards.entrySet()) {
@@ -183,38 +209,18 @@ public class Main extends JavaPlugin implements Listener{
 	
 
     // ---- Utils ---- //
-	public static Integer getBukkitVersion() {
+	public static Version getBukkitVersion() {
+		if(version != null)
+			return version;
 		String s = Bukkit.getBukkitVersion();
-		String v = "";
-		boolean pointCounter = true;
-		while(s.length() > 1) {
-			if(v.endsWith(".") || v.endsWith("-")) {// Allow only one point. example: from '1.8.8-R0.1-SNAPSHOT' extract to '1.8'. The pointcounter is needed for version 1.10+ because of more decimales.
-				if(pointCounter) {
-					pointCounter = false;
-				}else {
-					s = "";
-					try {
-						return Integer.parseInt(v.substring(0, v.length()-1).replace(".", ""));//decimals are removed. example: 1.8 ->  18 | example 2: 1.12 -> 112
-					}catch (Exception e) {
-						Main.pl.getLogger().severe("There was a problem whilst checking your minecraft server version! Have you something like a special version? Detected version: "+v);
-						Main.pl.getLogger().severe("If you don't know why you get this error and you are using one of the official supported server softwares, please report this bug in our discord!");
-						Bukkit.getPluginManager().disablePlugin(pl);
-						return 0;
-					}
-				}
-			}
-			v += s.substring(0, 1);//add the first char from s to v
-			s = s.substring(1);//remove the first char from s
-		}
-		return 0;
+		String version = s.substring(0, s.lastIndexOf("-R")).replace("_", ".");
+		pl.getLogger().info("Detected Server Version (original): "+s);
+		pl.getLogger().info("Detected Server Version (extracted): "+version);
+		// compareTo: 1 = a equals or is newer than b
+		// compareTo: -1 = a is older than b
+		return new Version(version);
 	}
-    private boolean setupEconomy() {
-        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
-        if(rsp == null)
-            return false;
-        econ = rsp.getProvider();
-        return econ != null;
-    }
+
     public static double round(double value, int places) {
     	if (places < 0) throw new IllegalArgumentException();
 

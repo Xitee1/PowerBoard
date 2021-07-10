@@ -59,15 +59,10 @@ public class Placeholders {
   			s = s.replace("%player_name%", p.getName());
   		// World from the player
   		if(s.contains("%player_world%")) {
-  			String name = p.getWorld().getName();
-  			if(name.equals("world")) {
-  				s = s.replace("%player_world%", "Overworld");
-  			}else if(name.equals("world_nether")) {
-  				s = s.replace("%player_world%", "Nether");
-  			}else if(name.equals("world_the_end")) {
-  				s = s.replace("%player_world%", "The End");
-  			}else
-  				s = s.replace("%player_world%", name);
+  			String world = p.getWorld().getName();
+  			if(pl.getConfig().isString("placeholder.world-names."+world))
+  				world = ChatColor.translateAlternateColorCodes('&', pl.getConfig().getString("placeholder.world-names."+world));
+  			s = s.replace("%player_world%", world);
   		}
   		// Location
   		if(s.contains("%player_loc_x%"))
@@ -145,34 +140,32 @@ public class Placeholders {
   	  			s = s.replace("%mem_used%", getReadableSize((int) getUsedMemory())+"");
   	  		if(s.contains("%mem_max%"))
   	  			s = s.replace("%mem_max%", getReadableSize((int) getMaxMemory())+"");
-  		}catch (Exception e) {
-			pl.getLogger().severe("Failed to get memory informations! This is not a bug with the plugin - please contact your server-hoster.");
-		}
+  		}catch (Exception e) {pl.getLogger().severe("Failed to get memory informations! This is not a bug with the plugin - please contact your server-hoster.");}
 
   		// Ping
-  		
   		if(s.contains("%player_ping%")) {
   			int ping = 0;
-  			if(Main.getBukkitVersion() <= 18) {
+  			if(Main.getBukkitVersion().equals(new Version("1.8"))) {
   				ping = version_1_08.getPing(p);
-  			}else if(Main.getBukkitVersion() <= 19) {
+  			}else if(Main.getBukkitVersion().equals(new Version("1.9"))) {
   				ping = version_1_09.getPing(p);
-  			}else if(Main.getBukkitVersion() <= 110) {
+  			}else if(Main.getBukkitVersion().equals(new Version("1.10"))) {
   				ping = version_1_10.getPing(p);
-  			}else if(Main.getBukkitVersion() <= 111) {
+  			}else if(Main.getBukkitVersion().equals(new Version("1.11"))) {
   				ping = version_1_11.getPing(p);
-  			}else if(Main.getBukkitVersion() <= 112) {
+  			}else if(Main.getBukkitVersion().equals(new Version("1.12"))) {
   				ping = version_1_12.getPing(p);
-  			}else if(Main.getBukkitVersion() <= 113) {
+  			}else if(Main.getBukkitVersion().equals(new Version("1.13"))) {
   				ping = version_1_13.getPing(p);
-  			}else if(Main.getBukkitVersion() <= 114) {
+  			}else if(Main.getBukkitVersion().equals(new Version("1.14"))) {
   				ping = version_1_14.getPing(p);
-  			}else if(Main.getBukkitVersion() <= 115) {
+  			}else if(Main.getBukkitVersion().equals(new Version("1.15"))) {
   				ping = version_1_15.getPing(p);
-  			}else if(Main.getBukkitVersion() <= 116) {
+  			}else if(Main.getBukkitVersion().equals(new Version("1.16"))) {
   				ping = version_1_16.getPing(p);
-  			}else
+  			}else if(Main.getBukkitVersion().equals(new Version("1.17"))) {
   				ping = version_1_17.getPing(p);
+  			}
   			if(ping > 999) {
   				s = s.replace("%player_ping%", ChatColor.RED+"999+");
   			}else
@@ -183,26 +176,27 @@ public class Placeholders {
   		// ---- Deprecated ---- //
   		if(s.contains("%ping%")) {
   			int ping = 0;
-  			if(Main.getBukkitVersion() <= 18) {
+  			if(Main.getBukkitVersion().equals(new Version("1.8"))) {
   				ping = version_1_08.getPing(p);
-  			}else if(Main.getBukkitVersion() <= 19) {
+  			}else if(Main.getBukkitVersion().equals(new Version("1.9"))) {
   				ping = version_1_09.getPing(p);
-  			}else if(Main.getBukkitVersion() <= 110) {
+  			}else if(Main.getBukkitVersion().equals(new Version("1.10"))) {
   				ping = version_1_10.getPing(p);
-  			}else if(Main.getBukkitVersion() <= 111) {
+  			}else if(Main.getBukkitVersion().equals(new Version("1.11"))) {
   				ping = version_1_11.getPing(p);
-  			}else if(Main.getBukkitVersion() <= 112) {
+  			}else if(Main.getBukkitVersion().equals(new Version("1.12"))) {
   				ping = version_1_12.getPing(p);
-  			}else if(Main.getBukkitVersion() <= 113) {
+  			}else if(Main.getBukkitVersion().equals(new Version("1.13"))) {
   				ping = version_1_13.getPing(p);
-  			}else if(Main.getBukkitVersion() <= 114) {
+  			}else if(Main.getBukkitVersion().equals(new Version("1.14"))) {
   				ping = version_1_14.getPing(p);
-  			}else if(Main.getBukkitVersion() <= 115) {
+  			}else if(Main.getBukkitVersion().equals(new Version("1.15"))) {
   				ping = version_1_15.getPing(p);
-  			}else if(Main.getBukkitVersion() <= 116) {
+  			}else if(Main.getBukkitVersion().equals(new Version("1.16"))) {
   				ping = version_1_16.getPing(p);
-  			}else
+  			}else if(Main.getBukkitVersion().equals(new Version("1.17"))) {
   				ping = version_1_17.getPing(p);
+  			}
   			if(ping > 999) {
   				s = s.replace("%ping%", ChatColor.RED+"999+");
   			}else

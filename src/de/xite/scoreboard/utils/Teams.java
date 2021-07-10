@@ -56,7 +56,7 @@ public class Teams {
 			return null;
 		}
 		String prefix = Placeholders.replace(this.p, this.prefix);
-		if(Main.getBukkitVersion() < 113) {//Under version 1.13+ you can use just up to 16 chars.
+		if(Main.getBukkitVersion().compareTo(new Version("1.13")) == 1) { // Below version 1.13 you can use just up to 16 chars
 			if(prefix.length() > 16) {
 				Main.pl.getLogger().severe("The prefix is too long! The limit is 16 chars included colorcodes. Chars: "+prefix.length()+", Prefix: "+prefix);
 				return "too long";
@@ -79,7 +79,7 @@ public class Teams {
 			return null;
 		}
 		String suffix = Placeholders.replace(this.p, this.suffix);
-		if(Main.getBukkitVersion() < 113) {//Under version 1.13+ you can use just up to 16 chars.
+		if(Main.getBukkitVersion().compareTo(new Version("1.13")) == 1) { // Below version 1.13 you can use just up to 16 chars
 			if(suffix.length() > 16) {
 				Main.pl.getLogger().severe("The suffix is too long! The limit is 16 chars included colorcodes. Chars: "+suffix.length()+", Suffix: "+suffix);
 				return "too long";

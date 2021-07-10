@@ -14,14 +14,13 @@ import de.xite.scoreboard.api.ScoreboardAPI;
 import de.xite.scoreboard.main.Main;
 import de.xite.scoreboard.utils.Placeholders;
 import de.xite.scoreboard.utils.Teams;
+import de.xite.scoreboard.utils.Version;
 
 public class ScoreboardPlayer {
 	static Main pl = Main.pl;
 	
 	@SuppressWarnings("deprecation")
 	public static void setScoreboard(Player p, String name) {
-		if(!pl.getConfig().getBoolean("scoreboard") && !pl.getConfig().getBoolean("tablist.ranks"))
-			return;
 		Scoreboard board = p.getScoreboard();
 
 		// ---- Ranks ---- //
@@ -37,7 +36,7 @@ public class ScoreboardPlayer {
 			if(obj == null) {
 				board = Bukkit.getScoreboardManager().getNewScoreboard();
 				
-				if(Main.getBukkitVersion() >= 113) { //only for version 1.13+
+				if(Main.getBukkitVersion().compareTo(new Version("1.13")) == 1) { //only for version 1.13+
 					obj = board.registerNewObjective("aaa", "bbb", "SBPlugin");
 				}else
 					obj = board.registerNewObjective("aaa", "bbb");
@@ -100,7 +99,7 @@ public class ScoreboardPlayer {
 			return false;
 		if(usePlaceholders)
 			title = Placeholders.replace(p, title);
-		if(Main.getBukkitVersion() < 113) {// In version 1.13+ you can use more than 16 chars
+		if(Main.getBukkitVersion().compareTo(new Version("1.13")) == 1) {// In version 1.13+ you can use more than 16 chars
 			if(title.length() <= 16) {
 				obj.setDisplayName(title);
 			}else {
@@ -161,7 +160,7 @@ public class ScoreboardPlayer {
 			score = Placeholders.replace(p, score);
 		
 		// ---- Set all scores ---- //
-		if(Main.getBukkitVersion() < 113) {//Under version 1.13+ you can just use up to 16 chars.
+		if(Main.getBukkitVersion().compareTo(new Version("1.13")) == 1) {//Under version 1.13+ you can just use up to 16 chars.
 			// Set the score for 1.12-
 			String[] s = getScorePrefixSuffix(score, 16, 30);
 			if(s == null) {
@@ -222,17 +221,28 @@ public class ScoreboardPlayer {
 		  - world:world AND permission:some.permission
 		  - world:world AND permission:some.other.permission
 		  - world:world AND gamemode:creative
-		  - world:masterworld
+		  - world:world_nether
 		*/
 		String newScoreboard = Main.players.get(p);
 		
-		
+		// Check if update is required
 		if(!Main.players.get(p).equals(newScoreboard)) {
 			ScoreboardManager.get(Main.players.get(p)).removePlayer(p);
 			ScoreboardManager.get(newScoreboard).addPlayer(p);
 			Main.players.replace(p, newScoreboard);
-			removeScoreboard(p, false);
-			setScoreboard(p, newScoreboard);
+			
+			// Update player's scoreboard
+			ScoreboardManager sm = ScoreboardManager.get(newScoreboard);
+			setTitle(p, p.getScoreboard(), sm.getCurrentTitle(), true, sm);// Get the current title and set it
+			
+			ArrayList<String> scores = sm.getCurrentScore();
+			for(int i = 0; i < scores.size(); i++) {
+				int id = scores.size()-i-1;
+				setScore(p, p.getScoreboard(), scores.get(id), i, true, sm);
+			}
+			sm.addPlayer(p);
+			if(Main.debug) // Send debug message if enabled
+				Main.pl.getLogger().info("Scores amount for "+sm.getName()+": "+sm.getCurrentScore().size());
 		}
 	}
 }

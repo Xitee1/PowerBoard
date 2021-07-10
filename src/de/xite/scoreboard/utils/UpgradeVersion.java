@@ -2,6 +2,7 @@ package de.xite.scoreboard.utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -11,19 +12,36 @@ public class UpgradeVersion {
 	static Main pl = Main.pl;
 	public static void updateMultipleScoreboards() {
 		pl.getLogger().info("Upgrading multiple scoreboard support..");
-		pl.getLogger().info("Move files..");
-		File file = new File(Main.pluginfolder+"/scoreboard.yml");
-		if(file.exists()) {
-			File folder = new File(Main.pluginfolder+"/scoreboards");
-			folder.mkdir();
-			file.renameTo(new File(Main.pluginfolder+"/scoreboards/scoreboard.yml"));
-		}
-		pl.getConfig().set("scoreboard-default", "scoreboard");
-		pl.getLogger().warning("--- WARNING ---");
-		pl.getLogger().warning("Please add the config option");
-		pl.getLogger().warning("\"scoreboard-default: 'scoreboard' # The scoreboard that will be set after a player joins the server\"");
-		pl.getLogger().warning("to your config.yml below \"scoreboard: true\"");
-		pl.getLogger().warning("--- WARNING ---");
+		pl.getLogger().info("Moving files..");
+		
+		File oldFile = new File(Main.pluginfolder+"/scoreboard.yml");
+		File file = new File(Main.pluginfolder+"/scoreboards/scoreboard.yml");
+		oldFile.renameTo(file);
+		
+		YamlConfiguration cfg = YamlConfiguration.loadConfiguration(file);
+		cfg.options().header("Here you can edit the screboard.\n"
+				+ "You can add as many animation steps as you like.\n"
+				+ "If you want a empty line, just set one animation step that is empty.\n\n"
+				+ "For every score (line) you can set a different speed.\n"
+				+ "You can set up to 14 scores. For that just add a new number, like '7':\n\n"
+				+ "If you have static scores (no animations or updates needed): Set the 'speed' value to '9999' or higher. Then the scheduler won't start to save performance.\n"
+				+ "Note: Specify the speed in ticks, not seconds. 20 ticks = one second\n\n"
+				+ "If you want to use multiple scoreboards, you have to set conditions for all scoreboards, except for the default one.\n");
+		ArrayList<String> list = new ArrayList<>();
+		list.add("world:world AND permission:some.permission");
+		list.add("world:world AND permission:some.other.permission");
+		list.add("world:world AND gamemode:creative");
+		list.add("world:world_nether");
+		cfg.set("conditions", list);
+		try {
+			cfg.save(file);
+		} catch (IOException e) {e.printStackTrace();}
+		
+		pl.getLogger().info("----- Upgrade successful! -----");
+		pl.getLogger().info("Done! The scoreboard.yml file is now located in "+file.getPath()+". To add new scoreboards, just copy the scoreboard.yml and rename it to what you want. "
+				+ "The filename of the copied scoreboard will be the scoreboard name. To set the conditions when the scoreboard should be applied, open the file and scroll down to the end. "
+				+ "There is a new option where you can set the conditions.");
+		pl.getLogger().info("----- Upgrade successful! -----");
 	}
 	public static void upgradeDoubleTabConfig(File file) {
 		//Migrate from tablist_footer.yml and tablist_header.yml 

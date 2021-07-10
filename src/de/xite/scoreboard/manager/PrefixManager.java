@@ -11,6 +11,7 @@ import org.bukkit.scoreboard.Team;
 
 import de.xite.scoreboard.main.Main;
 import de.xite.scoreboard.utils.Teams;
+import de.xite.scoreboard.utils.Version;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.user.User;
@@ -158,11 +159,6 @@ public class PrefixManager {
 			}
 			chat = chat.replace("%prefix%", prefix).replace("%name%", p.getName()).replace("%displayname%", displayname); // Replace chat placeholders
 			
-			if(suffix.length() != 0)
-				suffix = " "+suffix;
-			if(prefix.length() != 0)
-				prefix = prefix+" ";
-			
 			if(displayname.length() == 0)
 				displayname = prefix; // Make the displayname the prefix if the displayname is not set
 			// Get the name color and check for errors
@@ -201,9 +197,9 @@ public class PrefixManager {
 			Teams teams = Teams.get(p);
 			for(Player all : Bukkit.getOnlinePlayers()) {
 				Team t = all.getScoreboard().getTeam(teams.getTeamName());
-				if(t == null) {
+				if(t == null)
 					t = all.getScoreboard().registerNewTeam(teams.getTeamName());
-				}
+				
 				String prefix = teams.getPrefix();
 				String suffix = teams.getSuffix();
 				ChatColor nameColor = teams.getNameColor();
@@ -212,7 +208,7 @@ public class PrefixManager {
 					t.setPrefix(prefix);
 				if(suffix.length() != 0)
 					t.setSuffix(suffix);
-				if(nameColor != null && Main.getBukkitVersion() >= 113)//only for version 1.13+
+				if(nameColor != null && Main.getBukkitVersion().compareTo(new Version("1.13")) == 1) //only for version 1.13+
 					t.setColor(nameColor);
 				t.addPlayer(p);
 			}
@@ -237,7 +233,7 @@ public class PrefixManager {
 					
 					t.setPrefix(teams.getPrefix());
 					t.setSuffix(teams.getSuffix());
-					if(nameColor != null && Main.getBukkitVersion() >= 113)//only for version 1.13+
+					if(nameColor != null && Main.getBukkitVersion().compareTo(new Version("1.13")) == 1) //only for version 1.13+
 						t.setColor(nameColor);
 					t.addPlayer(all);
 				}
@@ -258,7 +254,7 @@ public class PrefixManager {
 					t.setPrefix(prefix);
 				if(suffix.length() != 0)
 					t.setSuffix(suffix);
-				if(nameColor != null && Main.getBukkitVersion() >= 113)//only for version 1.13+
+				if(nameColor != null && Main.getBukkitVersion().compareTo(new Version("1.13")) == 1) //only for version 1.13+
 					t.setColor(nameColor);
 				t.addPlayer(p);
 			}

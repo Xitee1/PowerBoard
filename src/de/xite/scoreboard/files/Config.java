@@ -3,10 +3,12 @@ package de.xite.scoreboard.files;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import de.xite.scoreboard.main.Main;
+import de.xite.scoreboard.utils.UpgradeVersion;
 
 public class Config {
 	static Main pl = Main.pl;
@@ -16,31 +18,25 @@ public class Config {
 			folder.mkdirs();
 		
 		// config.yml
-		pl.getConfig().options().copyDefaults(false);
+		pl.getConfig().options().copyDefaults(true);
 		pl.saveDefaultConfig();
 		pl.reloadConfig();
 		
-		// migrate single scoreboard
-		//if(pl.getConfig().getString("scoreboard-default") == null)
-			//UpgradeVersion.updateMultipleScoreboards();
-		pl.getConfig().set("scoreboard-default", "scoreboard");
-		// scoreboard.yml
+		// Create scoreboard folder if not exists
+		File sbfolder = new File(Main.pluginfolder+"/scoreboards/");
+		if(!sbfolder.exists() || !sbfolder.isDirectory())
+			sbfolder.mkdir();
+		
+		// migrate to multiple scoreboards
+		File file = new File(Main.pluginfolder+"/scoreboard.yml");
+		if(file.exists())
+			UpgradeVersion.updateMultipleScoreboards();
+		
+		// create default scoreboard.yml
 		createDefaultScoreboard();
 	}
-	/*
-	 
- 	File file = new File(Main.pluginfolder+"/scoreboards/scoreboard.yml");
-	if(!file.exists()) {
-		try {
-			File folder = new File(Main.pluginfolder+"/scoreboards/");
-			if(!folder.exists() || !folder.isDirectory())
-				folder.mkdir();
-			file.createNewFile();
-	 
-	 
-	 */
 	public static void createDefaultScoreboard() {
-		File file = new File(Main.pluginfolder+"/scoreboard.yml");
+		File file = new File(Main.pluginfolder+"/scoreboards/scoreboard.yml");
 		if(!file.exists()) {
 			try {
 				file.createNewFile();
@@ -49,8 +45,10 @@ public class Config {
 						+ "You can add as many animation steps as you like.\n"
 						+ "If you want a empty line, just set one animation step that is empty.\n\n"
 						+ "For every score (line) you can set a different speed.\n"
-						+ "If you have static scores (no animations or updates needed): Set the 'speed' value '9999' or higher. Then the scheduler won't start to save performance.\n"
-						+ "Note: Specify the speed in ticks, not seconds. 20 ticks = one second\n");
+						+ "You can set up to 14 scores. For that just add a new number, like '7':\n\n"
+						+ "If you have static scores (no animations or updates needed): Set the 'speed' value to '9999' or higher. Then the scheduler won't start to save performance.\n"
+						+ "Note: Specify the speed in ticks, not seconds. 20 ticks = one second\n\n"
+						+ "If you want to use multiple scoreboards, you have to set conditions for all scoreboards, except for the default one.\n");
 				//Titel
 				ArrayList<String> title = new ArrayList<String>();
 				title.add("&e&6S&ecoreboard");
@@ -152,6 +150,13 @@ public class Config {
 				score_7.add("&a%mem_used%/%mem_total%");
 				cfg.addDefault("6.speed", 30);
 				cfg.addDefault("6.scores", score_7);
+				
+				List<String> conditions = new ArrayList<>();
+				conditions.add("world:world AND permission:some.permission");
+				conditions.add("world:world AND permission:some.other.permission");
+				conditions.add("world:world AND gamemode:creative");
+				conditions.add("world:world_nether");
+				cfg.addDefault("conditions", conditions);
 				
 				//Save
 				cfg.options().copyDefaults(true);

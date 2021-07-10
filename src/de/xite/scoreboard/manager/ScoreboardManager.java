@@ -31,7 +31,7 @@ public class ScoreboardManager {
 		this.name = name;
 		
 		// Get the config
-		File f = new File(Main.pluginfolder+"/"+name+".yml");
+		File f = new File(Main.pluginfolder+"/scoreboards/"+name+".yml");
 		if(!f.exists()) {
 			Main.pl.getLogger().severe("Could not load Scoreboard named "+name+", because the config file does not exists!");
 			return;

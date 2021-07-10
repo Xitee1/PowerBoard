@@ -15,7 +15,7 @@ scoreboard: true # enable/disable the scoreboard
 scoreboard-default: 'scoreboard' # The scoreboard that will be set after a player joins the server
 
 tablist:
-  text:  true # enable/disable the header/footers
+  text: true # enable/disable the header/footers
   ranks: true # enable/disable the rank system (only tablist)
 
 chat:
@@ -76,7 +76,11 @@ placeholder:
   time-format: 'HH:mm' # If you don't know what to set here, have a look at this: https://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
   date-format: 'dd.MM.yyyy'
   money-decimals: 2 # The maximal decimals for the placeholder %money%.
-  preferLastPrefixColor: false # If you use ranks with luckperms-api, prefer the last colors from the prefix instead of the group-displayname to set the name-color
+  preferLastPrefixColor: true # If you use ranks with luckperms-api, prefer the last colors from the prefix instead of the group-displayname to set the name-color
+  world-names: # Replace world names for the %player_world% placeholder
+    world: 'Overword'
+    world_nether: 'Nether'
+    world_the_end: 'The End'
 
 ######################
 ### Plugin Updater ###
@@ -85,7 +89,7 @@ update:
   notification: true # Send a message to all Admins on join if a new update is available
   autoupdater: false # With this option, the plugin will be automatically updatet
 
-#################################################
-#### The dubug may helps you to find problems ###
-#################################################
+################################################
+#### The debug can help you to find problems ###
+################################################
 debug: false

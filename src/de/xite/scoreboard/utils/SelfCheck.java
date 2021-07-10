@@ -36,27 +36,39 @@ public class SelfCheck {
 		
 		//Updated config warnings
 	    if(cfg.contains("placeholder.money-digits")) {
-	    	pl.getLogger().warning(r+"self-check -> Your config.yml is out of date! Please change ->'money-digits' to 'money-decimals'<- in the ->'placeholder'<- section!"+w);
+	    	pl.getLogger().warning(r+"self-check -> Your config.yml is out of date! Please change ->'money-digits' to 'money-decimals'<- to the ->'placeholder'<- section!"+w);
 	    	hasErrors = true;
 	    }
 	    if(cfg.contains("ranks.luckperms")) {
-	    	pl.getLogger().warning(r+"self-check -> Your config.yml is out of date! Please change ->'luckperms' to 'luckperms-api'<- in the ->'ranks'<- section!"+w);
+	    	pl.getLogger().warning(r+"self-check -> Your config.yml is out of date! Please change ->'luckperms' to 'luckperms-api'<- to the ->'ranks'<- section!"+w);
 	    	hasErrors = true;
 	    }
 	    if(cfg.contains("chat.prefixes")) {
-	    	pl.getLogger().warning(r+"self-check -> Your config.yml is out of date! Please change ->'prefixes' to 'ranks'<- in the ->'chat'<- section!"+w);
+	    	pl.getLogger().warning(r+"self-check -> Your config.yml is out of date! Please change ->'prefixes' to 'ranks'<- to the ->'chat'<- section!"+w);
 	    	hasErrors = true;
 	    }
 	    if(cfg.contains("chat.enable")) {
-	    	pl.getLogger().warning(r+"self-check -> Your config.yml is out of date! Please change ->'enable' to 'ranks'<- in the ->'chat'<- section!"+w);
+	    	pl.getLogger().warning(r+"self-check -> Your config.yml is out of date! Please change ->'enable' to 'ranks'<- to the ->'chat'<- section!"+w);
 	    	hasErrors = true;
 	    }
 	    if(!cfg.contains("chat.allowHexColors")) {
-	    	pl.getLogger().warning(r+"self-check -> Your config.yml is out of date! Please add ->'allowHexColors: true'<- in the ->'chat'<- section in your config.yml to allow players to use hex colors."+w);
+	    	pl.getLogger().warning(r+"self-check -> Your config.yml is out of date! Please add ->'allowHexColors: true'<- to the ->'chat'<- section."+w);
 	    	hasErrors = true;
 	    }
 	    if(!cfg.contains("placeholder.prefer-plugin-placeholders")) {
-	    	pl.getLogger().warning(r+"self-check -> Your config.yml is out of date! Please add ->'prefer-plugin-placeholders: true'<- in the ->'placeholder'<- section in your config.yml. More infos are in the changelog."+w);
+	    	pl.getLogger().warning(r+"self-check -> Your config.yml is out of date! Please add ->'prefer-plugin-placeholders: true'<- to the ->'placeholder'<- section in your config.yml. More infos are in the changelog."+w);
+	    	hasErrors = true;
+	    }
+	    if(!cfg.contains("scoreboard-default")) {
+			pl.getLogger().warning("--- UPDATE ---");
+			pl.getLogger().warning("Please add the config option");
+			pl.getLogger().warning("\"scoreboard-default: 'scoreboard' # The scoreboard that will be set after a player joins the server\"");
+			pl.getLogger().warning("to your config.yml below \"scoreboard: true\"");
+			pl.getLogger().warning("--- UPDATE ---");
+			hasErrors = true;
+	    }
+	    if(!cfg.contains("placeholder.world-names")) {
+	    	pl.getLogger().warning(r+"self-check -> Your config.yml is out of date! A new config option was added. Have look at the changelogs to see how to add it."+w);
 	    	hasErrors = true;
 	    }
 	    //Check for errors
@@ -65,11 +77,7 @@ public class SelfCheck {
 	    	hasErrors = true;
 	    }
 	    if(!cfg.isString("scoreboard-default")) {
-			pl.getLogger().warning("--- WARNING ---");
-			pl.getLogger().warning("Please add the config option");
-			pl.getLogger().warning("\"scoreboard-default: 'scoreboard' # The scoreboard that will be set after a player joins the server\"");
-			pl.getLogger().warning("to your config.yml below \"scoreboard: true\"");
-			pl.getLogger().warning("--- WARNING ---");
+	    	pl.getLogger().warning(r+"self-check -> The setting 'scoreboard-default' is not valid!"+w);
 	    	hasErrors = true;
 	    }
 	    if(!cfg.isBoolean("tablist.text")) {
@@ -88,8 +96,11 @@ public class SelfCheck {
 	    	pl.getLogger().warning(r+"self-check -> The setting 'colorperm' in the section 'chat' is not valid!"+w);
 	    	hasErrors = true;
 	    }
+	    if(!cfg.isBoolean("chat.allowHexColors")) {
+	    	pl.getLogger().warning(r+"self-check -> The setting 'allowHexColors' in the section 'chat' is not valid!"+w);
+	    	hasErrors = true;
+	    }
 
-	    
 	    if(!cfg.isString("ranks.permissionsystem")) {
 	    	pl.getLogger().warning(r+"self-check -> The setting 'permissionsystem' in the section 'ranks' is not valid!"+w);
 	    	hasErrors = true;
@@ -103,49 +114,49 @@ public class SelfCheck {
 	    	hasErrors = true;
 	    }
 	    
-	    
 	    //Check ranks
-	    for(String s : cfg.getConfigurationSection("ranks.list").getValues(false).keySet()) {
-	    	if(Main.debug)
-	    		pl.getLogger().info(y+"self-check -> Checking rank '"+s+"'"+w);
-	    	if(!cfg.isString("ranks.list."+s+".permission")) {
-	    		pl.getLogger().severe(r+"self-check -> Your rank named '"+s+"' has no valid permission set!"+w);
-	    		hasFatalErrors = true;
-		    }
-	    	if(!cfg.isString("ranks.list."+s+".prefix")) {
-	    		pl.getLogger().severe(r+"self-check -> Your rank named '"+s+"' has no valid prefix!"+w);
-	    		hasFatalErrors = true;
-		    }
-	    	if(!cfg.isString("ranks.list."+s+".suffix")) {
-	    		pl.getLogger().severe(r+"self-check -> Your rank named '"+s+"' has no valid suffix!"+w);
-	    		hasFatalErrors = true;
-		    }
-	    	if(!cfg.isString("ranks.list."+s+".nameColor")) {
-		    	String s2 = cfg.getString("ranks.list."+s+".nameColor");
-		    	if(s.length() > 2) {
-		    		pl.getLogger().severe(r+"self-check -> Your rank named '"+s+"' has no valid name-color!"+w);
+	    if(cfg.getConfigurationSection("ranks.list") != null)
+		    for(String s : cfg.getConfigurationSection("ranks.list").getValues(false).keySet()) {
+		    	if(Main.debug)
+		    		pl.getLogger().info(y+"self-check -> Checking rank '"+s+"'"+w);
+		    	if(!cfg.isString("ranks.list."+s+".permission")) {
+		    		pl.getLogger().severe(r+"self-check -> Your rank named '"+s+"' has no valid permission set!"+w);
 		    		hasFatalErrors = true;
-		    	}else
-		    	if(s2.length() == 2) {
-		    		if(!s2.startsWith("&")) {
-		    			pl.getLogger().severe(r+"self-check -> Your rank named '"+s+"' has no valid name-color!"+w);
-		    			hasFatalErrors = true;
-		    		}
-		    	}else
-		    	if(s2.length() != 1) {
-		    		pl.getLogger().severe(r+"self-check -> Your rank named '"+s+"' has no valid name-color!"+w);
+			    }
+		    	if(!cfg.isString("ranks.list."+s+".prefix")) {
+		    		pl.getLogger().severe(r+"self-check -> Your rank named '"+s+"' has no valid prefix!"+w);
 		    		hasFatalErrors = true;
-		    	}
+			    }
+		    	if(!cfg.isString("ranks.list."+s+".suffix")) {
+		    		pl.getLogger().severe(r+"self-check -> Your rank named '"+s+"' has no valid suffix!"+w);
+		    		hasFatalErrors = true;
+			    }
+		    	if(!cfg.isString("ranks.list."+s+".nameColor")) {
+			    	String s2 = cfg.getString("ranks.list."+s+".nameColor");
+			    	if(s.length() > 2) {
+			    		pl.getLogger().severe(r+"self-check -> Your rank named '"+s+"' has no valid name-color!"+w);
+			    		hasFatalErrors = true;
+			    	}else
+			    	if(s2.length() == 2) {
+			    		if(!s2.startsWith("&")) {
+			    			pl.getLogger().severe(r+"self-check -> Your rank named '"+s+"' has no valid name-color!"+w);
+			    			hasFatalErrors = true;
+			    		}
+			    	}else
+			    	if(s2.length() != 1) {
+			    		pl.getLogger().severe(r+"self-check -> Your rank named '"+s+"' has no valid name-color!"+w);
+			    		hasFatalErrors = true;
+			    	}
+			    }
+		    	if(!cfg.isString("ranks.list."+s+".chatPrefix")) {
+		    		pl.getLogger().severe(r+"self-check -> Your rank named '"+s+"' has no valid chat prefix!"+w);
+		    		hasFatalErrors = true;
+			    }
+		    	if(!cfg.isString("ranks.list."+s+".placeholder-name")) {
+		    		pl.getLogger().warning(r+"self-check -> Your rank named '"+s+"' has no valid placeholder name!"+w);
+		    		hasErrors = true;
+			    }
 		    }
-	    	if(!cfg.isString("ranks.list."+s+".chatPrefix")) {
-	    		pl.getLogger().severe(r+"self-check -> Your rank named '"+s+"' has no valid chat prefix!"+w);
-	    		hasFatalErrors = true;
-		    }
-	    	if(!cfg.isString("ranks.list."+s+".placeholder-name")) {
-	    		pl.getLogger().warning(r+"self-check -> Your rank named '"+s+"' has no valid placeholder name!"+w);
-	    		hasErrors = true;
-		    }
-	    }
 	    if(!cfg.isBoolean("placeholder.prefer-plugin-placeholders")) {
 	    	pl.getLogger().warning(r+"self-check -> The setting 'prefer-plugin-placeholders' in the section 'placeholder' is not valid!"+w);
 	    	hasErrors = true;

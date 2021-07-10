@@ -18,7 +18,7 @@ public class LuckPermsEvent {
 
       	// subscribe to an event using a lambda
         eventBus.subscribe(UserDataRecalculateEvent.class, e -> {
-        	Bukkit.getScheduler().runTaskLater(pl, new Runnable() {// Run one seconds later that it doesn't update if a player disconnects
+        	Bukkit.getScheduler().runTaskLater(pl, new Runnable() {// Run one second later that it doesn't update if a player disconnects
 				@Override
 				public void run() {
 		        	Player p = Bukkit.getPlayer(e.getUser().getUniqueId());
