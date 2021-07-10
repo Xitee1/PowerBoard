@@ -18,14 +18,14 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import de.xite.scoreboard.api.CustomPlaceholders;
+import de.xite.scoreboard.board.ScoreboardManager;
+import de.xite.scoreboard.board.ScoreboardPlayer;
 import de.xite.scoreboard.commands.ScoreboardCommand;
 import de.xite.scoreboard.files.Config;
 import de.xite.scoreboard.files.TabConfig;
 import de.xite.scoreboard.listeners.Chat;
 import de.xite.scoreboard.listeners.JoinQuitListener;
 import de.xite.scoreboard.listeners.LuckPermsEvent;
-import de.xite.scoreboard.manager.ScoreboardManager;
-import de.xite.scoreboard.manager.ScoreboardPlayer;
 import de.xite.scoreboard.utils.BStatsMetrics;
 import de.xite.scoreboard.utils.SelfCheck;
 import de.xite.scoreboard.utils.Updater;
@@ -120,10 +120,10 @@ public class Main extends JavaPlugin implements Listener{
 		if(pl.getConfig().getBoolean("update.autoupdater"))
 			if(Updater.checkVersion())
 				Updater.downloadFile();
-		Main.unregisterScoreboards();
 		if(pl.getConfig().getBoolean("scoreboard"))
 			for(Entry<Player, String> all : Main.players.entrySet())
 				ScoreboardPlayer.removeScoreboard(all.getKey(), true);
+		Main.unregisterScoreboards();
 		ph.clear();
 	}
 	public void initializePlugins() {

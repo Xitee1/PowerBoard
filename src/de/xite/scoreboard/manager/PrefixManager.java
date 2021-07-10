@@ -218,7 +218,7 @@ public class PrefixManager {
     		Main.pl.getLogger().info("Updated "+p.getName()+"'s team!");
 	}
 	@SuppressWarnings("deprecation")
-	public static void registerTeams(Player p, Scoreboard board) {
+	public static void setTeams(Player p, Scoreboard board) {
 		delay(p);
 		try {
 			// Für den neuen Spieler alle Spieler die bereits Online sind setzen

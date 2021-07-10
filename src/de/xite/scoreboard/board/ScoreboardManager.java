@@ -1,4 +1,4 @@
-package de.xite.scoreboard.manager;
+package de.xite.scoreboard.board;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,6 +9,8 @@ import java.util.Map.Entry;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitTask;
+
 import de.xite.scoreboard.main.Main;
 
 public class ScoreboardManager {
@@ -22,10 +24,17 @@ public class ScoreboardManager {
 	ArrayList<String> title = new ArrayList<>(); // <animatons>
 	
 	// Store all schedulers to stop them later
-	ArrayList<Integer> scheduler = new ArrayList<>();
+	ArrayList<BukkitTask> scheduler = new ArrayList<>();
 	
 	// Store all players with this scoreboard
 	ArrayList<Player> players = new ArrayList<>();
+	
+	// Current steps
+	HashMap<Integer, Integer> currentScoreStep = new HashMap<>(); // Score ID; Animation ID
+	int currentTitleStep; // animation id
+	
+	// paused
+	Boolean paused = true;
 	
 	public ScoreboardManager(String name) {
 		this.name = name;
@@ -43,6 +52,7 @@ public class ScoreboardManager {
 	public static ScoreboardManager get(String name) {
 		if(!Main.scoreboards.containsKey(name))
 			Main.scoreboards.put(name, new ScoreboardManager(name));
+			
 		return Main.scoreboards.get(name);
 	}
 	
@@ -91,8 +101,6 @@ public class ScoreboardManager {
 	
 	
 	// ---- Start the animations ---- //
-	
-	int currentTitleStep; // animation id
 	private void startTitleAnimation(int speed) {
 		// check if scheduler is needed (don't schedule if higher than '9999')
 		if(speed >= 9999 || speed < 0) {
@@ -106,27 +114,27 @@ public class ScoreboardManager {
 		currentTitleStep = 0;
 		// Start animation scheduler
 		scheduler.add(
-			Bukkit.getScheduler().scheduleSyncRepeatingTask(Main.pl, new Runnable() {
+			Bukkit.getScheduler().runTaskTimerAsynchronously(Main.pl, new Runnable() {
 				@Override
 				public void run() {
-					String s = title.get(currentTitleStep); // get the current score (text)
-					for(Player p : players)
-						ScoreboardPlayer.setTitle(p, p.getScoreboard(), s, true, get(name)); // set the score
-					if(currentTitleStep >= title.size()-1) {
-						currentTitleStep = 0;
-					}else
-						currentTitleStep++;
+					if(!paused) {
+						String s = title.get(currentTitleStep); // get the current score (text)
+						for(Player p : players)
+							ScoreTitleUtils.setTitle(p, p.getScoreboard(), s, true, get(name)); // set the score
+						if(currentTitleStep >= title.size()-1) {
+							currentTitleStep = 0;
+						}else
+							currentTitleStep++;
+					}
 				}
 			}, 20, speed)
 		);
 	}
-	
-	HashMap<Integer, Integer> currentScoreStep = new HashMap<>(); // Score ID; Animation ID
 	private void startScoreAnimation(int id, int speed) {
 		currentScoreStep.put(id, 0);
 		
 		// check if scheduler is needed (don't schedule if higher than '9999')
-		if(speed >= 9999) {
+		if(speed >= 9999 || speed < 0) {
 			if(Main.debug)
 				Main.pl.getLogger().info("Scoreboard-Score (ID: "+id+", Name: "+name+"): no animation needed");
 			return;
@@ -136,33 +144,49 @@ public class ScoreboardManager {
 			
 		// Start animation scheduler
 		scheduler.add(
-			Bukkit.getScheduler().scheduleSyncRepeatingTask(Main.pl, new Runnable() {
+				Bukkit.getScheduler().runTaskTimerAsynchronously(Main.pl, new Runnable() {
 				@Override
 				public void run() {
-					String s = scores.get(id).get(currentScoreStep.get(id)); // get the current score (text)
-					for(Player p : players)
-						ScoreboardPlayer.setScore(p, p.getScoreboard(), s, scores.size()-id-1, true, get(name)); // set the score
-					
-					if(currentScoreStep.get(id) >= scores.get(id).size()-1) {
-						currentScoreStep.replace(id, 0);
-					}else
-						currentScoreStep.replace(id, currentScoreStep.get(id)+1);
+					if(!paused) {
+						String s = scores.get(id).get(currentScoreStep.get(id)); // get the current score (text)
+						for(Player p : players) {
+							int i = scores.size()-id-1;
+							ScoreboardManager sm = get(name);
+							Bukkit.getServer().getScheduler().runTask(Main.pl, new Runnable(){
+								@Override
+								public void run(){
+									ScoreTitleUtils.setScore(p, p.getScoreboard(), s, i, true, sm); // set the score
+								}
+							});
+						}
+						if(currentScoreStep.get(id) >= scores.get(id).size()-1) {
+							currentScoreStep.replace(id, 0);
+						}else
+							currentScoreStep.replace(id, currentScoreStep.get(id)+1);
+						}
 					}
-				}, 20, speed)
-			);
+				}, 20, speed));
 	}
 	public void addPlayer(Player p) {
 		if(!players.contains(p))
 			players.add(p);
+		if(Main.players.containsKey(p))
+			Main.players.remove(p);
+		Main.players.put(p, name);
+		paused = false;
 	}
 	public void removePlayer(Player p) {
 		if(players.contains(p))
 			players.remove(p);
+		if(Main.players.containsKey(p))
+			Main.players.remove(p);
+		if(players.size() == 0)
+			paused = true;
 	}
 	public String getCurrentTitle() {
 		return title.get(currentTitleStep);
 	}
-	public ArrayList<String> getCurrentScore() {
+	public ArrayList<String> getCurrentScores() {
 		ArrayList<String> list = new ArrayList<>();
 		for(Entry<Integer, Integer> s : currentScoreStep.entrySet()) {
 			int score = s.getKey();
@@ -177,14 +201,14 @@ public class ScoreboardManager {
 	
 	public static void unregister(String name) {
 		ScoreboardManager sm = get(name);
-		for(int i : sm.scheduler)
-			Bukkit.getScheduler().cancelTask(i);
-		sm.scores.clear();
-		sm.title.clear();
-		sm.currentScoreStep.clear();
+		for(BukkitTask task : sm.scheduler)
+			task.cancel();
+		sm.scores = null;
+		sm.title = null;
+		sm.currentScoreStep = null;
 		sm.currentTitleStep = 0;
 		sm.name = null;
-		sm.players.clear();
+		sm.players = null;
 		Main.scoreboards.remove(name);
 	}
 }
