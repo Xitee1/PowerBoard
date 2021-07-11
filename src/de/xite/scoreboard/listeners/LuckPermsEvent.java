@@ -4,7 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import de.xite.scoreboard.main.Main;
-import de.xite.scoreboard.manager.PrefixManager;
+import de.xite.scoreboard.modules.ranks.PrefixManager;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.event.EventBus;
 import net.luckperms.api.event.user.UserDataRecalculateEvent;

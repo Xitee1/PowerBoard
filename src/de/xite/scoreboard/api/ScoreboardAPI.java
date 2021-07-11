@@ -4,9 +4,9 @@ import java.util.ArrayList;
 
 import org.bukkit.entity.Player;
 
-import de.xite.scoreboard.board.ScoreTitleUtils;
-import de.xite.scoreboard.board.ScoreboardPlayer;
 import de.xite.scoreboard.main.Main;
+import de.xite.scoreboard.modules.board.ScoreTitleUtils;
+import de.xite.scoreboard.modules.board.ScoreboardPlayer;
 
 public class ScoreboardAPI {
 	// ---- Placeholders ---- //

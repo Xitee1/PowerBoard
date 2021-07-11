@@ -4,7 +4,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import de.xite.scoreboard.main.Main;
-import de.xite.scoreboard.manager.PrefixManager;
+import de.xite.scoreboard.modules.ranks.PrefixManager;
 
 public class Teams {
 	Player p;

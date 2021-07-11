@@ -1,4 +1,4 @@
-package de.xite.scoreboard.files;
+package de.xite.scoreboard.main;
 
 import java.io.File;
 import java.io.IOException;
@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import de.xite.scoreboard.main.Main;
 import de.xite.scoreboard.utils.UpgradeVersion;
 
 public class Config {

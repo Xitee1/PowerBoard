@@ -1,4 +1,4 @@
-package de.xite.scoreboard.board;
+package de.xite.scoreboard.modules.board;
 
 import java.util.ArrayList;
 
@@ -21,7 +21,7 @@ public class ScoreTitleUtils {
 			return false;
 		if(usePlaceholders)
 			title = Placeholders.replace(p, title);
-		if(Main.getBukkitVersion().compareTo(new Version("1.13")) == 1) {// In version 1.13+ you can use more than 16 chars
+		if(Main.getBukkitVersion().compareTo(new Version("1.13")) == 1 || Main.getBukkitVersion().equals(new Version("1.13"))) {// In version 1.13+ you can use more than 16 chars
 			if(title.length() <= 16) {
 				obj.setDisplayName(title);
 			}else {
@@ -94,7 +94,7 @@ public class ScoreTitleUtils {
 			score = Placeholders.replace(p, score);
 		
 		// ---- Set all scores ---- //
-		if(Main.getBukkitVersion().compareTo(new Version("1.13")) == 1) {//Under version 1.13+ you can just use up to 16 chars.
+		if(Main.getBukkitVersion().compareTo(new Version("1.13")) == 1 || Main.getBukkitVersion().equals(new Version("1.13"))) {//Under version 1.13+ you can just use up to 16 chars.
 			// Set the score for 1.12-
 			String[] s = getScorePrefixSuffix(score, 16, 30);
 			if(s == null) {

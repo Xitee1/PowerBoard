@@ -1,4 +1,4 @@
-package de.xite.scoreboard.board;
+package de.xite.scoreboard.modules.board;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -8,7 +8,7 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
 import de.xite.scoreboard.main.Main;
-import de.xite.scoreboard.manager.PrefixManager;
+import de.xite.scoreboard.modules.ranks.PrefixManager;
 import de.xite.scoreboard.utils.Teams;
 import de.xite.scoreboard.utils.Version;
 
@@ -33,7 +33,7 @@ public class ScoreboardPlayer {
 			if(obj == null) {
 				board = Bukkit.getScoreboardManager().getNewScoreboard();
 				
-				if(Main.getBukkitVersion().compareTo(new Version("1.13")) == 1) { //only for version 1.13+
+				if(Main.getBukkitVersion().compareTo(new Version("1.13")) == 1 || Main.getBukkitVersion().equals(new Version("1.13"))) { //only for version 1.13+
 					obj = board.registerNewObjective("aaa", "bbb", "SBPlugin");
 				}else
 					obj = board.registerNewObjective("aaa", "bbb");
@@ -42,6 +42,10 @@ public class ScoreboardPlayer {
 		}
 		if(name != null && pl.getConfig().getBoolean("scoreboard")) { // Check if the scoreboard is enabled
 			ScoreboardManager sm = ScoreboardManager.get(name);
+			if(sm == null) {
+				pl.getLogger().severe("Could not set scoreboard '"+name+"'! File does not exists!");
+				return;
+			}
 			ScoreTitleUtils.setTitle(p, board, sm.getCurrentTitle(), true, sm);// Get the current title and set it
 			ScoreTitleUtils.setScores(p, board, sm.getCurrentScores(), true, sm);
 		}
@@ -73,6 +77,10 @@ public class ScoreboardPlayer {
 			// Update player's scoreboard
 			removeScoreboard(p, false);
 			ScoreboardManager sm = ScoreboardManager.get(newScoreboard);
+			if(sm == null) {
+				pl.getLogger().severe("Could not set scoreboard '"+newScoreboard+"'! File does not exists!");
+				return;
+			}
 			ScoreTitleUtils.setTitle(p, p.getScoreboard(), sm.getCurrentTitle(), true, sm);// Get the current title and set it
 			ScoreTitleUtils.setScores(p, p.getScoreboard(), sm.getCurrentScores(), true, sm);
 		}

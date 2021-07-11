@@ -1,4 +1,4 @@
-package de.xite.scoreboard.manager;
+package de.xite.scoreboard.modules.ranks;
 
 import java.util.ArrayList;
 import java.util.HashMap;

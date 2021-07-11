@@ -1,4 +1,4 @@
-package de.xite.scoreboard.board;
+package de.xite.scoreboard.modules.board;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,9 +32,6 @@ public class ScoreboardManager {
 	// Current steps
 	HashMap<Integer, Integer> currentScoreStep = new HashMap<>(); // Score ID; Animation ID
 	int currentTitleStep; // animation id
-	
-	// paused
-	Boolean paused = true;
 	
 	public ScoreboardManager(String name) {
 		this.name = name;
@@ -117,7 +114,7 @@ public class ScoreboardManager {
 			Bukkit.getScheduler().runTaskTimerAsynchronously(Main.pl, new Runnable() {
 				@Override
 				public void run() {
-					if(!paused) {
+					if(players.size() != 0) {
 						String s = title.get(currentTitleStep); // get the current score (text)
 						for(Player p : players)
 							ScoreTitleUtils.setTitle(p, p.getScoreboard(), s, true, get(name)); // set the score
@@ -147,7 +144,7 @@ public class ScoreboardManager {
 				Bukkit.getScheduler().runTaskTimerAsynchronously(Main.pl, new Runnable() {
 				@Override
 				public void run() {
-					if(!paused) {
+					if(players.size() != 0) {
 						String s = scores.get(id).get(currentScoreStep.get(id)); // get the current score (text)
 						for(Player p : players) {
 							int i = scores.size()-id-1;
@@ -173,15 +170,12 @@ public class ScoreboardManager {
 		if(Main.players.containsKey(p))
 			Main.players.remove(p);
 		Main.players.put(p, name);
-		paused = false;
 	}
 	public void removePlayer(Player p) {
 		if(players.contains(p))
 			players.remove(p);
 		if(Main.players.containsKey(p))
 			Main.players.remove(p);
-		if(players.size() == 0)
-			paused = true;
 	}
 	public String getCurrentTitle() {
 		return title.get(currentTitleStep);

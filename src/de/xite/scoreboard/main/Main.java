@@ -18,14 +18,13 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import de.xite.scoreboard.api.CustomPlaceholders;
-import de.xite.scoreboard.board.ScoreboardManager;
-import de.xite.scoreboard.board.ScoreboardPlayer;
 import de.xite.scoreboard.commands.ScoreboardCommand;
-import de.xite.scoreboard.files.Config;
-import de.xite.scoreboard.files.TabConfig;
 import de.xite.scoreboard.listeners.Chat;
 import de.xite.scoreboard.listeners.JoinQuitListener;
 import de.xite.scoreboard.listeners.LuckPermsEvent;
+import de.xite.scoreboard.modules.board.ScoreboardManager;
+import de.xite.scoreboard.modules.board.ScoreboardPlayer;
+import de.xite.scoreboard.modules.tablist.TabConfig;
 import de.xite.scoreboard.utils.BStatsMetrics;
 import de.xite.scoreboard.utils.SelfCheck;
 import de.xite.scoreboard.utils.Updater;

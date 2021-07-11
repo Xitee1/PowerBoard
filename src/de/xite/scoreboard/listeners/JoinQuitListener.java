@@ -8,10 +8,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import de.xite.scoreboard.board.ScoreboardPlayer;
-import de.xite.scoreboard.files.TabConfig;
 import de.xite.scoreboard.main.Main;
-import de.xite.scoreboard.manager.Tabpackage;
+import de.xite.scoreboard.modules.board.ScoreboardPlayer;
+import de.xite.scoreboard.modules.tablist.TabConfig;
+import de.xite.scoreboard.modules.tablist.Tabpackage;
 import de.xite.scoreboard.utils.Updater;
 
 public class JoinQuitListener implements Listener {

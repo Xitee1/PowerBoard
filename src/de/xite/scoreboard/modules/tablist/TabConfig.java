@@ -1,4 +1,4 @@
-package de.xite.scoreboard.files;
+package de.xite.scoreboard.modules.tablist;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -8,8 +8,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
+import de.xite.scoreboard.main.Config;
 import de.xite.scoreboard.main.Main;
-import de.xite.scoreboard.manager.Tabpackage;
 import de.xite.scoreboard.utils.Placeholders;
 import de.xite.scoreboard.utils.UpgradeVersion;
 

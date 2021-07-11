@@ -6,22 +6,23 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import de.xite.scoreboard.files.Config;
+import de.xite.scoreboard.main.Config;
 import de.xite.scoreboard.main.Main;
+import de.xite.scoreboard.modules.tablist.TabConfig;
 import de.xite.scoreboard.utils.Updater;
 import net.md_5.bungee.api.ChatColor;
 
 public class ScoreboardCommand implements CommandExecutor{
-	String designLine1 = Main.pr+"§7X§e§m-----§6Scoreboard§e§m-----§7X";
-	String designLine2 = Main.pr+"§7X§e§m-----§6Scoreboard§e§m-----§7X";
+	String designLine1 = Main.pr+ChatColor.GRAY+"§7X§e§m-----§6Scoreboard§e§m-----§7X";
+	String designLine2 = Main.pr+ChatColor.GRAY+"X§e§m-----§6Scoreboard§e§m-----§7X";
 	@Override
 	public boolean onCommand(CommandSender s, Command arg1, String arg2, String[] args) {
 		if(args.length == 1) {
 			if(args[0].equalsIgnoreCase("info")) {
 				s.sendMessage(designLine1);
-				s.sendMessage(Main.pr+ChatColor.YELLOW+"Your version: §3v"+Main.pl.getDescription().getVersion());
-				s.sendMessage(Main.pr+ChatColor.YELLOW+"Newest version: §3v"+Updater.getVersion());
-				s.sendMessage(Main.pr+ChatColor.YELLOW+"Author: §3Xitee");
+				s.sendMessage(Main.pr+ChatColor.YELLOW+"Your version: "+ChatColor.DARK_AQUA+"v"+Main.pl.getDescription().getVersion());
+				s.sendMessage(Main.pr+ChatColor.YELLOW+"Newest version: "+ChatColor.DARK_AQUA+"v"+Updater.getVersion());
+				s.sendMessage(Main.pr+ChatColor.YELLOW+"Author: "+ChatColor.DARK_AQUA+"Xitee");
 				s.sendMessage(designLine2);
 			}else if(args[0].equalsIgnoreCase("update")) {
 				if(!(s instanceof Player) || (s instanceof Player && ((Player) s).hasPermission("scoreboard.update"))) {
@@ -32,21 +33,26 @@ public class ScoreboardCommand implements CommandExecutor{
 						s.sendMessage(Main.pr+ChatColor.RED+"Download failed! Please try it later again. More infos are in the console.");
 					}
 				}else {
-					s.sendMessage(Main.pr+ChatColor.RED+"The following permission is required to execute this command: §7scoreboard.update");
+					s.sendMessage(Main.pr+ChatColor.RED+"The following permission is required to execute this command: "+ChatColor.GRAY+"scoreboard.update");
 				}
 			}else if(args[0].equalsIgnoreCase("reload") || args[0].equalsIgnoreCase("rl")) {
 				if(!(s instanceof Player) || (s instanceof Player && ((Player) s).hasPermission("scoreboard.reload"))) {
-					s.sendMessage(Main.pr+ChatColor.GRAY+"Reloading scoreboard. Warning: You should not use this command regularly because of bugs and it may needs more performance. If you want that this plugin runs stable, restart the server.");
-					s.sendMessage(Main.pr+ChatColor.GRAY+"loading §econfig.yml §7...");
+					s.sendMessage(Main.pr+ChatColor.GRAY+"Reloading configuration. Warning: You should not use this command regularly because of bugs and memory or performance leaks!");
+					s.sendMessage(Main.pr+ChatColor.GRAY+"Reloading "+ChatColor.YELLOW+"config.yml "+ChatColor.GRAY+"...");
 					Bukkit.getScheduler().cancelTasks(Main.pl);
 					Config.loadConfig();
 					if(Main.pl.getConfig().getBoolean("scoreboard")) {
+						s.sendMessage(Main.pr+ChatColor.GRAY+"Reloading "+ChatColor.YELLOW+"scoreboards "+ChatColor.GRAY+"...");
 						Main.unregisterScoreboards();
 						Main.registerScoreboards();
 					}
-					s.sendMessage(Main.pr+ChatColor.GREEN+"All config files have been reloaded!");
+					if(Main.pl.getConfig().getBoolean("tablist.text")) {
+						TabConfig tab = new TabConfig();
+						tab.register();
+					}
+					s.sendMessage(Main.pr+ChatColor.GREEN+"Plugin reloaded!");
 				}else {
-					s.sendMessage(Main.pr+ChatColor.RED+"The following permission is required to execute this command: §7scoreboard.reload");
+					s.sendMessage(Main.pr+ChatColor.RED+"The following permission is required to execute this command: "+ChatColor.GRAY+"scoreboard.reload");
 				}
 			}else {
 				sendMainPage(s);
@@ -60,7 +66,7 @@ public class ScoreboardCommand implements CommandExecutor{
 		s.sendMessage(designLine1);
 		s.sendMessage(Main.pr+"§7- §c/sb info §8- §7Shows all infos about the plugin");
 		s.sendMessage(Main.pr+"§7- §c/sb reload §8- §7Reload all configs");
-		s.sendMessage(Main.pr+"§7- §c/sb update §8- §7Downloading the newest version");
+		s.sendMessage(Main.pr+"§7- §c/sb update §8- §7Download the newest version");
 		s.sendMessage(designLine2);
 	}
 }
