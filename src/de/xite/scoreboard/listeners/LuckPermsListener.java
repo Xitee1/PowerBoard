@@ -9,8 +9,8 @@ import net.luckperms.api.LuckPerms;
 import net.luckperms.api.event.EventBus;
 import net.luckperms.api.event.user.UserDataRecalculateEvent;
 
-public class LuckPermsEvent {
-    public LuckPermsEvent(Main pl, LuckPerms api) {
+public class LuckPermsListener {
+    public LuckPermsListener(Main pl, LuckPerms api) {
     	if(!pl.getConfig().getBoolean("tablist.ranks"))
     		return;
         // get the LuckPerms event bus
@@ -28,5 +28,4 @@ public class LuckPermsEvent {
 			}, 20);
         });
     }
-
 }

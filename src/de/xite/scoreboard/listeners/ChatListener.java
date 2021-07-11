@@ -8,7 +8,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import de.xite.scoreboard.main.Main;
 import de.xite.scoreboard.utils.Teams;
 
-public class Chat implements Listener{
+public class ChatListener implements Listener{
 	static Main pl = Main.pl;
 	@EventHandler
 	public void onChat(AsyncPlayerChatEvent e) {

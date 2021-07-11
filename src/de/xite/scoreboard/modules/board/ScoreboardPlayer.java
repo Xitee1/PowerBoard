@@ -1,5 +1,7 @@
 package de.xite.scoreboard.modules.board;
 
+import java.util.HashMap;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
@@ -14,6 +16,12 @@ import de.xite.scoreboard.utils.Version;
 
 public class ScoreboardPlayer {
 	static Main pl = Main.pl;
+	
+	// All registered scoreboards
+	public static HashMap<String, ScoreboardManager> scoreboards = new HashMap<>();
+	
+	// All players with scoreboards
+	public static HashMap<Player, String> players = new HashMap<>(); // Player; Scoreboard config file name
 	
 	@SuppressWarnings("deprecation")
 	public static void setScoreboard(Player p, String name) {
@@ -68,12 +76,12 @@ public class ScoreboardPlayer {
 		  - world:world AND gamemode:creative
 		  - world:world_nether
 		*/
-		if(!Main.players.containsKey(p))
+		if(!players.containsKey(p))
 			return;
-		String newScoreboard = Main.players.get(p);
+		String newScoreboard = players.get(p);
 		
 		// Check if update is required
-		if(!Main.players.get(p).equals(newScoreboard)) {
+		if(!players.get(p).equals(newScoreboard)) {
 			// Update player's scoreboard
 			removeScoreboard(p, false);
 			ScoreboardManager sm = ScoreboardManager.get(newScoreboard);
@@ -86,10 +94,10 @@ public class ScoreboardPlayer {
 		}
 	}
 	public static void removeScoreboard(Player p, boolean removeTeams) {
-		if(!Main.players.containsKey(p))
+		if(!players.containsKey(p))
 			return;
-		ScoreboardManager.get(Main.players.get(p)).removePlayer(p);
-		Main.players.remove(p);
+		ScoreboardManager.get(players.get(p)).removePlayer(p);
+		players.remove(p);
 		
 		if(removeTeams) {
 			for(Team t : p.getScoreboard().getTeams())

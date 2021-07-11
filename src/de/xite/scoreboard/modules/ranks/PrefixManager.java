@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
+import de.xite.scoreboard.main.ExternalPlugins;
 import de.xite.scoreboard.main.Main;
 import de.xite.scoreboard.utils.Teams;
 import de.xite.scoreboard.utils.Version;
@@ -28,7 +29,7 @@ public class PrefixManager {
 	public static ArrayList<Player> updateDelay = new ArrayList<>();
 	
 	public static boolean register(Player p) {
-		if(!((pl.getConfig().getBoolean("ranks.luckperms-api.enable") || pl.getConfig().getBoolean("ranks.luckperms.enable")) && pl.luckPerms != null)) {
+		if(!((pl.getConfig().getBoolean("ranks.luckperms-api.enable") || pl.getConfig().getBoolean("ranks.luckperms.enable")) && ExternalPlugins.luckPerms != null)) {
 			int i = 0;
 			for(String line : pl.getConfig().getConfigurationSection("ranks.list").getValues(false).keySet()) {
 				if(!line.contains(".")) {
@@ -45,7 +46,7 @@ public class PrefixManager {
 					String team;
 					
 					//---PEX---//
-					if(Main.hasPex && (pl.getConfig().getString("ranks.permissionsystem").equalsIgnoreCase("PermissionsEx") || pl.getConfig().getString("ranks.permissionsystem").equalsIgnoreCase("pex"))) {
+					if(ExternalPlugins.hasPex && (pl.getConfig().getString("ranks.permissionsystem").equalsIgnoreCase("PermissionsEx") || pl.getConfig().getString("ranks.permissionsystem").equalsIgnoreCase("pex"))) {
 						if(PermissionsEx.getUser(p).inGroup(permission)) {
 							if(Main.debug)
 								pl.getLogger().info("The player "+p.getName()+" has now the rank (pex): Prefix: "+prefix+"; Suffix: "+suffix+"; Permission: "+permission);
@@ -62,7 +63,7 @@ public class PrefixManager {
 						}
 					}else
 					//---LuckPerms (without API)---//
-					if(pl.luckPerms != null && pl.getConfig().getString("ranks.permissionsystem").equalsIgnoreCase("luckperms")) {
+					if(ExternalPlugins.luckPerms != null && pl.getConfig().getString("ranks.permissionsystem").equalsIgnoreCase("luckperms")) {
 						if(isPlayerInGroup(p, permission)) {
 							if(Main.debug)
 								pl.getLogger().info("The player "+p.getName()+" has now the rank (luckperms): Prefix: "+prefix+"; Suffix: "+suffix+"; Group: "+permission);
@@ -104,7 +105,7 @@ public class PrefixManager {
 		//---LuckPerms (with API)---//
 		}else {
 			//Get user and rank data from LuckPerms
-			LuckPerms api = pl.luckPerms;
+			LuckPerms api = ExternalPlugins.luckPerms;
 			User user = api.getUserManager().getUser(p.getUniqueId());
 			Group group = api.getGroupManager().getGroup(user.getPrimaryGroup());
 			
@@ -271,7 +272,7 @@ public class PrefixManager {
 		}, 20*3);// wait 3 seconds before enable new update
 	}
 	public static boolean isPlayerInGroup(Player p, String g) {
-		LuckPerms api = pl.luckPerms;
+		LuckPerms api = ExternalPlugins.luckPerms;
 		User user = api.getUserManager().getUser(p.getUniqueId());
 		String group = user.getPrimaryGroup();
 		if(Main.debug)

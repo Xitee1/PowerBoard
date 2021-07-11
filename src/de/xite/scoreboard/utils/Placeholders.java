@@ -10,6 +10,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import de.xite.scoreboard.api.CustomPlaceholders;
+import de.xite.scoreboard.main.ExternalPlugins;
 import de.xite.scoreboard.main.Main;
 import de.xite.scoreboard.versions.version_1_08;
 import de.xite.scoreboard.versions.version_1_09;
@@ -28,13 +29,16 @@ public class Placeholders {
 	static boolean tps = false;
 	public static ArrayList<String> deprecatedWarning = new ArrayList<>();
 	
+	// All registered custom placeholders
+	public static ArrayList<CustomPlaceholders> ph = new ArrayList<>();
+	
 	public static String replace(Player p, String s) {
 		// Import placeholders from APIs
-		for(CustomPlaceholders ph : Main.ph)
+		for(CustomPlaceholders ph : ph)
 			s = ph.replace(p, s);
 		
 		// Placeholder API if PAPI prefered
-		if(Main.hasPapi && !pl.getConfig().getBoolean("prefer-plugin-placeholders"))
+		if(ExternalPlugins.hasPapi && !pl.getConfig().getBoolean("prefer-plugin-placeholders"))
   			s = PlaceholderAPI.setPlaceholders(p, s);
 		
 		// ---- Placeholders from Scoreboard Plugin ---- //
@@ -118,13 +122,13 @@ public class Placeholders {
   		}
   		// Money
   		if(s.contains("%player_money%")) {
-  			if(Main.hasVault == true) {
+  			if(ExternalPlugins.hasVault == true) {
   				int decimals = pl.getConfig().getInt("placeholder.money-decimals");
   				// If the decimals are set to 0, cast it to int to remove the '.0'
   				if(decimals != 0) {
-  					s = s.replace("%player_money%", ""+Main.round(Main.econ.getBalance(p), decimals));
+  					s = s.replace("%player_money%", ""+Main.round(ExternalPlugins.econ.getBalance(p), decimals));
   				}else
-  					s = s.replace("%player_money%", ""+((int) Main.econ.getBalance(p)));
+  					s = s.replace("%player_money%", ""+((int) ExternalPlugins.econ.getBalance(p)));
   			}else {
   				pl.getLogger().severe("Could not get the player's money because you haven't Vault installed or set up! You need Vault and a money system that supports Vault on your server!");
   				s = s.replace("%player_money%", "Error: See console");
@@ -209,8 +213,8 @@ public class Placeholders {
   			}
   		}
   		if(s.contains("%money%")) {
-  			if(Main.hasVault == true) {
-  				double balance = Main.econ.getBalance(p);
+  			if(ExternalPlugins.hasVault == true) {
+  				double balance = ExternalPlugins.econ.getBalance(p);
   				//config name changed from money-digits to money-decimals - support will drop in v.4.0
   				if(pl.getConfig().getInt("placeholder.money-digits") == 0 && pl.getConfig().getInt("placeholder.money-decimals") != 0) {
   					balance = Main.round(balance, pl.getConfig().getInt("placeholder.money-decimals"));
@@ -328,7 +332,7 @@ public class Placeholders {
   		// Replace colors (HEX) - only 1.16+
   		s = Main.translateHexColor(s);
   		// Replace PAPI if plugin prefered
-  		if(Main.hasPapi && pl.getConfig().getBoolean("prefer-plugin-placeholders"))
+  		if(ExternalPlugins.hasPapi && pl.getConfig().getBoolean("prefer-plugin-placeholders"))
   			s = PlaceholderAPI.setPlaceholders(p, s);
   		
 		return s;

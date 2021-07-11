@@ -7,11 +7,12 @@ import org.bukkit.entity.Player;
 import de.xite.scoreboard.main.Main;
 import de.xite.scoreboard.modules.board.ScoreTitleUtils;
 import de.xite.scoreboard.modules.board.ScoreboardPlayer;
+import de.xite.scoreboard.utils.Placeholders;
 
 public class ScoreboardAPI {
 	// ---- Placeholders ---- //
 	public static void registerCustomPlaceholders(CustomPlaceholders ph) {
-		Main.ph.add(ph);
+		Placeholders.ph.add(ph);
 	}
 	
 	// ---- Scoreboard ---- //

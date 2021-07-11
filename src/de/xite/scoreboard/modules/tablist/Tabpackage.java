@@ -35,25 +35,25 @@ public class Tabpackage {
 		footer = footer.substring(0, footer.length()-1); //remove the empty line at the end
 		
 		//Tablist senden
-		if(Main.getBukkitVersion().equals(new Version("1.17"))){
+		if(Main.getBukkitVersion().compareTo(new Version("1.17")) == 1 || Main.getBukkitVersion().equals(new Version("1.17"))){
 			version_1_17.sendTab(p, header, footer);
-		}else if(Main.getBukkitVersion().equals(new Version("1.16"))){
+		}else if(Main.getBukkitVersion().compareTo(new Version("1.16")) == 1 || Main.getBukkitVersion().equals(new Version("1.16"))){
 			version_1_16.sendTab(p, header, footer);
-		}else if(Main.getBukkitVersion().equals(new Version("1.15"))){
+		}else if(Main.getBukkitVersion().compareTo(new Version("1.15")) == 1 || Main.getBukkitVersion().equals(new Version("1.15"))){
 			version_1_15.sendTab(p, header, footer);
-		}else if(Main.getBukkitVersion().equals(new Version("1.14"))){
+		}else if(Main.getBukkitVersion().compareTo(new Version("1.14")) == 1 || Main.getBukkitVersion().equals(new Version("1.14"))){
 			version_1_14.sendTab(p, header, footer);
-		}else if(Main.getBukkitVersion().equals(new Version("1.13"))){
+		}else if(Main.getBukkitVersion().compareTo(new Version("1.13")) == 1 || Main.getBukkitVersion().equals(new Version("1.13"))){
 			version_1_13.sendTab(p, header, footer);
-		}else if(Main.getBukkitVersion().equals(new Version("1.12"))){
+		}else if(Main.getBukkitVersion().compareTo(new Version("1.12")) == 1 || Main.getBukkitVersion().equals(new Version("1.12"))){
 			version_1_12.sendTab(p, header, footer);
-		}else if(Main.getBukkitVersion().equals(new Version("1.11"))){
+		}else if(Main.getBukkitVersion().compareTo(new Version("1.11")) == 1 || Main.getBukkitVersion().equals(new Version("1.11"))){
 		  version_1_11.sendTab(p, header, footer);
-		}else if(Main.getBukkitVersion().equals(new Version("1.10"))){
+		}else if(Main.getBukkitVersion().compareTo(new Version("1.10")) == 1 || Main.getBukkitVersion().equals(new Version("1.10"))){
 			version_1_10.sendTab(p, header, footer);
-		}else if(Main.getBukkitVersion().equals(new Version("1.9"))){
+		}else if(Main.getBukkitVersion().compareTo(new Version("1.9")) == 1 || Main.getBukkitVersion().equals(new Version("1.9"))){
 			version_1_08.sendTab(p, header, footer);
-		}else if(Main.getBukkitVersion().equals(new Version("1.8"))){
+		}else if(Main.getBukkitVersion().compareTo(new Version("1.8")) == 1 || Main.getBukkitVersion().equals(new Version("1.8"))){
 			version_1_08.sendTab(p, header, footer);
 		}else
 			pl.getLogger().severe("You are using a version that is not supported! If you think this version should work, please report it to our discord server!");

@@ -47,10 +47,10 @@ public class ScoreboardManager {
 		importTitle(cfg); // Import the title
 	}
 	public static ScoreboardManager get(String name) {
-		if(!Main.scoreboards.containsKey(name))
-			Main.scoreboards.put(name, new ScoreboardManager(name));
+		if(!ScoreboardPlayer.scoreboards.containsKey(name))
+			ScoreboardPlayer.scoreboards.put(name, new ScoreboardManager(name));
 			
-		return Main.scoreboards.get(name);
+		return ScoreboardPlayer.scoreboards.get(name);
 	}
 	
 	// Import
@@ -167,15 +167,15 @@ public class ScoreboardManager {
 	public void addPlayer(Player p) {
 		if(!players.contains(p))
 			players.add(p);
-		if(Main.players.containsKey(p))
-			Main.players.remove(p);
-		Main.players.put(p, name);
+		if(ScoreboardPlayer.players.containsKey(p))
+			ScoreboardPlayer.players.remove(p);
+		ScoreboardPlayer.players.put(p, name);
 	}
 	public void removePlayer(Player p) {
 		if(players.contains(p))
 			players.remove(p);
-		if(Main.players.containsKey(p))
-			Main.players.remove(p);
+		if(ScoreboardPlayer.players.containsKey(p))
+			ScoreboardPlayer.players.remove(p);
 	}
 	public String getCurrentTitle() {
 		return title.get(currentTitleStep);
@@ -203,6 +203,6 @@ public class ScoreboardManager {
 		sm.currentTitleStep = 0;
 		sm.name = null;
 		sm.players = null;
-		Main.scoreboards.remove(name);
+		ScoreboardPlayer.scoreboards.remove(name);
 	}
 }
