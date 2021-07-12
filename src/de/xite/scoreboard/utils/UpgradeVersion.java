@@ -28,10 +28,6 @@ public class UpgradeVersion {
 				+ "Note: Specify the speed in ticks, not seconds. 20 ticks = one second\n\n"
 				+ "If you want to use multiple scoreboards, you have to set conditions for all scoreboards, except for the default one.\n");
 		ArrayList<String> list = new ArrayList<>();
-		list.add("world:world AND permission:some.permission");
-		list.add("world:world AND permission:some.other.permission");
-		list.add("world:world AND gamemode:creative");
-		list.add("world:world_nether");
 		cfg.set("conditions", list);
 		try {
 			cfg.save(file);

@@ -1,6 +1,7 @@
 package de.xite.scoreboard.main;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,10 +17,25 @@ public class Config {
 		if(folder == null || !folder.isDirectory())
 			folder.mkdirs();
 		
-		// config.yml
+		// (create) and load config.yml
 		pl.getConfig().options().copyDefaults(true);
 		pl.saveDefaultConfig();
 		pl.reloadConfig();
+		
+		// Register hex color syntax
+		String s = pl.getConfig().getString("placeholder.hexColorSyntax");
+		if(s.contains("000000")) {
+			String[] s2 = s.split("000000");
+			pl.getLogger().info("s: "+s);
+			if(s2.length == 1) {
+				Main.hexColorBegin = s2[0];
+				pl.getLogger().info("begin: "+Main.hexColorBegin);
+			}
+			if(s2.length == 2) {
+				Main.hexColorBegin = s2[1];
+				pl.getLogger().info("begin: "+Main.hexColorEnd);
+			}
+		}
 		
 		// Create scoreboard folder if not exists
 		File sbfolder = new File(Main.pluginfolder+"/scoreboards/");
@@ -35,11 +51,49 @@ public class Config {
 		createDefaultScoreboard();
 	}
 	public static void createDefaultScoreboard() {
+		// readme
+		File readme = new File(Main.pluginfolder+"/scoreboards/readme.txt");
+		if(!readme.exists()) {
+			try {
+				readme.createNewFile();
+				FileWriter myWriter = new FileWriter(readme);
+				myWriter.write("How to use multiple scoreboards:\n"
+						+ "1. Set the default scoreboard in the config.yml. The name of the scoreboard is the filename.\n\n"
+						+ "2. Now copy the default scoreboard file and rename it to what you want.\n\n"
+						+ "3. Open the copied file and go to the end. There you can configurate the conditions to apply the scoreboard. Examples are below.\n\n"
+						+ "4. The scoreboard you've set as default doesn't really needs conditions because it will automatically be set if a players joins.\n\n\n"
+						+ "Examples:\n"
+						+ "Apply if a player is in creative mode OR has a permission:\n"
+						+ "- 'gamemode:creative'\n"
+						+ "- 'permission:some.permission'\n\n"
+						+ "Apply if a player is in creative mode OR surival mode AND has a permission:\n"
+						+ "- 'gamemode:creative AND permission:some.permission'\n"
+						+ "- 'gamemode.survival AND permission:some.permission'\n\n"
+						+ "Apply the above, but only in a specific world:\n"
+						+ "- 'gamemode:creative AND permission:some.permission AND world:world_nether'\n"
+						+ "- 'gamemode.survival AND permission:some.permission AND world:world_nether'\n\n"
+						+ "Now you should understand how it works. If you want OR, add a new line. If you want AND, write 'AND' following with the condition.\n\n"
+						+ "Here are all conditions you can use:\n"
+						+ "- world:<world>\n"
+						+ "- permission:<permission>\n"
+						+ "- gamemode:<survival/creative/adventure/spectator>");
+				myWriter.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		// default scoreboard
 		File file = new File(Main.pluginfolder+"/scoreboards/scoreboard.yml");
 		if(!file.exists()) {
 			try {
 				file.createNewFile();
-				YamlConfiguration cfg = YamlConfiguration.loadConfiguration(file);
+				YamlConfiguration cfg;
+				try {
+					cfg = YamlConfiguration.loadConfiguration(file);
+				}catch (Exception e) {
+					pl.getLogger().severe("You have errors in the tablist.yml file! Please check for spacing and typo errors!");
+					return;
+				}
 				cfg.options().header("Here you can edit the screboard.\n"
 						+ "You can add as many animation steps as you like.\n"
 						+ "If you want a empty line, just set one animation step that is empty.\n\n"
@@ -151,10 +205,7 @@ public class Config {
 				cfg.addDefault("6.scores", score_7);
 				
 				List<String> conditions = new ArrayList<>();
-				conditions.add("world:world AND permission:some.permission");
-				conditions.add("world:world AND permission:some.other.permission");
-				conditions.add("world:world AND gamemode:creative");
-				conditions.add("world:world_nether");
+				conditions.add("&Add conditions here");
 				cfg.addDefault("conditions", conditions);
 				
 				//Save

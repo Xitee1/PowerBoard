@@ -1,6 +1,7 @@
 package de.xite.scoreboard.modules.board;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -204,5 +205,33 @@ public class ScoreboardManager {
 		sm.name = null;
 		sm.players = null;
 		ScoreboardPlayer.scoreboards.remove(name);
+	}
+	
+	
+	public static void registerAllScoreboards() {
+		ArrayList<String> boards = new ArrayList<>();
+		// Get all scoreboards from the scoreboard folder
+		File f = new File(Main.pluginfolder+"/scoreboards/");
+		FilenameFilter filter = new FilenameFilter() {
+			@Override
+			public boolean accept(File f, String name) {
+				return name.endsWith(".yml");
+			}
+		};
+		File[] files = f.listFiles(filter);
+		
+		for(int i = 0; i < files.length; i++) {
+			String s = files[i].getName();
+			boards.add(s.substring(0, s.lastIndexOf(".yml")));
+		}
+		new ScoreboardPlayer(); // prepare the scoreboard
+		for(String board : boards)
+			ScoreboardManager.get(board);
+	}
+	public static void unregisterAllScoreboards() {
+		for(Entry<String, ScoreboardManager> sm : ScoreboardPlayer.scoreboards.entrySet()) {
+			String name = sm.getKey();
+			unregister(name);
+		}
 	}
 }

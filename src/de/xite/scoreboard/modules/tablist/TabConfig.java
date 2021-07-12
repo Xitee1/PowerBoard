@@ -37,7 +37,14 @@ public class TabConfig {
 		Config.createDefaultTablist(file);
 		
 		// Check for errors
-		YamlConfiguration cfg = YamlConfiguration.loadConfiguration(file);
+		YamlConfiguration cfg;
+		try {
+			cfg = YamlConfiguration.loadConfiguration(file);
+		}catch (Exception e) {
+			pl.getLogger().severe("You have errors in the tablist.yml file! Please check for spacing and typo errors!");
+			return;
+		}
+		
 		if(!(cfg.contains("header") || cfg.contains("footer"))) {
 			pl.getLogger().severe("The tablist config file is empty or the header/footer is not configurated!");
 			disabled = true;

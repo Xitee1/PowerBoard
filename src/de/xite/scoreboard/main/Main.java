@@ -1,10 +1,7 @@
 package de.xite.scoreboard.main;
 
-import java.io.File;
-import java.io.FilenameFilter;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -34,9 +31,11 @@ public class Main extends JavaPlugin implements Listener{
 	public static Version version; // Minecraft version
 	public static boolean debug = false; // Debug
 	
+	public static String hexColorBegin = "", hexColorEnd = "";
+	
 	@Override
 	public void onEnable() {
-		// ---- Load Plugin ----//
+		// ---- Load the plugin ----//
 		pl = this;
 		version = getBukkitVersion();
 		
@@ -52,8 +51,7 @@ public class Main extends JavaPlugin implements Listener{
 		
 		ExternalPlugins.initializePlugins(); // Load all external plugin APIs
 	    
-		// Updater
-		if(Updater.checkVersion()) {
+		if(Updater.checkVersion()) { // Check for updates
 			pl.getLogger().info("-> A new version (v."+Updater.version+") is available! Your version: "+pl.getDescription().getVersion());
 			pl.getLogger().info("-> Update me! :)");
 		}
@@ -67,16 +65,17 @@ public class Main extends JavaPlugin implements Listener{
 		
 		// ---- Load Modules ---- //
 		if(pl.getConfig().getBoolean("scoreboard"))
-			registerScoreboards(); // Register all Scoreboards
+			ScoreboardManager.registerAllScoreboards(); // Register all Scoreboards
 		
-		// Set the scoreboard and prefixes for all online players
 		Bukkit.getScheduler().runTaskLater(pl, new Runnable() {
 			@Override
 			public void run() {
+				// set scoreboard and ranks
 				if(pl.getConfig().getBoolean("scoreboard") || pl.getConfig().getBoolean("tablist.ranks"))
 					ScoreboardPlayer.players.clear();
 					for(Player all : Bukkit.getOnlinePlayers())
 						ScoreboardPlayer.setScoreboard(all, pl.getConfig().getString("scoreboard-default"));
+				// set tablist
 				if(pl.getConfig().getBoolean("tablist.text")) {
 					TabConfig tab = new TabConfig();
 					tab.register();
@@ -92,38 +91,9 @@ public class Main extends JavaPlugin implements Listener{
 		if(pl.getConfig().getBoolean("scoreboard"))
 			for(Entry<Player, String> all : ScoreboardPlayer.players.entrySet())
 				ScoreboardPlayer.removeScoreboard(all.getKey(), true);
-		Main.unregisterScoreboards();
+		ScoreboardManager.unregisterAllScoreboards();
 		Placeholders.ph.clear();
 	}
-
-	public static void registerScoreboards() {
-		ArrayList<String> boards = new ArrayList<>();
-		// Get all scoreboards from the scoreboard folder
-		File f = new File(pluginfolder+"/scoreboards/");
-		FilenameFilter filter = new FilenameFilter() {
-			@Override
-			public boolean accept(File f, String name) {
-				return name.endsWith(".yml");
-			}
-		};
-		File[] files = f.listFiles(filter);
-		
-		for(int i = 0; i < files.length; i++) {
-			String s = files[i].getName();
-			boards.add(s.substring(0, s.lastIndexOf(".yml")));
-		}
-		new ScoreboardPlayer(); // prepare the scoreboard
-		for(String board : boards)
-			ScoreboardManager.get(board);
-	}
-	public static void unregisterScoreboards() {
-		for(Entry<String, ScoreboardManager> sm : ScoreboardPlayer.scoreboards.entrySet()) {
-			String name = sm.getKey();
-			ScoreboardManager.unregister(name);
-		}
-	}
-	
-
     // ---- Utils ---- //
 	public static Version getBukkitVersion() {
 		if(version != null)
@@ -147,9 +117,7 @@ public class Main extends JavaPlugin implements Listener{
     
     public final static char COLOR_CHAR = ChatColor.COLOR_CHAR;
     public static String translateHexColor(String message) {
-    	String startTag = "#";
-    	String endTag = "";
-        final Pattern hexPattern = Pattern.compile(startTag + "([A-Fa-f0-9]{6})" + endTag);
+        final Pattern hexPattern = Pattern.compile(hexColorBegin + "([A-Fa-f0-9]{6})" + hexColorEnd);
         Matcher matcher = hexPattern.matcher(message);
         StringBuffer buffer = new StringBuffer(message.length() + 4 * 8);
         while (matcher.find())

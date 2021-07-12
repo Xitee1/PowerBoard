@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 
 import de.xite.scoreboard.main.Config;
 import de.xite.scoreboard.main.Main;
+import de.xite.scoreboard.modules.board.ScoreboardManager;
 import de.xite.scoreboard.modules.tablist.TabConfig;
 import de.xite.scoreboard.utils.Updater;
 import net.md_5.bungee.api.ChatColor;
@@ -43,8 +44,8 @@ public class ScoreboardCommand implements CommandExecutor{
 					Config.loadConfig();
 					if(Main.pl.getConfig().getBoolean("scoreboard")) {
 						s.sendMessage(Main.pr+ChatColor.GRAY+"Reloading "+ChatColor.YELLOW+"scoreboards "+ChatColor.GRAY+"...");
-						Main.unregisterScoreboards();
-						Main.registerScoreboards();
+						ScoreboardManager.unregisterAllScoreboards();
+						ScoreboardManager.registerAllScoreboards();
 					}
 					if(Main.pl.getConfig().getBoolean("tablist.text")) {
 						TabConfig tab = new TabConfig();
