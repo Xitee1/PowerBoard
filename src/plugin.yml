@@ -3,7 +3,7 @@ version: 3.5
 author: Xitee
 softdepend: [PermissionsEx, Vault, PlaceholderAPI, LuckPerms]
 main: de.xite.scoreboard.main.Main
-api-version: 1.17
+api-version: 1.13
 commands:
    sb:
       description: Open the Scoreboard Menu

@@ -16,10 +16,47 @@ public class ScoreboardAPI {
 	}
 	
 	// ---- Scoreboard ---- //
+	/**
+	 * API has changed.
+	 *
+	 * @deprecated use {@link #setScoreboard(p)} instead.  
+	 */
+	@Deprecated
+	public static void enableScoreboard(Player p, String s) {
+		ScoreboardPlayer.setScoreboard(p, null);
+	}
+	/**
+	 * API has changed.
+	 *
+	 * @deprecated use {@link #setScoreboard(p)} instead.  
+	 */
+	@Deprecated
+	public static void disableScoreboard(Player p, String s) {
+		ScoreboardPlayer.removeScoreboard(p, false);
+	}
+	/**
+	 * API has changed.
+	 *
+	 * @deprecated use {@link #setScoreboard(p)} instead.  
+	 */
+	@Deprecated
 	public static void enableScoreboard(Player p) {
 		ScoreboardPlayer.setScoreboard(p, null);
 	}
+	/**
+	 * API has changed.
+	 *
+	 * @deprecated use {@link #setScoreboard(p)} instead.  
+	 */
+	@Deprecated
 	public static void disableScoreboard(Player p) {
+		ScoreboardPlayer.removeScoreboard(p, false);
+	}
+	
+	public static void setScoreboard(Player p) {
+		ScoreboardPlayer.setScoreboard(p, null);
+	}
+	public static void removeScoreboard(Player p) {
 		ScoreboardPlayer.removeScoreboard(p, false);
 	}
 	
