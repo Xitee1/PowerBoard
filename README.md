@@ -31,7 +31,6 @@ ScoreboardAPI.removeScoreboard(p);
 // Set a complete custom Scoreboard
 // You have to disable the scoreboard in the config.yml!
 
-
 ScoreboardAPI.setScoreboard(p); // Enable the scoreboard - Yes, we have disabled it in the config.yml, but now we have to enable it again with the API
 ScoreboardAPI.setScoreboardTitle(p, title, false); // The boolean indicates if the placeholders should be replaced
 
