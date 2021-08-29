@@ -31,16 +31,15 @@ ScoreboardAPI.removeScoreboard(p);
 // Set a complete custom Scoreboard
 // You have to disable the scoreboard in the config.yml!
 
-ScoreboardAPI.setScoreboard(p); // Enable the scoreboard - Yes, we have disabled it in the config.yml, but now we have to enable it again with the API
-ScoreboardAPI.setScoreboardTitle(p, title, false); // The boolean indicates if the placeholders should be replaced
+ScoreboardAPI.setScoreboard(p); // Set the scoreboard for the player
+ScoreboardAPI.setScoreboardTitle(p, title, false); // The boolean indicates if the placeholders should be replaced or not
 
-// You can set up to 14 scores (If you set more not all of them will show up)
-// Set multiple scores
+// You can set up to 14 scores. If you set more, not all of them will show up!
 ArrayList<String> scores = new ArrayList<>();
 scores.add("Score 1");
 scores.add("Score 2");
 scores.add("Score 3");
-ScoreboardAPI.setScoreboardScores(p, scores, false); // The boolean indicates if the placeholders should be replaced
+ScoreboardAPI.setScoreboardScores(p, scores, false); // The boolean indicates if the placeholders should be replaced or not
 
 // Update a single score
 ScoreboardAPI.setScoreboardScore(p, "Score 3 Updated", 2, false); // The score with the text "Score 3" has now been changed to "Score 3 Updated"
