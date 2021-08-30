@@ -4,12 +4,26 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import de.xite.scoreboard.main.Main;
 
 public class UpgradeVersion {
 	static Main pl = Main.pl;
+	public static void rename() {
+		File newFolder = new File(Main.pluginfolder);
+		File oldFolder = new File("plugins/Scoreboard");
+		if(!newFolder.exists() && oldFolder.exists()) {
+			oldFolder.renameTo(newFolder);
+		}
+		File jarFile = new File("plugins/Scoreboard.jar");
+		if(jarFile.exists()) {
+			Bukkit.getPluginManager().disablePlugin(Bukkit.getPluginManager().getPlugin("Scoreboard"));
+			jarFile.delete();
+		}
+	}
+	
 	public static void updateMultipleScoreboards() {
 		pl.getLogger().info("Upgrading multiple scoreboard support..");
 		pl.getLogger().info("Moving files..");

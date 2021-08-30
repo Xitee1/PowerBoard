@@ -1,4 +1,4 @@
-name: Scoreboard
+name: PowerBoard
 version: 3.5
 author: Xitee
 softdepend: [PermissionsEx, Vault, PlaceholderAPI, LuckPerms]

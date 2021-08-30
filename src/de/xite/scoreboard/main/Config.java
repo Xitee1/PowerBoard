@@ -61,7 +61,7 @@ public class Config {
 						+ "1. Set the default scoreboard in the config.yml. The name of the scoreboard is the filename.\n\n"
 						+ "2. Now copy the default scoreboard file and rename it to what you want.\n\n"
 						+ "3. Open the copied file and go to the end. There you can configurate the conditions to apply the scoreboard. Examples are below.\n\n"
-						+ "4. The scoreboard you've set as default doesn't really needs conditions because it will automatically be set if a players joins.\n\n\n"
+						+ "4. The scoreboard you've set as default doesn't really needs conditions because it will automatically be set when a players joins the server.\n\n\n"
 						+ "Examples:\n"
 						+ "Apply if a player is in creative mode OR has a permission:\n"
 						+ "- 'gamemode:creative'\n"
@@ -104,25 +104,47 @@ public class Config {
 						+ "If you want to use multiple scoreboards, you have to set conditions for all scoreboards, except for the default one.\n");
 				//Titel
 				ArrayList<String> title = new ArrayList<String>();
-				title.add("&e&6S&ecoreboard");
-				title.add("&eS&6c&eoreboard");
-				title.add("&eSc&6o&ereboard");
-				title.add("&eSco&6r&eeboard");
-				title.add("&eScor&6e&eboard");
-				title.add("&eScore&6b&eoard");
-				title.add("&eScoreb&6o&eard");
-				title.add("&eScorebo&6a&erd");
-				title.add("&eScoreboa&6r&ed");
-				title.add("&eScoreboar&6d&e");
-				title.add("&eScoreboa&6r&ed");
-				title.add("&eScorebo&6a&erd");
-				title.add("&eScoreb&6o&eard");
-				title.add("&eScore&6b&eoard");
-				title.add("&eScor&6e&eboard");
-				title.add("&eSco&6r&eeboard");
-				title.add("&eSc&6o&ereboard");
-				title.add("&eS&6c&eoreboard");
-				cfg.addDefault("titel.speed", 17);
+				title.add("&4PowerBoard");
+				title.add("&4PowerBoard");
+				title.add("&cPowerBoard");
+				title.add("&cPowerBoard");
+				title.add("&6PowerBoard");
+				title.add("&6PowerBoard");
+				title.add("&ePowerBoard");
+				title.add("&ePowerBoard");
+				title.add("&2PowerBoard");
+				title.add("&2PowerBoard");
+				title.add("&aPowerBoard");
+				title.add("&aPowerBoard");
+				title.add("&bPowerBoard");
+				title.add("&bPowerBoard");
+				title.add("&3PowerBoard");
+				title.add("&3PowerBoard");
+				title.add("&1PowerBoard");
+				title.add("&1PowerBoard");
+				title.add("&9PowerBoard");
+				title.add("&9PowerBoard");
+				title.add("&dPowerBoard");
+				title.add("&dPowerBoard");
+				title.add("&5PowerBoard");
+				title.add("&5PowerBoard");
+				title.add("&fPowerBoard");
+				title.add("&fPowerBoard");
+				title.add("&7PowerBoard");
+				title.add("&7PowerBoard");
+				title.add("&8PowerBoard");
+				title.add("&8PowerBoard");
+				title.add("&0PowerBoard");
+				title.add("&0PowerBoard");
+				title.add("&aPowerBoard");
+				title.add("&aPowerBoard");
+				title.add("&f&oPowerBoard");
+				title.add("&f&kPowerBoard");
+				title.add("&f&mPowerBoard");
+				title.add("&f&mPowerBoard");
+				title.add("&f&o&nPowerBoard");
+				title.add(" ");
+				cfg.addDefault("titel.speed", 6);
 				cfg.addDefault("titel.titles", title);
 				
 				//Scores

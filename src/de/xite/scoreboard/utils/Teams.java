@@ -126,8 +126,11 @@ public class Teams {
 		if(!Main.pl.getConfig().getString("chat.colorperm").equals("none") && p.hasPermission(Main.pl.getConfig().getString("chat.colorperm"))) {
 			message = ChatColor.translateAlternateColorCodes('&', message);
 			
-			if(Main.pl.getConfig().getBoolean("chat.allowHexColors"))
-				message = Main.translateHexColor(message);
+			if(Main.pl.getConfig().getBoolean("chat.allowHexColors")) {
+				String hex = Main.translateHexColor(message);
+				if(!hex.equalsIgnoreCase("InvalidHexColor"))
+					message = hex;
+			}
 		}
 		
 		return Placeholders.replace(p, this.chatPrefix)+message;

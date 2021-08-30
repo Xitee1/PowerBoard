@@ -14,20 +14,22 @@ import org.bukkit.plugin.java.JavaPlugin;
 import de.xite.scoreboard.commands.ScoreboardCommand;
 import de.xite.scoreboard.listeners.ChatListener;
 import de.xite.scoreboard.listeners.JoinQuitListener;
+import de.xite.scoreboard.listeners.ScoreboardConditionListener;
 import de.xite.scoreboard.modules.board.ScoreboardManager;
 import de.xite.scoreboard.modules.board.ScoreboardPlayer;
 import de.xite.scoreboard.modules.tablist.TabConfig;
 import de.xite.scoreboard.utils.Placeholders;
 import de.xite.scoreboard.utils.SelfCheck;
 import de.xite.scoreboard.utils.Updater;
+import de.xite.scoreboard.utils.UpgradeVersion;
 import de.xite.scoreboard.utils.Version;
 import net.md_5.bungee.api.ChatColor;
 
 public class Main extends JavaPlugin implements Listener{
 	public static Main pl;
 	
-	public static String pluginfolder = "plugins/Scoreboard"; // plugin folder
-	public static String pr = ChatColor.GRAY+"["+ChatColor.YELLOW+"Scoreboard"+ChatColor.GRAY+"] "; // prefix
+	public static String pluginfolder = "plugins/PowerBoard"; // plugin folder
+	public static String pr = ChatColor.GRAY+"["+ChatColor.YELLOW+"PowerBoard"+ChatColor.GRAY+"] "; // prefix
 	public static Version version; // Minecraft version
 	public static boolean debug = false; // Debug
 	
@@ -39,6 +41,7 @@ public class Main extends JavaPlugin implements Listener{
 		pl = this;
 		version = getBukkitVersion();
 		
+		UpgradeVersion.rename();
 		Config.loadConfig(); // load the config.yml
 		if(SelfCheck.check()) { // start the self check
 	    	pl.getLogger().severe("self-check -> Fatal errors were found! Please fix you config! Disabling Plugin...");
@@ -61,6 +64,7 @@ public class Main extends JavaPlugin implements Listener{
 		PluginManager pm = Bukkit.getPluginManager();
 		pm.registerEvents(new JoinQuitListener(), this);
 		pm.registerEvents(new ChatListener(), this);
+		pm.registerEvents(new ScoreboardConditionListener(), this);
 		pm.registerEvents(this, this);
 		
 		// ---- Load Modules ---- //
@@ -117,18 +121,22 @@ public class Main extends JavaPlugin implements Listener{
     
     public final static char COLOR_CHAR = ChatColor.COLOR_CHAR;
     public static String translateHexColor(String message) {
-        final Pattern hexPattern = Pattern.compile(hexColorBegin + "([A-Fa-f0-9]{6})" + hexColorEnd);
-        Matcher matcher = hexPattern.matcher(message);
-        StringBuffer buffer = new StringBuffer(message.length() + 4 * 8);
-        while (matcher.find())
-        {
-            String group = matcher.group(1);
-            matcher.appendReplacement(buffer, COLOR_CHAR + "x"
-                    + COLOR_CHAR + group.charAt(0) + COLOR_CHAR + group.charAt(1)
-                    + COLOR_CHAR + group.charAt(2) + COLOR_CHAR + group.charAt(3)
-                    + COLOR_CHAR + group.charAt(4) + COLOR_CHAR + group.charAt(5)
-                    );
-        }
-        return matcher.appendTail(buffer).toString();
+    	try {
+            final Pattern hexPattern = Pattern.compile(hexColorBegin + "([A-Fa-f0-9]{6})" + hexColorEnd);
+            Matcher matcher = hexPattern.matcher(message);
+            StringBuffer buffer = new StringBuffer(message.length() + 4 * 8);
+            while (matcher.find()) {
+                String group = matcher.group(1);
+                matcher.appendReplacement(buffer, COLOR_CHAR + "x"
+                        + COLOR_CHAR + group.charAt(0) + COLOR_CHAR + group.charAt(1)
+                        + COLOR_CHAR + group.charAt(2) + COLOR_CHAR + group.charAt(3)
+                        + COLOR_CHAR + group.charAt(4) + COLOR_CHAR + group.charAt(5)
+                        );
+            }
+            return matcher.appendTail(buffer).toString();
+    	}catch (Exception e) {
+    		pl.getLogger().severe("You have a invalid HEX-Color-Code! Please check the syntax! String: "+message);
+    		return "InvalidHexColor";
+		}
     }
 }

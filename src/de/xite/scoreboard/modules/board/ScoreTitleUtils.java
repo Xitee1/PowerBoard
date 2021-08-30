@@ -19,6 +19,8 @@ public class ScoreTitleUtils {
 		Objective obj = board.getObjective(DisplaySlot.SIDEBAR);
 		if(obj == null)
 			return false;
+		if(Main.debug)
+			Main.pl.getLogger().info("Set scoreboard title for Player "+p.getName());
 		if(usePlaceholders)
 			title = Placeholders.replace(p, title);
 		if(Main.getBukkitVersion().compareTo(new Version("1.13")) == 1 || Main.getBukkitVersion().equals(new Version("1.13"))) {// In version 1.13+ you can use more than 16 chars
@@ -67,6 +69,8 @@ public class ScoreTitleUtils {
 		Objective obj = board.getObjective(DisplaySlot.SIDEBAR);
 		if(obj == null)
 			return false;
+		if(Main.debug)
+			Main.pl.getLogger().info("Set scoreboard score for Player "+p.getName());
 		String colorcode = "§"+ScoreID;
 		if(ScoreID > 9) {
 			if(ScoreID == 10)

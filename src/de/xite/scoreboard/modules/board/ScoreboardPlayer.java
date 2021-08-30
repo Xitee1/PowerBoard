@@ -1,6 +1,8 @@
 package de.xite.scoreboard.modules.board;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -41,7 +43,7 @@ public class ScoreboardPlayer {
 			if(obj == null) {
 				board = Bukkit.getScoreboardManager().getNewScoreboard();
 				
-				if(Main.getBukkitVersion().compareTo(new Version("1.13")) == 1 || Main.getBukkitVersion().equals(new Version("1.13"))) { //only for version 1.13+
+				if(Main.getBukkitVersion().compareTo(new Version("1.13")) == 1 || Main.getBukkitVersion().equals(new Version("1.13"))) { // only for version 1.13+
 					obj = board.registerNewObjective("aaa", "bbb", "SBPlugin");
 				}else
 					obj = board.registerNewObjective("aaa", "bbb");
@@ -68,6 +70,7 @@ public class ScoreboardPlayer {
 		if(pl.getConfig().getBoolean("tablist.ranks"))
 			PrefixManager.setTeams(p, board);
 	}
+	@SuppressWarnings("deprecation")
 	public static void updateScoreboard(Player p) {
 		/* Config syntax: 
 		conditions:
@@ -78,20 +81,67 @@ public class ScoreboardPlayer {
 		*/
 		if(!players.containsKey(p))
 			return;
-		String newScoreboard = players.get(p);
-		
+
+		ScoreboardManager newScoreboard = getMatchingScoreboard(p);
+		if(newScoreboard == null) {
+			pl.getLogger().severe("Could not set scoreboard '"+newScoreboard+"'! File does not exists!");
+			return;
+		}
+		if(Main.debug)
+			pl.getLogger().info("Changing "+p.getName()+"'s scoreboard to "+newScoreboard.getName());
 		// Check if update is required
-		if(!players.get(p).equals(newScoreboard)) {
+		if(players.get(p).equals(newScoreboard.getName())) {
 			// Update player's scoreboard
 			removeScoreboard(p, false);
-			ScoreboardManager sm = ScoreboardManager.get(newScoreboard);
-			if(sm == null) {
-				pl.getLogger().severe("Could not set scoreboard '"+newScoreboard+"'! File does not exists!");
-				return;
-			}
-			ScoreTitleUtils.setTitle(p, p.getScoreboard(), sm.getCurrentTitle(), true, sm);// Get the current title and set it
-			ScoreTitleUtils.setScores(p, p.getScoreboard(), sm.getCurrentScores(), true, sm);
+			
+			Scoreboard board = p.getScoreboard();
+			Objective obj;
+			if(Main.getBukkitVersion().compareTo(new Version("1.13")) == 1 || Main.getBukkitVersion().equals(new Version("1.13"))) { // only for version 1.13+
+				obj = board.registerNewObjective("aaa", "bbb", "SBPlugin");
+			}else
+				obj = board.registerNewObjective("aaa", "bbb");
+			obj.setDisplaySlot(DisplaySlot.SIDEBAR);
+			
+			ScoreTitleUtils.setTitle(p, board, newScoreboard.getCurrentTitle(), true, newScoreboard);// Get the current title and set it
+			ScoreTitleUtils.setScores(p, board, newScoreboard.getCurrentScores(), true, newScoreboard);
+			newScoreboard.addPlayer(p);
 		}
+	}
+	public static ScoreboardManager getMatchingScoreboard(Player p) {
+		for(Entry<String, ScoreboardManager> e : scoreboards.entrySet()) {
+			ScoreboardManager sm = e.getValue();
+			for(String condition : sm.conditions) { // For all "OR" conditions (lines)
+				ArrayList<String> andConditions = new ArrayList<>();
+				if(condition.contains(" AND ")) {
+					for(String s : condition.split("AND"))
+						andConditions.add(s);
+				}else
+					andConditions.add(condition);
+				
+				Boolean match = true;
+				for(String s : andConditions) {
+					if(s.startsWith("world:")) {
+						String value = s.split("world:")[1];
+						if(!(p.getLocation().getWorld().getName().equals(value)))
+							match = false;
+					}
+					if(s.startsWith("permission:")) {
+						String value = s.split("permission:")[1];
+						if(!(p.hasPermission(value)))
+							match = false;
+					}
+					if(s.startsWith("gamemode:")) {
+						String value = s.split("gamemode:")[1];
+						if(!(p.getGameMode().name().equalsIgnoreCase(value)))
+							match = false;
+					}
+				}
+				
+				if(match == true)
+					return sm;
+			}
+		}
+		return null;
 	}
 	public static void removeScoreboard(Player p, boolean removeTeams) {
 		if(!players.containsKey(p))

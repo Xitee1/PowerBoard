@@ -5,6 +5,7 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
@@ -17,6 +18,9 @@ import de.xite.scoreboard.main.Main;
 public class ScoreboardManager {
 	// The name of the scoreboard
 	String name;
+	
+	// Conditions
+	List<String> conditions;
 	
 	// all scores with all animations
 	HashMap<Integer, ArrayList<String>> scores = new HashMap<>(); // <score ID, <animations>>
@@ -44,6 +48,7 @@ public class ScoreboardManager {
 			return;
 		}
 		YamlConfiguration cfg = YamlConfiguration.loadConfiguration(f);
+		conditions = cfg.getStringList("conditions");
 		importScores(cfg); // Import all scores
 		importTitle(cfg); // Import the title
 	}
