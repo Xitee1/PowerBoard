@@ -1,5 +1,5 @@
 #####################################################################################################
-### Scoreboard + Tablist + Prefix + Chat | Animated                                               ###
+### Powerboard: Scoreboard + Tablist + Prefix + Chat | Animated                                   ###
 ###                                                                                               ###
 ### You need some help? Have a look at our wiki: https://wiki.xitma.de/plugin.php?name=scoreboard ###
 ### For bugreports and proposals join our Discord: https://discord.gg/p95cB9YQFJ                  ###
@@ -88,7 +88,7 @@ placeholder:
 ######################
 update:
   notification: true # Send a message to all Admins on join if a new update is available
-  autoupdater: false # With this option, the plugin will be automatically updatet
+  autoupdater: false # With this option, the plugin will be automatically updated
 
 ################################################
 #### The debug can help you to find problems ###

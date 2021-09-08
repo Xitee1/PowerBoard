@@ -37,42 +37,42 @@ public class ExternalPlugins {
 				pl.getLogger().severe("There was an error while loading Vault! Make sure that you have a money system on your server that also supports Vault.");
 			}
 		}
-	    if(Bukkit.getPluginManager().isPluginEnabled("PermissionsEx"))
-	        hasPex = true;
-	    if(Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI"))
-	    	hasPapi = true;
-	    if(Bukkit.getPluginManager().isPluginEnabled("LuckPerms")) {
-	    	hasLuckPerms = true;
+		if(Bukkit.getPluginManager().isPluginEnabled("PermissionsEx"))
+			hasPex = true;
+		if(Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI"))
+			hasPapi = true;
+		if(Bukkit.getPluginManager().isPluginEnabled("LuckPerms")) {
+			hasLuckPerms = true;
 			RegisteredServiceProvider<LuckPerms> provider = Bukkit.getServicesManager().getRegistration(LuckPerms.class);
 			if(provider != null) {
 				luckPerms = provider.getProvider();
 			}
 			new LuckPermsListener(pl, luckPerms);
-	    }
+		}
 		// BStats analytics
 		try {
 			int pluginId = 6722; // <-- Replace with the id of your plugin!
-	        BStatsMetrics metrics = new BStatsMetrics(pl, pluginId);
-	        //Costom charts
-	        metrics.addCustomChart(new BStatsMetrics.SimplePie("update_auto_update", () -> pl.getConfig().getBoolean("update.autoupdater") ? "Aktiviert" : "Deaktiviert"));
-	        metrics.addCustomChart(new BStatsMetrics.SimplePie("update_notifications", () -> pl.getConfig().getBoolean("update.notification") ? "Aktiviert" : "Deaktiviert"));
+			BStatsMetrics metrics = new BStatsMetrics(pl, pluginId);
+			// Custom charts
+			metrics.addCustomChart(new BStatsMetrics.SimplePie("update_auto_update", () -> pl.getConfig().getBoolean("update.autoupdater") ? "Aktiviert" : "Deaktiviert"));
+			metrics.addCustomChart(new BStatsMetrics.SimplePie("update_notifications", () -> pl.getConfig().getBoolean("update.notification") ? "Aktiviert" : "Deaktiviert"));
 	        
-	        metrics.addCustomChart(new BStatsMetrics.SimplePie("setting_use_scoreboard", () -> pl.getConfig().getBoolean("scoreboard") ? "Aktiviert" : "Deaktiviert"));
-	        metrics.addCustomChart(new BStatsMetrics.SimplePie("setting_use_tablist_text", () -> pl.getConfig().getBoolean("tablist.text") ? "Aktiviert" : "Deaktiviert"));
-	        metrics.addCustomChart(new BStatsMetrics.SimplePie("setting_use_tablist_ranks", () -> pl.getConfig().getBoolean("tablist.ranks") ? "Aktiviert" : "Deaktiviert"));
-	        metrics.addCustomChart(new BStatsMetrics.SimplePie("setting_use_chat", () -> pl.getConfig().getBoolean("chat.ranks") ? "Atktiviert" : "Deaktiviert"));
-	        metrics.addCustomChart(new BStatsMetrics.SimplePie("setting_permsystem", () -> pl.getConfig().getString("ranks.permissionsystem").toLowerCase()));
-	        if(Main.debug)
-	        	pl.getLogger().info("Analytics sent to BStats");
+			metrics.addCustomChart(new BStatsMetrics.SimplePie("setting_use_scoreboard", () -> pl.getConfig().getBoolean("scoreboard") ? "Aktiviert" : "Deaktiviert"));
+			metrics.addCustomChart(new BStatsMetrics.SimplePie("setting_use_tablist_text", () -> pl.getConfig().getBoolean("tablist.text") ? "Aktiviert" : "Deaktiviert"));
+			metrics.addCustomChart(new BStatsMetrics.SimplePie("setting_use_tablist_ranks", () -> pl.getConfig().getBoolean("tablist.ranks") ? "Aktiviert" : "Deaktiviert"));
+			metrics.addCustomChart(new BStatsMetrics.SimplePie("setting_use_chat", () -> pl.getConfig().getBoolean("chat.ranks") ? "Atktiviert" : "Deaktiviert"));
+			metrics.addCustomChart(new BStatsMetrics.SimplePie("setting_permsystem", () -> pl.getConfig().getString("ranks.permissionsystem").toLowerCase()));
+			if(Main.debug)
+				pl.getLogger().info("Analytics sent to BStats");
 		} catch (Exception e) {
 			pl.getLogger().warning("Could not send analytics to BStats!");
 		}
 	}
-    private static boolean setupEconomy() {
-        RegisteredServiceProvider<Economy> rsp = pl.getServer().getServicesManager().getRegistration(Economy.class);
-        if(rsp == null)
-            return false;
-        econ = rsp.getProvider();
-        return econ != null;
-    }
+	private static boolean setupEconomy() {
+		RegisteredServiceProvider<Economy> rsp = pl.getServer().getServicesManager().getRegistration(Economy.class);
+		if(rsp == null)
+			return false;
+		econ = rsp.getProvider();
+		return econ != null;
+	}
 }

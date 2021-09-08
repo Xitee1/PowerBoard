@@ -22,11 +22,11 @@ public class JoinQuitListener implements Listener {
 		if(p.hasPermission("scoreboard.update") || p.isOp()) {
 			if(Updater.checkVersion()) {
 				if(pl.getConfig().getBoolean("update.notification")) {
-					p.sendMessage(Main.pr+ChatColor.RED+"A new version is available (§bv"+Updater.version+ChatColor.RED+")! Your version: §bv"+pl.getDescription().getVersion());
+					p.sendMessage(Main.pr+ChatColor.RED+"A new version is available ("+ChatColor.AQUA+"v"+Updater.version+ChatColor.RED+")! Your version: "+ChatColor.AQUA+pl.getDescription().getVersion());
 					if(pl.getConfig().getBoolean("update.autoupdater")) {
 						p.sendMessage(Main.pr+ChatColor.GREEN+"The plugin will be updated automatically after a server restart.");
 					}else {
-						p.sendMessage(Main.pr+ChatColor.RED+"The auto-updater is disabled in your config.yml. Type §6/sb update §cto update to the newest version.");
+						p.sendMessage(Main.pr+ChatColor.RED+"The auto-updater is disabled in your config.yml. Type /sb update or enable the auto-updater.");
 					}
 				}
 			}
