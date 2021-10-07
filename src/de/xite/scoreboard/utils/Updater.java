@@ -26,7 +26,7 @@ public class Updater {
         } catch (IOException e) {
             pl.getLogger().info("Updater -> Cannot look for updates: " + e.getMessage());
         }
-        return "Could not check for updates! You probably restarted your server to often, so SpigotMC blocked your IP.";
+        return "Could not check for updates! You probably restarted your server to often, so SpigotMC blocked your IP. You probably have to wait a few minutes/hours.";
     }
     
     public static boolean checkVersion() {

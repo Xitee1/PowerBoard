@@ -30,10 +30,10 @@ public class Main extends JavaPlugin implements Listener{
 	
 	public static String pluginfolder = "plugins/PowerBoard"; // plugin folder
 	public static String pr = ChatColor.GRAY+"["+ChatColor.YELLOW+"PowerBoard"+ChatColor.GRAY+"] "; // prefix
-	public static Version version; // Minecraft version
-	public static boolean debug = false; // Debug
+	public static String hexColorBegin = "", hexColorEnd = ""; // hex color Syntax
 	
-	public static String hexColorBegin = "", hexColorEnd = "";
+	public static Version version; // Minecraft version
+	public static boolean debug = false;
 	
 	@Override
 	public void onEnable() {
@@ -135,7 +135,7 @@ public class Main extends JavaPlugin implements Listener{
             }
             return matcher.appendTail(buffer).toString();
     	}catch (Exception e) {
-    		pl.getLogger().severe("You have a invalid HEX-Color-Code! Please check the syntax! String: "+message);
+    		pl.getLogger().severe("You have an invalid HEX-Color-Code! Please check the syntax! String: "+message);
     		return "InvalidHexColor";
 		}
     }

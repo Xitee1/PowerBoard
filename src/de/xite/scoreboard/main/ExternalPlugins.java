@@ -2,11 +2,17 @@ package de.xite.scoreboard.main;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.RegisteredServiceProvider;
+import org.bukkit.plugin.ServicePriority;
+import org.bukkit.plugin.ServicesManager;
 
-import de.xite.scoreboard.listeners.LuckPermsListener;
+import de.xite.scoreboard.depend.LuckPermsListener;
+import de.xite.scoreboard.depend.VaultChatImpl;
+import de.xite.scoreboard.depend.VaultPermissionImpl;
 import de.xite.scoreboard.utils.BStatsMetrics;
 import net.luckperms.api.LuckPerms;
+import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.permission.Permission;
 
 public class ExternalPlugins {
 	static Main pl = Main.pl;
@@ -26,21 +32,19 @@ public class ExternalPlugins {
 		if(Bukkit.getPluginManager().isPluginEnabled("Vault")) {
 			if(debug)
 				pl.getLogger().info("Loading Vault...");
-			try{
-				if(setupEconomy()) {
-					hasVault = true;
-					if(debug)
-						pl.getLogger().info("Successfully loaded Vault!");
-				}else
-					pl.getLogger().severe("There was an error while loading Vault! Make sure that you have a money system on your server that also supports Vault.");
-			}catch (NoClassDefFoundError  e) {
-				pl.getLogger().severe("There was an error while loading Vault! Make sure that you have a money system on your server that also supports Vault.");
+			if(setupEconomy()) {
+				hasVault = true;
+				if(debug)
+					pl.getLogger().info("Successfully loaded Vault-Economy!");
 			}
+			setupChat();
 		}
-		if(Bukkit.getPluginManager().isPluginEnabled("PermissionsEx"))
-			hasPex = true;
 		if(Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI"))
 			hasPapi = true;
+		
+		
+		if(Bukkit.getPluginManager().isPluginEnabled("PermissionsEx"))
+			hasPex = true;
 		if(Bukkit.getPluginManager().isPluginEnabled("LuckPerms")) {
 			hasLuckPerms = true;
 			RegisteredServiceProvider<LuckPerms> provider = Bukkit.getServicesManager().getRegistration(LuckPerms.class);
@@ -70,9 +74,22 @@ public class ExternalPlugins {
 	}
 	private static boolean setupEconomy() {
 		RegisteredServiceProvider<Economy> rsp = pl.getServer().getServicesManager().getRegistration(Economy.class);
-		if(rsp == null)
+		if(rsp == null) {
+			pl.getLogger().warning("Error hooking into Vault-Economy!");
 			return false;
+		}
 		econ = rsp.getProvider();
 		return econ != null;
+	}
+	private static void setupChat() {
+	    ServicesManager servicesManager = pl.getServer().getServicesManager();
+
+	    Permission permission = new VaultPermissionImpl();
+
+	    servicesManager.register(Permission.class, permission, pl, ServicePriority.Highest);
+		
+	    servicesManager.register(Chat.class, new VaultChatImpl(permission), pl, ServicePriority.Highest);
+		
+		pl.getLogger().info("Registered Vault-Chat");
 	}
 }

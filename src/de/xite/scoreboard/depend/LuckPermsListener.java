@@ -1,4 +1,4 @@
-package de.xite.scoreboard.listeners;
+package de.xite.scoreboard.depend;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -18,14 +18,14 @@ public class LuckPermsListener {
 
       	// subscribe to an event using a lambda
         eventBus.subscribe(UserDataRecalculateEvent.class, e -> {
-        	Bukkit.getScheduler().runTaskLater(pl, new Runnable() {// Run one second later that it doesn't update if a player disconnects
+        	Bukkit.getScheduler().runTaskLater(pl, new Runnable() {// Run a half second later that it doesn't update if a player disconnects
 				@Override
 				public void run() {
 		        	Player p = Bukkit.getPlayer(e.getUser().getUniqueId());
 		        	if(p != null)
 		            	PrefixManager.update(p);
 				}
-			}, 20);
+			}, 10);
         });
     }
 }

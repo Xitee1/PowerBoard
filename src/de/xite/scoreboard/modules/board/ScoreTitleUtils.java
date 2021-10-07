@@ -19,17 +19,15 @@ public class ScoreTitleUtils {
 		Objective obj = board.getObjective(DisplaySlot.SIDEBAR);
 		if(obj == null)
 			return false;
-		if(Main.debug)
-			Main.pl.getLogger().info("Set scoreboard title for Player "+p.getName());
 		if(usePlaceholders)
 			title = Placeholders.replace(p, title);
-		if(Main.getBukkitVersion().compareTo(new Version("1.13")) == 1 || Main.getBukkitVersion().equals(new Version("1.13"))) {// In version 1.13+ you can use more than 16 chars
-			if(title.length() <= 16) {
+		if(Main.getBukkitVersion().compareTo(new Version("1.13")) == 1 || Main.getBukkitVersion().equals(new Version("1.13"))) { // In version 1.13+ you can use more than 16 chars
+			if(title.length() <= 64) {
 				obj.setDisplayName(title);
 			}else {
 				obj.setDisplayName(ChatColor.RED+"-too long-");
 				Main.pl.getLogger().warning(" ");
-				Main.pl.getLogger().warning("-> The scoreboard title is too long! The limit is 16 chars!");
+				Main.pl.getLogger().warning("-> The scoreboard title is too long! The limit is 64 chars!");
 				if(sm != null)
 					Main.pl.getLogger().warning("-> Scoreboard: "+sm.getName());
 				Main.pl.getLogger().warning("-> Title: "+Main.pl.getConfig().getString("scoreboard.name"));
@@ -37,12 +35,12 @@ public class ScoreTitleUtils {
 				Main.pl.getLogger().warning(" ");
 			}
 		}else {
-			if(title.length() <= 64) {
+			if(title.length() <= 16) {
 				obj.setDisplayName(title);
 			}else {
 				obj.setDisplayName(ChatColor.RED+"-too long-");
 				Main.pl.getLogger().warning(" ");
-				Main.pl.getLogger().warning("-> The scoreboard title is too long! The limit is 64 chars!");
+				Main.pl.getLogger().warning("-> The scoreboard title is too long! The limit is 16 chars!");
 				if(sm != null)
 					Main.pl.getLogger().warning("-> Scoreboard: "+sm.getName());
 				Main.pl.getLogger().warning("-> Title: "+Main.pl.getConfig().getString("scoreboard.name"));
@@ -69,20 +67,18 @@ public class ScoreTitleUtils {
 		Objective obj = board.getObjective(DisplaySlot.SIDEBAR);
 		if(obj == null)
 			return false;
-		if(Main.debug)
-			Main.pl.getLogger().info("Set scoreboard score for Player "+p.getName());
-		String colorcode = "§"+ScoreID;
+		String colorcode = "Â§"+ScoreID;
 		if(ScoreID > 9) {
 			if(ScoreID == 10)
-				colorcode = "§a";
+				colorcode = "Â§a";
 			if(ScoreID == 11)
-				colorcode = "§b";
+				colorcode = "Â§b";
 			if(ScoreID == 12)
-				colorcode = "§c";
+				colorcode = "Â§c";
 			if(ScoreID == 13)
-				colorcode = "§d";
+				colorcode = "Â§d";
 			if(ScoreID == 14)
-				colorcode = "§e";
+				colorcode = "Â§e";
 		}
 		Team team = board.getTeam("score-"+ScoreID);
 		if(team == null) {
@@ -98,13 +94,13 @@ public class ScoreTitleUtils {
 			score = Placeholders.replace(p, score);
 		
 		// ---- Set all scores ---- //
-		if(Main.getBukkitVersion().compareTo(new Version("1.13")) == 1 || Main.getBukkitVersion().equals(new Version("1.13"))) {//Under version 1.13+ you can just use up to 16 chars.
-			// Set the score for 1.12-
-			String[] s = getScorePrefixSuffix(score, 16, 30);
+		if(Main.getBukkitVersion().compareTo(new Version("1.13")) == 1 || Main.getBukkitVersion().equals(new Version("1.13"))) { // Under version 1.13+ you can just use up to 16 chars.
+			// Set the score for 1.13+
+			String[] s = getScorePrefixSuffix(score, 64, 126);
 			if(s == null) {
 				team.setPrefix(ChatColor.RED+"-too long-");
 				Main.pl.getLogger().warning(" ");
-				Main.pl.getLogger().warning("-> The scoreboard-score is too long! The limit is 30 chars!");
+				Main.pl.getLogger().warning("-> The scoreboard-score is too long! The limit is 126 chars!");
 				if(sm != null)
 					Main.pl.getLogger().warning("-> Scoreboard: "+sm.getName());
 				Main.pl.getLogger().warning("-> Score: \""+score+"\", chars: "+score.length());
@@ -115,12 +111,12 @@ public class ScoreTitleUtils {
 				team.setSuffix(s[1]);
 			}
 		}else {
-			// Set the score for 1.13+
-			String[] s = getScorePrefixSuffix(score, 64, 126);
+			// Set the score for 1.12-
+			String[] s = getScorePrefixSuffix(score, 16, 30);
 			if(s == null) {
 				team.setPrefix(ChatColor.RED+"-too long-");
 				Main.pl.getLogger().warning(" ");
-				Main.pl.getLogger().warning("-> The scoreboard-score is too long! The limit is 126 chars!");
+				Main.pl.getLogger().warning("-> The scoreboard-score is too long! The limit is 30 chars!");
 				if(sm != null)
 					Main.pl.getLogger().warning("-> Scoreboard: "+sm.getName());
 				Main.pl.getLogger().warning("-> Score: \""+score+"\", chars: "+score.length());

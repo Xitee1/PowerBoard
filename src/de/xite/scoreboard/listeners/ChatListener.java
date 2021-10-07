@@ -24,8 +24,7 @@ public class ChatListener implements Listener{
 					pl.getLogger().warning("The player "+p.getName()+" has no Rank! Make sure that he has the correct permissions.");
 				}
 			}else {
-				pl.getLogger().warning("There was an error by the player "+p.getName()+" whilst chatting. Please rejoin and try it again. If the problem persist, please check your Plugin"
-						+ "configuration!");
+				pl.getLogger().warning("The player "+p.getName()+" has no team! Please rejoin and try it again. If the problem persist, please check your Plugin configuration!");
 			}
 		}
 	}

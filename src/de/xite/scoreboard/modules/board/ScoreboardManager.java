@@ -209,7 +209,6 @@ public class ScoreboardManager {
 		sm.currentTitleStep = 0;
 		sm.name = null;
 		sm.players = null;
-		ScoreboardPlayer.scoreboards.remove(name);
 	}
 	
 	
@@ -238,5 +237,6 @@ public class ScoreboardManager {
 			String name = sm.getKey();
 			unregister(name);
 		}
+		ScoreboardPlayer.scoreboards.clear();
 	}
 }

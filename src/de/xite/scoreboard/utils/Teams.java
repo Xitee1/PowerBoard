@@ -104,7 +104,7 @@ public class Teams {
 		}
 	
 		String nameColorS = this.nameColor;
-		nameColorS = nameColorS.replace("&", "").replace("§", "");
+		nameColorS = nameColorS.replace("&", "").replace("ï¿½", "");
 		try {
 			return ChatColor.getByChar(nameColorS);
 		}catch (Exception e) {
@@ -120,7 +120,7 @@ public class Teams {
 			return null;
 		}
 		if(this.chatPrefix == null) {
-			Main.pl.getLogger().severe("An error occured while the player "+p.getName()+" sended a chat message! Maybe he has no rank?");
+			Main.pl.getLogger().severe("An error occured while the player "+p.getName()+" was sending a chat message! Maybe he has no rank?");
 			return message;
 		}
 		if(!Main.pl.getConfig().getString("chat.colorperm").equals("none") && p.hasPermission(Main.pl.getConfig().getString("chat.colorperm"))) {

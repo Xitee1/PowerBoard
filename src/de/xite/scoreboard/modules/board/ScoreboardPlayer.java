@@ -56,7 +56,7 @@ public class ScoreboardPlayer {
 				pl.getLogger().severe("Could not set scoreboard '"+name+"'! File does not exists!");
 				return;
 			}
-			ScoreTitleUtils.setTitle(p, board, sm.getCurrentTitle(), true, sm);// Get the current title and set it
+			ScoreTitleUtils.setTitle(p, board, sm.getCurrentTitle(), true, sm); // Get the current title and set it
 			ScoreTitleUtils.setScores(p, board, sm.getCurrentScores(), true, sm);
 		}
 		
@@ -69,8 +69,16 @@ public class ScoreboardPlayer {
 		// ---- Ranks ---- //
 		if(pl.getConfig().getBoolean("tablist.ranks"))
 			PrefixManager.setTeams(p, board);
+		
+		// Update if more scoreboards exists
+		Bukkit.getScheduler().runTaskLater(pl, new Runnable() {
+			@Override
+			public void run() {
+				if(ScoreboardPlayer.scoreboards.size() > 1)
+					ScoreboardPlayer.updateScoreboard(p);
+			}
+		}, 20);
 	}
-	@SuppressWarnings("deprecation")
 	public static void updateScoreboard(Player p) {
 		/* Config syntax: 
 		conditions:
@@ -83,33 +91,35 @@ public class ScoreboardPlayer {
 			return;
 
 		ScoreboardManager newScoreboard = getMatchingScoreboard(p);
-		if(newScoreboard == null) {
-			pl.getLogger().severe("Could not set scoreboard '"+newScoreboard+"'! File does not exists!");
+		if(newScoreboard == null)
 			return;
-		}
 		if(Main.debug)
 			pl.getLogger().info("Changing "+p.getName()+"'s scoreboard to "+newScoreboard.getName());
 		// Check if update is required
-		if(players.get(p).equals(newScoreboard.getName())) {
+		if(!players.get(p).equals(newScoreboard.getName())) {
+			// Remove old scoreboard
+			ScoreboardManager.get(players.get(p)).removePlayer(p);
+			players.remove(p);
+			
 			// Update player's scoreboard
-			removeScoreboard(p, false);
+
 			
 			Scoreboard board = p.getScoreboard();
-			Objective obj;
-			if(Main.getBukkitVersion().compareTo(new Version("1.13")) == 1 || Main.getBukkitVersion().equals(new Version("1.13"))) { // only for version 1.13+
-				obj = board.registerNewObjective("aaa", "bbb", "SBPlugin");
-			}else
-				obj = board.registerNewObjective("aaa", "bbb");
-			obj.setDisplaySlot(DisplaySlot.SIDEBAR);
 			
-			ScoreTitleUtils.setTitle(p, board, newScoreboard.getCurrentTitle(), true, newScoreboard);// Get the current title and set it
-			ScoreTitleUtils.setScores(p, board, newScoreboard.getCurrentScores(), true, newScoreboard);
 			newScoreboard.addPlayer(p);
+			ScoreTitleUtils.setTitle(p, board, newScoreboard.getCurrentTitle(), true, newScoreboard); // Get the current title and set it
+			ScoreTitleUtils.setScores(p, board, newScoreboard.getCurrentScores(), true, newScoreboard);
+			
+			p.setScoreboard(board);
 		}
 	}
 	public static ScoreboardManager getMatchingScoreboard(Player p) {
 		for(Entry<String, ScoreboardManager> e : scoreboards.entrySet()) {
 			ScoreboardManager sm = e.getValue();
+			if(sm == null) {
+				pl.getLogger().severe("Could not set scoreboard '"+sm+"'! File does not exists!");
+				return null;
+			}
 			for(String condition : sm.conditions) { // For all "OR" conditions (lines)
 				ArrayList<String> andConditions = new ArrayList<>();
 				if(condition.contains(" AND ")) {
@@ -118,7 +128,7 @@ public class ScoreboardPlayer {
 				}else
 					andConditions.add(condition);
 				
-				Boolean match = true;
+				boolean match = true;
 				for(String s : andConditions) {
 					if(s.startsWith("world:")) {
 						String value = s.split("world:")[1];

@@ -19,10 +19,11 @@ public class JoinQuitListener implements Listener {
 	@EventHandler
 	public void onJoin(PlayerJoinEvent e) {
 		Player p = e.getPlayer();
+		p.setDisplayName(p.getName());
 		if(p.hasPermission("scoreboard.update") || p.isOp()) {
 			if(Updater.checkVersion()) {
 				if(pl.getConfig().getBoolean("update.notification")) {
-					p.sendMessage(Main.pr+ChatColor.RED+"A new version is available ("+ChatColor.AQUA+"v"+Updater.version+ChatColor.RED+")! Your version: "+ChatColor.AQUA+pl.getDescription().getVersion());
+					p.sendMessage(Main.pr+ChatColor.RED+"A new update is available ("+ChatColor.AQUA+"v"+Updater.version+ChatColor.RED+")! Your version: "+ChatColor.AQUA+pl.getDescription().getVersion());
 					if(pl.getConfig().getBoolean("update.autoupdater")) {
 						p.sendMessage(Main.pr+ChatColor.GREEN+"The plugin will be updated automatically after a server restart.");
 					}else {
@@ -36,18 +37,15 @@ public class JoinQuitListener implements Listener {
 			public void run() {
 				if(pl.getConfig().getBoolean("scoreboard") || pl.getConfig().getBoolean("tablist.ranks"))
 					ScoreboardPlayer.setScoreboard(p, pl.getConfig().getString("scoreboard-default"));
-				if(pl.getConfig().getBoolean("tablist.text")) {// Set the Scoreboard text if enabled
-					for(int line : TabConfig.headers.keySet()) {
+				if(pl.getConfig().getBoolean("tablist.text")) { // Set the Scoreboard text if enabled
+					for(int line : TabConfig.headers.keySet())
 						TabConfig.setHeader(p, line, TabConfig.headers.get(line).get(0));
-					}
-					for(int line : TabConfig.footers.keySet()) {
+					for(int line : TabConfig.footers.keySet())
 						TabConfig.setFooter(p, line, TabConfig.footers.get(line).get(0));
-					}
 					Tabpackage.send(p);
 				}
 			}
 		}, 5);
-
 	}
 	@EventHandler
 	public void onQuit(PlayerQuitEvent e) {
