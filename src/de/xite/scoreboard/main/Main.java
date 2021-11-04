@@ -78,7 +78,7 @@ public class Main extends JavaPlugin implements Listener{
 				if(pl.getConfig().getBoolean("scoreboard") || pl.getConfig().getBoolean("tablist.ranks"))
 					ScoreboardPlayer.players.clear();
 					for(Player all : Bukkit.getOnlinePlayers())
-						ScoreboardPlayer.setScoreboard(all, pl.getConfig().getString("scoreboard-default"));
+						ScoreboardPlayer.setScoreboard(all);
 				// set tablist
 				if(pl.getConfig().getBoolean("tablist.text")) {
 					TabConfig tab = new TabConfig();

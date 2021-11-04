@@ -26,9 +26,8 @@ public class ScoreboardPlayer {
 	public static HashMap<Player, String> players = new HashMap<>(); // Player; Scoreboard config file name
 	
 	@SuppressWarnings("deprecation")
-	public static void setScoreboard(Player p, String name) {
+	public static void setScoreboard(Player p) {
 		Scoreboard board = p.getScoreboard();
-
 		// ---- Ranks ---- //
 		if(pl.getConfig().getBoolean("tablist.ranks")) {
 			Teams teams = Teams.get(p);
@@ -37,7 +36,7 @@ public class ScoreboardPlayer {
 		}
 		
 		// ---- Scoreboard ---- //
-		if(name == null || pl.getConfig().getBoolean("tablist.ranks") || pl.getConfig().getBoolean("scoreboard")) { // Set obj if name == null, ranks, scoreboard
+		if(pl.getConfig().getBoolean("tablist.ranks") || pl.getConfig().getBoolean("scoreboard")) { // Set obj if name == null, ranks, scoreboard
 			removeScoreboard(p, false);
 			Objective obj = board.getObjective(DisplaySlot.SIDEBAR);
 			if(obj == null) {
@@ -50,18 +49,18 @@ public class ScoreboardPlayer {
 			}
 			obj.setDisplaySlot(DisplaySlot.SIDEBAR);
 		}
-		if(name != null && pl.getConfig().getBoolean("scoreboard")) { // Check if the scoreboard is enabled
-			ScoreboardManager sm = ScoreboardManager.get(name);
-			if(sm == null) {
-				pl.getLogger().severe("Could not set scoreboard '"+name+"'! File does not exists!");
+		if(pl.getConfig().getBoolean("scoreboard")) { // Check if the scoreboard is enabled
+			ScoreboardManager sm = getMatchingScoreboard(p);
+			if(sm == null)
 				return;
-			}
+			sm.addPlayer(p);
 			ScoreTitleUtils.setTitle(p, board, sm.getCurrentTitle(), true, sm); // Get the current title and set it
 			ScoreTitleUtils.setScores(p, board, sm.getCurrentScores(), true, sm);
 		}
 		
 		// ---- Set the scoreboard ---- //
 		p.setScoreboard(board);
+		
 		// Debug
 		if(Main.debug)
 			Main.pl.getLogger().info("Scoreboard set for player "+p.getName());
@@ -69,15 +68,6 @@ public class ScoreboardPlayer {
 		// ---- Ranks ---- //
 		if(pl.getConfig().getBoolean("tablist.ranks"))
 			PrefixManager.setTeams(p, board);
-		
-		// Update if more scoreboards exists
-		Bukkit.getScheduler().runTaskLater(pl, new Runnable() {
-			@Override
-			public void run() {
-				if(ScoreboardPlayer.scoreboards.size() > 1)
-					ScoreboardPlayer.updateScoreboard(p);
-			}
-		}, 20);
 	}
 	public static void updateScoreboard(Player p) {
 		/* Config syntax: 
@@ -97,20 +87,19 @@ public class ScoreboardPlayer {
 			pl.getLogger().info("Changing "+p.getName()+"'s scoreboard to "+newScoreboard.getName());
 		// Check if update is required
 		if(!players.get(p).equals(newScoreboard.getName())) {
+			ScoreboardPlayer.removeScoreboard(p, true);
+			setScoreboard(p);
+			/*
 			// Remove old scoreboard
 			ScoreboardManager.get(players.get(p)).removePlayer(p);
-			players.remove(p);
 			
 			// Update player's scoreboard
-
+			newScoreboard.addPlayer(p);
 			
 			Scoreboard board = p.getScoreboard();
-			
-			newScoreboard.addPlayer(p);
 			ScoreTitleUtils.setTitle(p, board, newScoreboard.getCurrentTitle(), true, newScoreboard); // Get the current title and set it
 			ScoreTitleUtils.setScores(p, board, newScoreboard.getCurrentScores(), true, newScoreboard);
-			
-			p.setScoreboard(board);
+			*/
 		}
 	}
 	public static ScoreboardManager getMatchingScoreboard(Player p) {
@@ -123,7 +112,7 @@ public class ScoreboardPlayer {
 			for(String condition : sm.conditions) { // For all "OR" conditions (lines)
 				ArrayList<String> andConditions = new ArrayList<>();
 				if(condition.contains(" AND ")) {
-					for(String s : condition.split("AND"))
+					for(String s : condition.split(" AND "))
 						andConditions.add(s);
 				}else
 					andConditions.add(condition);
@@ -132,7 +121,7 @@ public class ScoreboardPlayer {
 				for(String s : andConditions) {
 					if(s.startsWith("world:")) {
 						String value = s.split("world:")[1];
-						if(!(p.getLocation().getWorld().getName().equals(value)))
+						if(!(p.getLocation().getWorld().getName().equalsIgnoreCase(value)))
 							match = false;
 					}
 					if(s.startsWith("permission:")) {
@@ -151,7 +140,7 @@ public class ScoreboardPlayer {
 					return sm;
 			}
 		}
-		return null;
+		return ScoreboardManager.get(pl.getConfig().getString("scoreboard-default"));
 	}
 	public static void removeScoreboard(Player p, boolean removeTeams) {
 		if(!players.containsKey(p))

@@ -14,17 +14,16 @@ import de.xite.scoreboard.utils.Updater;
 import net.md_5.bungee.api.ChatColor;
 
 public class ScoreboardCommand implements CommandExecutor{
-	String designLine1 = Main.pr+ChatColor.GRAY+"§7X§e§m-----§6Scoreboard§e§m-----§7X";
-	String designLine2 = Main.pr+ChatColor.GRAY+"X§e§m-----§6Scoreboard§e§m-----§7X";
+	String designLine = Main.pr+ChatColor.GRAY+"X"+ChatColor.YELLOW+""+ChatColor.STRIKETHROUGH+"-----"+ChatColor.GOLD+"Scoreboard"+ChatColor.YELLOW+""+ChatColor.STRIKETHROUGH+"-----"+ChatColor.GRAY+"X";
 	@Override
 	public boolean onCommand(CommandSender s, Command arg1, String arg2, String[] args) {
 		if(args.length == 1) {
 			if(args[0].equalsIgnoreCase("info")) {
-				s.sendMessage(designLine1);
+				s.sendMessage(designLine);
 				s.sendMessage(Main.pr+ChatColor.YELLOW+"Your version: "+ChatColor.DARK_AQUA+"v"+Main.pl.getDescription().getVersion());
 				s.sendMessage(Main.pr+ChatColor.YELLOW+"Newest version: "+ChatColor.DARK_AQUA+"v"+Updater.getVersion());
 				s.sendMessage(Main.pr+ChatColor.YELLOW+"Author: "+ChatColor.DARK_AQUA+"Xitee");
-				s.sendMessage(designLine2);
+				s.sendMessage(designLine);
 			}else if(args[0].equalsIgnoreCase("update")) {
 				if(!(s instanceof Player) || (s instanceof Player && ((Player) s).hasPermission("scoreboard.update"))) {
 					s.sendMessage(Main.pr+ChatColor.GREEN+"Downloading the newest version...");
@@ -64,10 +63,10 @@ public class ScoreboardCommand implements CommandExecutor{
 		return false;
 	}
 	public void sendMainPage(CommandSender s) {
-		s.sendMessage(designLine1);
-		s.sendMessage(Main.pr+"§7- §c/sb info §8- §7Shows all infos about the plugin");
-		s.sendMessage(Main.pr+"§7- §c/sb reload §8- §7Reload all configs");
-		s.sendMessage(Main.pr+"§7- §c/sb update §8- §7Download the newest version");
-		s.sendMessage(designLine2);
+		s.sendMessage(designLine);
+		s.sendMessage(Main.pr+ChatColor.RED+"/sb info "+ChatColor.DARK_GRAY+"- "+ChatColor.GRAY+"Shows all infos about the plugin");
+		s.sendMessage(Main.pr+ChatColor.RED+"/sb reload "+ChatColor.DARK_GRAY+"- "+ChatColor.GRAY+"Reload all configs");
+		s.sendMessage(Main.pr+ChatColor.RED+"/sb update "+ChatColor.DARK_GRAY+"- "+ChatColor.GRAY+"Download the newest version");
+		s.sendMessage(designLine);
 	}
 }

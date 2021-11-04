@@ -77,7 +77,7 @@ placeholder:
   date-format: 'dd.MM.yyyy'
   money-decimals: 2 # The maximal decimals for the placeholder %money%.
   preferLastPrefixColor: true # If you use ranks with luckperms-api, prefer the last colors from the prefix instead of the group-displayname to set the name-color
-  hexColorSyntax: '{#000000}' # Set the syntax to trigger hex colors. For example '{color:000000}' or 'color:000000' or '{#000000}' - what you want
+  hexColorSyntax: '{#000000}' # Set the syntax to trigger hex colors. For example '{color:000000}' or 'color:000000' or juts '#000000' - what you want
   world-names: # Replace world names for the %player_world% placeholder
     world: 'Overword'
     world_nether: 'Nether'

@@ -23,7 +23,7 @@ public class ScoreboardAPI {
 	 */
 	@Deprecated
 	public static void enableScoreboard(Player p, String s) {
-		ScoreboardPlayer.setScoreboard(p, null);
+		ScoreboardPlayer.setScoreboard(p);
 	}
 	/**
 	 * API has changed.
@@ -41,7 +41,7 @@ public class ScoreboardAPI {
 	 */
 	@Deprecated
 	public static void enableScoreboard(Player p) {
-		ScoreboardPlayer.setScoreboard(p, null);
+		ScoreboardPlayer.setScoreboard(p);
 	}
 	/**
 	 * API has changed.
@@ -53,8 +53,12 @@ public class ScoreboardAPI {
 		ScoreboardPlayer.removeScoreboard(p, false);
 	}
 	
+	
+	
+	
+	
 	public static void setScoreboard(Player p) {
-		ScoreboardPlayer.setScoreboard(p, null);
+		ScoreboardPlayer.setScoreboard(p);
 	}
 	public static void removeScoreboard(Player p) {
 		ScoreboardPlayer.removeScoreboard(p, false);
@@ -62,15 +66,15 @@ public class ScoreboardAPI {
 	
 	public static void setScoreboardTitle(Player p, String title, boolean usePlaceholders) {
 		if(!ScoreTitleUtils.setTitle(p, p.getScoreboard(), title, usePlaceholders, null))
-				Main.pl.getLogger().severe("Failed to set the Scoreboard-Title! The scoreboard is not registered yet - please set the scoreboard first!");
+				Main.pl.getLogger().severe("Failed to set the Scoreboard-Title! The scoreboard is not registered yet - please set the scoreboard first with setScoreboard(p) !");
 	}
 	public static void setScoreboardScore(Player p, String score, int index, boolean usePlaceholders) {
 		if(!ScoreTitleUtils.setScore(p, p.getScoreboard(), score, index, usePlaceholders, null))
-			Main.pl.getLogger().severe("Failed to set the Scoreboard-Score! The scoreboard is not registered yet - please set the scoreboard first!");
+			Main.pl.getLogger().severe("Failed to set the Scoreboard-Score! The scoreboard is not registered yet - please set the scoreboard first with setScoreboard(p) !");
 	}
 	public static void setScoreboardScores(Player p, ArrayList<String> scores, boolean usePlaceholders) {
 		if(!ScoreTitleUtils.setScores(p, p.getScoreboard(), scores, usePlaceholders, null))
-			Main.pl.getLogger().severe("Failed to set the Scoreboard-Scores! The scoreboard is not registered yet - please set the scoreboard first!");
+			Main.pl.getLogger().severe("Failed to set the Scoreboard-Scores! The scoreboard is not registered yet - please set the scoreboard first with setScoreboard(p) !");
 	}
 	// ---- Ranks ---- //
 	/* Planned

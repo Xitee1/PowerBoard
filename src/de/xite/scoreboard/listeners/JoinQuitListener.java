@@ -35,8 +35,9 @@ public class JoinQuitListener implements Listener {
 		Bukkit.getScheduler().runTaskLater(pl, new Runnable() { // Wait 0.25 seconds; Set the scoreboard if enabled
 			@Override
 			public void run() {
-				if(pl.getConfig().getBoolean("scoreboard") || pl.getConfig().getBoolean("tablist.ranks"))
-					ScoreboardPlayer.setScoreboard(p, pl.getConfig().getString("scoreboard-default"));
+				if(pl.getConfig().getBoolean("scoreboard") || pl.getConfig().getBoolean("tablist.ranks")) {
+					ScoreboardPlayer.setScoreboard(p);
+				}
 				if(pl.getConfig().getBoolean("tablist.text")) { // Set the Scoreboard text if enabled
 					for(int line : TabConfig.headers.keySet())
 						TabConfig.setHeader(p, line, TabConfig.headers.get(line).get(0));
