@@ -59,7 +59,7 @@ public class Config {
 				FileWriter myWriter = new FileWriter(readme);
 				myWriter.write("How to use multiple scoreboards:\n"
 						+ "1. Set the default scoreboard in the config.yml. The name of the scoreboard is the filename.\n\n"
-						+ "2. Now copy the default scoreboard file and rename it to what you want.\n\n"
+						+ "2. Now copy the default scoreboard file and rename it to whatever you want. The filename will become the scoreboard name.\n\n"
 						+ "3. Open the copied file and go to the end. There you can configurate the conditions to apply the scoreboard. Examples are below.\n\n"
 						+ "4. The scoreboard you've set as default doesn't really needs conditions because it will automatically be set when a players joins the server.\n\n\n"
 						+ "Examples:\n"
