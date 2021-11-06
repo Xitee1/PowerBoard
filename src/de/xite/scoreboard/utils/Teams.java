@@ -56,14 +56,14 @@ public class Teams {
 			return null;
 		}
 		String prefix = Placeholders.replace(this.p, this.prefix);
-		if(Main.getBukkitVersion().compareTo(new Version("1.13")) == 1) { // Below version 1.13 you can use just up to 16 chars
-			if(prefix.length() > 16) {
-				Main.pl.getLogger().severe("The prefix is too long! The limit is 16 chars included colorcodes. Chars: "+prefix.length()+", Prefix: "+prefix);
+		if(Main.getBukkitVersion().compareTo(new Version("1.13")) == 1 || Main.getBukkitVersion().equals(new Version("1.13"))) { // Under version 1.13+ you can just use up to 16 chars.
+			if(prefix.length() > 64) {
+				Main.pl.getLogger().severe("The prefix is too long! The limit is 64 chars included colorcodes. Chars: "+prefix.length()+", Prefix: "+prefix);
 				return "too long";
 			}
 		}else {
-			if(prefix.length() > 64) {
-				Main.pl.getLogger().severe("The prefix is too long! The limit is 64 chars included colorcodes. Chars: "+prefix.length()+", Prefix: "+prefix);
+			if(prefix.length() > 16) {
+				Main.pl.getLogger().severe("The prefix is too long! The limit is 16 chars included colorcodes. Chars: "+prefix.length()+", Prefix: "+prefix);
 				return "too long";
 			}
 		}
@@ -79,14 +79,14 @@ public class Teams {
 			return null;
 		}
 		String suffix = Placeholders.replace(this.p, this.suffix);
-		if(Main.getBukkitVersion().compareTo(new Version("1.13")) == 1) { // Below version 1.13 you can use just up to 16 chars
-			if(suffix.length() > 16) {
-				Main.pl.getLogger().severe("The suffix is too long! The limit is 16 chars included colorcodes. Chars: "+suffix.length()+", Suffix: "+suffix);
+		if(Main.getBukkitVersion().compareTo(new Version("1.13")) == 1 || Main.getBukkitVersion().equals(new Version("1.13"))) { // Under version 1.13+ you can just use up to 16 chars.
+			if(suffix.length() > 64) {
+				Main.pl.getLogger().severe("The suffix is too long! The limit is 64 chars included colorcodes. Chars: "+suffix.length()+", Suffix: "+suffix);
 				return "too long";
 			}
 		}else {
-			if(suffix.length() > 64) {
-				Main.pl.getLogger().severe("The suffix is too long! The limit is 64 chars included colorcodes. Chars: "+suffix.length()+", Suffix: "+suffix);
+			if(suffix.length() > 16) {
+				Main.pl.getLogger().severe("The suffix is too long! The limit is 16 chars included colorcodes. Chars: "+suffix.length()+", Suffix: "+suffix);
 				return "too long";
 			}
 		}
@@ -104,7 +104,7 @@ public class Teams {
 		}
 	
 		String nameColorS = this.nameColor;
-		nameColorS = nameColorS.replace("&", "").replace("�", "");
+		nameColorS = nameColorS.replace("&", "").replace("§", "");
 		try {
 			return ChatColor.getByChar(nameColorS);
 		}catch (Exception e) {

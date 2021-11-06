@@ -104,7 +104,7 @@ public class Main extends JavaPlugin implements Listener{
 			return version;
 		String s = Bukkit.getBukkitVersion();
 		String version = s.substring(0, s.lastIndexOf("-R")).replace("_", ".");
-		pl.getLogger().info("Detected Server Version (original): "+s);
+		pl.getLogger().info("Detected Server versteckterTextVersion (original): "+s);
 		pl.getLogger().info("Detected Server Version (extracted): "+version);
 		// compareTo: 1 = a equals or is newer than b
 		// compareTo: -1 = a is older than b

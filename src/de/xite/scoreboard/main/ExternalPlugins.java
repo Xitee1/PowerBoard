@@ -6,11 +6,9 @@ import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.ServicesManager;
 
 import de.xite.scoreboard.depend.LuckPermsListener;
-import de.xite.scoreboard.depend.VaultChatImpl;
 import de.xite.scoreboard.depend.VaultPermissionImpl;
 import de.xite.scoreboard.utils.BStatsMetrics;
 import net.luckperms.api.LuckPerms;
-import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 
@@ -88,7 +86,7 @@ public class ExternalPlugins {
 
 	    servicesManager.register(Permission.class, permission, pl, ServicePriority.Highest);
 		
-	    servicesManager.register(Chat.class, new VaultChatImpl(permission), pl, ServicePriority.Highest);
+	    //servicesManager.register(Chat.class, new VaultChatImpl(permission), pl, ServicePriority.Highest);
 		
 		pl.getLogger().info("Registered Vault-Chat");
 	}

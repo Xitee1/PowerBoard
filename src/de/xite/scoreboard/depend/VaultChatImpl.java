@@ -36,12 +36,12 @@ public class VaultChatImpl extends Chat{
 
 	@Override
 	public String getGroupPrefix(String arg0, String arg1) {
-		return "DasGehtNiemals";
+		return null;
 	}
 
 	@Override
 	public String getGroupSuffix(String arg0, String arg1) {
-		return "NiemalsGehtDas";
+		return null;
 	}
 
 	@Override
@@ -75,12 +75,12 @@ public class VaultChatImpl extends Chat{
 
 	@Override
 	public String getPlayerPrefix(String arg0, String arg1) {
-		return "DasGehtNiemals";
+		return null;
 	}
 
 	@Override
 	public String getPlayerSuffix(String arg0, String arg1) {
-		return "NiemalsGehtDas";
+		return null;
 	}
 
 	@Override
