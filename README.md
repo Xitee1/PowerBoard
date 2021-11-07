@@ -7,7 +7,7 @@ Wiki: https://github.com/Xitee1/PowerBoard/wiki
 
 ## Developer-API
 
-Don't forget to put "Scoreboard" as depend or softdepend
+Don't forget to put "PowerBoard" as depend or softdepend
 
 ```java
 // Set custom placeholders
