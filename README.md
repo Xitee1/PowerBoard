@@ -2,6 +2,7 @@
 Scoreboard + Tablist + Prefix + Chat | Animated
 
 Download: https://www.spigotmc.org/resources/scoreboard-tablist-prefix-chat-animated.73854/
+
 Wiki: https://github.com/Xitee1/PowerBoard/wiki
 
 ## Developer-API
