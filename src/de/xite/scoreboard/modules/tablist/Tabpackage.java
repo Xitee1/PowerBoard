@@ -22,6 +22,7 @@ public class Tabpackage {
 	public static void send(Player p) {
 		String header = "", footer = "";
 		
+		
 		if(TabConfig.headers.isEmpty() || TabConfig.footers.isEmpty()) {
 			pl.getLogger().severe("The tablist config file is empty or the header/footer is not configurated!");
 			return;
@@ -31,10 +32,10 @@ public class Tabpackage {
 			header += e.getValue()+"\n";
 		for(Entry<Integer, String> e : TabConfig.currentFooter.get(p).entrySet())
 			footer += e.getValue()+"\n";
-		header = header.substring(0, header.length()-1); //remove the empty line at the end
-		footer = footer.substring(0, footer.length()-1); //remove the empty line at the end
+		header = header.substring(0, header.length()-1); // remove the empty line at the end
+		footer = footer.substring(0, footer.length()-1); // remove the empty line at the end
 		
-		//Tablist senden
+		// Send tablist
 		if(Main.getBukkitVersion().compareTo(new Version("1.17")) == 1 || Main.getBukkitVersion().equals(new Version("1.17"))){
 			version_1_17.sendTab(p, header, footer);
 		}else if(Main.getBukkitVersion().compareTo(new Version("1.16")) == 1 || Main.getBukkitVersion().equals(new Version("1.16"))){

@@ -96,12 +96,12 @@ public class TabConfig {
 		File file = new File(Main.pluginfolder+"/tablist.yml");
 		YamlConfiguration cfg = YamlConfiguration.loadConfiguration(file);
 		
-		int intervall = 20;
+		int interval = 20;
 		for(int line : headers.keySet()) {//For all lines (header)
 			int speed = cfg.getInt("header."+line+".speed");
 			if(speed < 1)
 				speed = 1;
-			Bukkit.getScheduler().scheduleSyncRepeatingTask(pl, new Runnable() {
+			Bukkit.getScheduler().runTaskTimerAsynchronously(pl, new Runnable() {
 				int step = 0;
 				@Override
 				public void run() {
@@ -115,14 +115,14 @@ public class TabConfig {
 						step++;
 				}
 			}, 0, speed);
-			if(speed < intervall)
-				intervall = speed;
+			if(speed < interval)
+				interval = speed;
 		}
-		for(int line : footers.keySet()) {//For all lines (footer)
+		for(int line : footers.keySet()) { // For all lines (footer)
 			int speed = cfg.getInt("footer."+line+".speed");
 			if(speed < 1)
 				speed = 1;
-			Bukkit.getScheduler().scheduleSyncRepeatingTask(pl, new Runnable() {
+			Bukkit.getScheduler().runTaskTimerAsynchronously(pl, new Runnable() {
 				int step = 0;
 				@Override
 				public void run() {
@@ -136,19 +136,19 @@ public class TabConfig {
 						step++;
 				}
 			}, 0, speed);
-			if(speed < intervall)
-				intervall = speed;
+			if(speed < interval)
+				interval = speed;
 		}
 		if(disabled)
-			intervall = 20*10;// to not spam the console if there are errors
-		Bukkit.getScheduler().scheduleSyncRepeatingTask(Main.pl, new Runnable() {
+			interval = 20*10; // to not spam the console if there are errors
+		Bukkit.getScheduler().runTaskTimerAsynchronously(Main.pl, new Runnable() {
 			@Override
 			public void run() {
 				for(Player p : Bukkit.getOnlinePlayers()) {
 					if(TabConfig.currentHeader.containsKey(p) && TabConfig.currentFooter.containsKey(p)) // Prevent error messages
-						Tabpackage.send(p);// Send Tablist
+						Tabpackage.send(p); // Send Tablist
 				}
 			}
-		}, 20, intervall);
+		}, 20, interval);
 	}
 }

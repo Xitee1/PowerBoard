@@ -6,9 +6,11 @@ import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.ServicesManager;
 
 import de.xite.scoreboard.depend.LuckPermsListener;
+import de.xite.scoreboard.depend.VaultChatImpl;
 import de.xite.scoreboard.depend.VaultPermissionImpl;
 import de.xite.scoreboard.utils.BStatsMetrics;
 import net.luckperms.api.LuckPerms;
+import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 
@@ -35,7 +37,7 @@ public class ExternalPlugins {
 				if(debug)
 					pl.getLogger().info("Successfully loaded Vault-Economy!");
 			}
-			setupChat();
+			//setupChat();
 		}
 		if(Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI"))
 			hasPapi = true;
@@ -53,7 +55,7 @@ public class ExternalPlugins {
 		}
 		// BStats analytics
 		try {
-			int pluginId = 6722; // <-- Replace with the id of your plugin!
+			int pluginId = 6722;
 			BStatsMetrics metrics = new BStatsMetrics(pl, pluginId);
 			// Custom charts
 			metrics.addCustomChart(new BStatsMetrics.SimplePie("update_auto_update", () -> pl.getConfig().getBoolean("update.autoupdater") ? "Aktiviert" : "Deaktiviert"));
@@ -86,7 +88,7 @@ public class ExternalPlugins {
 
 	    servicesManager.register(Permission.class, permission, pl, ServicePriority.Highest);
 		
-	    //servicesManager.register(Chat.class, new VaultChatImpl(permission), pl, ServicePriority.Highest);
+	    servicesManager.register(Chat.class, new VaultChatImpl(permission), pl, ServicePriority.Highest);
 		
 		pl.getLogger().info("Registered Vault-Chat");
 	}
