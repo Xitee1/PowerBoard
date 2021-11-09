@@ -57,6 +57,6 @@ public class Tabpackage {
 		}else if(Main.getBukkitVersion().compareTo(new Version("1.8")) == 1 || Main.getBukkitVersion().equals(new Version("1.8"))){
 			version_1_08.sendTab(p, header, footer);
 		}else
-			pl.getLogger().severe("You are using a version that is not supported! If you think this version should work, please report it to our discord server!");
+			pl.getLogger().severe("You are using a version that is not supported! If you think this version should work, please report it to our Discord server or GitHub!");
 	}
 }

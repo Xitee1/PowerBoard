@@ -1,7 +1,7 @@
 #####################################################################################################
 ### Powerboard: Scoreboard + Tablist + Prefix + Chat | Animated                                   ###
 ###                                                                                               ###
-### You need some help? Have a look at our wiki: https://wiki.xitma.de/plugin.php?name=scoreboard ###
+### You need some help? Have a look at our wiki: https://github.com/Xitee1/PowerBoard/wiki        ###
 ### For bugreports and proposals join our Discord: https://discord.gg/p95cB9YQFJ                  ###
 ###                                                                                               ###
 ### You can find the source code at: https://github.com/Xitee1/PowerBoard                         ###
@@ -75,9 +75,9 @@ placeholder:
   prefer-plugin-placeholders: true # Prefer replacing the placeholders by the plugin itself and not PAPI
   time-format: 'HH:mm' # If you don't know what to set here, have a look at this: https://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
   date-format: 'dd.MM.yyyy'
-  money-decimals: 2 # The maximal decimals for the placeholder %money%.
+  money-decimals: 2 # The maximum decimals for the placeholder %player_money%.
   preferLastPrefixColor: true # If you use ranks with luckperms-api, prefer the last colors from the prefix instead of the group-displayname to set the name-color
-  hexColorSyntax: '{#000000}' # Set the syntax to trigger hex colors. For example '{color:000000}' or 'color:000000' or juts '#000000' - what you want
+  hexColorSyntax: '#000000' # Set the syntax to trigger hex colors. For example 'color:000000' or just '#000000' - whatever you want. WARNING NOT WORKING CHARS: { } ( ) 
   world-names: # Replace world names for the %player_world% placeholder
     world: 'Overword'
     world_nether: 'Nether'

@@ -75,7 +75,7 @@ public class ExternalPlugins {
 	private static boolean setupEconomy() {
 		RegisteredServiceProvider<Economy> rsp = pl.getServer().getServicesManager().getRegistration(Economy.class);
 		if(rsp == null) {
-			pl.getLogger().warning("Error hooking into Vault-Economy!");
+			pl.getLogger().warning("Error hooking into Vault-Economy! <- Ignore if you don't have a economy plugin.");
 			return false;
 		}
 		econ = rsp.getProvider();

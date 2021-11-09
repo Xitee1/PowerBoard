@@ -6,6 +6,10 @@ main: de.xite.scoreboard.main.Main
 api-version: 1.13
 commands:
    sb:
-      description: Open the Scoreboard Menu
+      description: Manage the plugin
    scoreboard:
-      description: Open the Scoreboard Menu
+      description: Manage the plugin
+   pb:
+      description: Manage the plugin
+   powerboard:
+      description: Manage the plugin

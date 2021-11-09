@@ -1,5 +1,7 @@
  package de.xite.scoreboard.commands;
 
+import java.util.Map.Entry;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -9,12 +11,15 @@ import org.bukkit.entity.Player;
 import de.xite.scoreboard.main.Config;
 import de.xite.scoreboard.main.Main;
 import de.xite.scoreboard.modules.board.ScoreboardManager;
+import de.xite.scoreboard.modules.board.ScoreboardPlayer;
 import de.xite.scoreboard.modules.tablist.TabConfig;
 import de.xite.scoreboard.utils.Updater;
 import net.md_5.bungee.api.ChatColor;
 
 public class ScoreboardCommand implements CommandExecutor{
 	String designLine = Main.pr+ChatColor.GRAY+"X"+ChatColor.YELLOW+""+ChatColor.STRIKETHROUGH+"-----"+ChatColor.GOLD+"Scoreboard"+ChatColor.YELLOW+""+ChatColor.STRIKETHROUGH+"-----"+ChatColor.GRAY+"X";
+	Main pl = Main.pl;
+	
 	@Override
 	public boolean onCommand(CommandSender s, Command arg1, String arg2, String[] args) {
 		if(args.length == 1) {
@@ -37,14 +42,19 @@ public class ScoreboardCommand implements CommandExecutor{
 				}
 			}else if(args[0].equalsIgnoreCase("reload") || args[0].equalsIgnoreCase("rl")) {
 				if(!(s instanceof Player) || (s instanceof Player && ((Player) s).hasPermission("scoreboard.reload"))) {
-					s.sendMessage(Main.pr+ChatColor.GRAY+"Reloading configuration. Warning: You should not use this command regularly because of bugs and memory or performance leaks!");
 					s.sendMessage(Main.pr+ChatColor.GRAY+"Reloading "+ChatColor.YELLOW+"config.yml "+ChatColor.GRAY+"...");
 					Bukkit.getScheduler().cancelTasks(Main.pl);
 					Config.loadConfig();
 					if(Main.pl.getConfig().getBoolean("scoreboard")) {
 						s.sendMessage(Main.pr+ChatColor.GRAY+"Reloading "+ChatColor.YELLOW+"scoreboards "+ChatColor.GRAY+"...");
+						for(Entry<Player, String> all : ScoreboardPlayer.players.entrySet())
+							ScoreboardPlayer.removeScoreboard(all.getKey(), true);
 						ScoreboardManager.unregisterAllScoreboards();
 						ScoreboardManager.registerAllScoreboards();
+						ScoreboardPlayer.players.clear();
+						for(Player all : Bukkit.getOnlinePlayers())
+							ScoreboardPlayer.setScoreboard(all);
+						
 					}
 					if(Main.pl.getConfig().getBoolean("tablist.text")) {
 						TabConfig tab = new TabConfig();
@@ -64,9 +74,9 @@ public class ScoreboardCommand implements CommandExecutor{
 	}
 	public void sendMainPage(CommandSender s) {
 		s.sendMessage(designLine);
-		s.sendMessage(Main.pr+ChatColor.RED+"/sb info "+ChatColor.DARK_GRAY+"- "+ChatColor.GRAY+"Shows all infos about the plugin");
-		s.sendMessage(Main.pr+ChatColor.RED+"/sb reload "+ChatColor.DARK_GRAY+"- "+ChatColor.GRAY+"Reload all configs");
-		s.sendMessage(Main.pr+ChatColor.RED+"/sb update "+ChatColor.DARK_GRAY+"- "+ChatColor.GRAY+"Download the newest version");
+		s.sendMessage(Main.pr+ChatColor.RED+"/pb info "+ChatColor.DARK_GRAY+"- "+ChatColor.GRAY+"Shows all infos about the plugin");
+		s.sendMessage(Main.pr+ChatColor.RED+"/pb reload "+ChatColor.DARK_GRAY+"- "+ChatColor.GRAY+"Reload all configs");
+		s.sendMessage(Main.pr+ChatColor.RED+"/pb update "+ChatColor.DARK_GRAY+"- "+ChatColor.GRAY+"Download the newest version");
 		s.sendMessage(designLine);
 	}
 }

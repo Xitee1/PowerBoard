@@ -19,7 +19,6 @@ import de.xite.scoreboard.modules.board.ScoreboardManager;
 import de.xite.scoreboard.modules.board.ScoreboardPlayer;
 import de.xite.scoreboard.modules.tablist.TabConfig;
 import de.xite.scoreboard.utils.Placeholders;
-import de.xite.scoreboard.utils.SelfCheck;
 import de.xite.scoreboard.utils.Updater;
 import de.xite.scoreboard.utils.UpgradeVersion;
 import de.xite.scoreboard.utils.Version;
@@ -30,7 +29,7 @@ public class Main extends JavaPlugin implements Listener{
 	
 	public static String pluginfolder = "plugins/PowerBoard"; // plugin folder
 	public static String pr = ChatColor.GRAY+"["+ChatColor.YELLOW+"PowerBoard"+ChatColor.GRAY+"] "; // prefix
-	public static String hexColorBegin = "", hexColorEnd = ""; // hex color Syntax
+	public static String hexColorBegin = "#", hexColorEnd = ""; // hex color Syntax
 	
 	public static Version version; // Minecraft version
 	public static boolean debug = false;
@@ -41,12 +40,11 @@ public class Main extends JavaPlugin implements Listener{
 		pl = this;
 		version = getBukkitVersion();
 		
-		UpgradeVersion.rename();
-		Config.loadConfig(); // load the config.yml
-		if(SelfCheck.check()) { // start the self check
-	    	pl.getLogger().severe("self-check -> Fatal errors were found! Please fix you config! Disabling Plugin...");
-	    	Bukkit.getPluginManager().disablePlugin(pl);
-	    	return;
+		UpgradeVersion.rename(); // rename from "scoreboard" to "powerboard"
+		
+		if(!Config.loadConfig()) { // load the config.yml
+			Bukkit.getPluginManager().disablePlugin(pl);
+			return;
 		}
 		
 		if(pl.getConfig().getBoolean("debug")) // Check if the debug is enabled in the config.yml
@@ -61,6 +59,8 @@ public class Main extends JavaPlugin implements Listener{
 		// ---- Register commands and events ---- //
 		getCommand("sb").setExecutor(new ScoreboardCommand());
 		getCommand("scoreboard").setExecutor(new ScoreboardCommand());
+		getCommand("pb").setExecutor(new ScoreboardCommand());
+		getCommand("powerboard").setExecutor(new ScoreboardCommand());
 		PluginManager pm = Bukkit.getPluginManager();
 		pm.registerEvents(new JoinQuitListener(), this);
 		pm.registerEvents(new ChatListener(), this);
@@ -69,14 +69,13 @@ public class Main extends JavaPlugin implements Listener{
 		
 		// ---- Load Modules ---- //
 		if(pl.getConfig().getBoolean("scoreboard"))
-			ScoreboardManager.registerAllScoreboards(); // Register all Scoreboards
+			ScoreboardManager.registerAllScoreboards();
 		
 		Bukkit.getScheduler().runTaskLater(pl, new Runnable() {
 			@Override
 			public void run() {
 				// set scoreboard and ranks
 				if(pl.getConfig().getBoolean("scoreboard") || pl.getConfig().getBoolean("tablist.ranks"))
-					ScoreboardPlayer.players.clear();
 					for(Player all : Bukkit.getOnlinePlayers())
 						ScoreboardPlayer.setScoreboard(all);
 				// set tablist
@@ -104,7 +103,7 @@ public class Main extends JavaPlugin implements Listener{
 			return version;
 		String s = Bukkit.getBukkitVersion();
 		String version = s.substring(0, s.lastIndexOf("-R")).replace("_", ".");
-		pl.getLogger().info("Detected Server versteckterTextVersion (original): "+s);
+		pl.getLogger().info("Detected Server Version (original): "+s);
 		pl.getLogger().info("Detected Server Version (extracted): "+version);
 		// compareTo: 1 = a equals or is newer than b
 		// compareTo: -1 = a is older than b
@@ -119,6 +118,7 @@ public class Main extends JavaPlugin implements Listener{
         return bd.doubleValue();
     }
     
+    // Credit to https://www.spigotmc.org/threads/hex-color-code-translate.449748/#post-3867804
     public final static char COLOR_CHAR = ChatColor.COLOR_CHAR;
     public static String translateHexColor(String message) {
     	try {

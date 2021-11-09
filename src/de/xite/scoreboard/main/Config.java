@@ -8,11 +8,12 @@ import java.util.List;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 
+import de.xite.scoreboard.utils.SelfCheck;
 import de.xite.scoreboard.utils.UpgradeVersion;
 
 public class Config {
 	static Main pl = Main.pl;
-	public static void loadConfig() {
+	public static boolean loadConfig() {
 		File folder = new File(Main.pluginfolder);
 		if(folder == null || !folder.isDirectory())
 			folder.mkdirs();
@@ -24,19 +25,18 @@ public class Config {
 		
 		// Register hex color syntax
 		String s = pl.getConfig().getString("placeholder.hexColorSyntax");
-		if(s.contains("000000")) {
-			String[] s2 = s.split("000000");
-			pl.getLogger().info("s: "+s);
-			if(s2.length == 1) {
-				Main.hexColorBegin = s2[0];
-				pl.getLogger().info("begin: "+Main.hexColorBegin);
-			}
-			if(s2.length == 2) {
-				Main.hexColorBegin = s2[1];
-				pl.getLogger().info("begin: "+Main.hexColorEnd);
+		if(s.length() != 0) {
+			if(s.contains("000000")) {
+				s = s.replace("{", "").replace("}", "").replace("(", "").replace(")", "");
+				String[] s2 = s.split("000000");
+				if(s2.length > 0)
+					Main.hexColorBegin = s2[0];
+				if(s2.length > 1)
+					Main.hexColorEnd = s2[1];
+			}else {
+				pl.getLogger().severe("You have an invalid HEX-Color syntax in your config!");
 			}
 		}
-		
 		// Create scoreboard folder if not exists
 		File sbfolder = new File(Main.pluginfolder+"/scoreboards/");
 		if(!sbfolder.exists() || !sbfolder.isDirectory())
@@ -49,6 +49,13 @@ public class Config {
 		
 		// create default scoreboard.yml
 		createDefaultScoreboard();
+		
+		// run self check
+		if(SelfCheck.check()) { 
+	    	pl.getLogger().severe("self-check -> Fatal errors were found! Please fix you config! Disabling Plugin...");
+	    	return false;
+		}
+		return true;
 	}
 	public static void createDefaultScoreboard() {
 		// readme
