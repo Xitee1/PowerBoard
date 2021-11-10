@@ -8,7 +8,6 @@ import java.util.List;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import de.xite.scoreboard.utils.SelfCheck;
 import de.xite.scoreboard.utils.UpgradeVersion;
 
 public class Config {
@@ -51,12 +50,20 @@ public class Config {
 		createDefaultScoreboard();
 		
 		// run self check
-		if(SelfCheck.check()) { 
+		/*if(SelfCheck.check()) { 
 	    	pl.getLogger().severe("self-check -> Fatal errors were found! Please fix you config! Disabling Plugin...");
 	    	return false;
-		}
+		}*/
+		
+		Main.debug = pl.getConfig().getBoolean("debug"); // Check if the debug is enabled in the config.yml
+		
 		return true;
 	}
+	
+	
+	//----------------------//
+	// Create default files //
+	//----------------------//
 	public static void createDefaultScoreboard() {
 		// readme
 		File readme = new File(Main.pluginfolder+"/scoreboards/readme.txt");

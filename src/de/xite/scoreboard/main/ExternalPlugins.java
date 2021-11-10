@@ -81,7 +81,7 @@ public class ExternalPlugins {
 		econ = rsp.getProvider();
 		return econ != null;
 	}
-	private static void setupChat() {
+	public static void setupChat() {
 	    ServicesManager servicesManager = pl.getServer().getServicesManager();
 
 	    Permission permission = new VaultPermissionImpl();

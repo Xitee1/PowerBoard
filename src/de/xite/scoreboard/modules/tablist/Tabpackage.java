@@ -23,15 +23,18 @@ public class Tabpackage {
 		String header = "", footer = "";
 		
 		
-		if(TabConfig.headers.isEmpty() || TabConfig.footers.isEmpty()) {
+		if(TabManager.headers.isEmpty() || TabManager.footers.isEmpty()) {
 			pl.getLogger().severe("The tablist config file is empty or the header/footer is not configurated!");
 			return;
 		}
-		
-		for(Entry<Integer, String> e : TabConfig.currentHeader.get(p).entrySet())
+		if(!TabManager.currentHeader.containsKey(p) || !TabManager.currentFooter.containsKey(p))
+			return;
+		for(Entry<Integer, String> e : TabManager.currentHeader.get(p).entrySet())
 			header += e.getValue()+"\n";
-		for(Entry<Integer, String> e : TabConfig.currentFooter.get(p).entrySet())
+		for(Entry<Integer, String> e : TabManager.currentFooter.get(p).entrySet())
 			footer += e.getValue()+"\n";
+		if(header.length() == 0 || footer.length() == 0)
+			return;
 		header = header.substring(0, header.length()-1); // remove the empty line at the end
 		footer = footer.substring(0, footer.length()-1); // remove the empty line at the end
 		

@@ -222,7 +222,7 @@ public class PrefixManager {
 	public static void setTeams(Player p, Scoreboard board) {
 		delay(p);
 		try {
-			// Für den neuen Spieler alle Spieler die bereits Online sind setzen
+			// Set for the new player all player's that are already online
 			for(Player all : Bukkit.getOnlinePlayers()) {
 				Teams teams = Teams.get(all);
 				if(teams != null) {// Teams are set a few seconds after a player joined and have no team yet. This prevents errors.
@@ -240,7 +240,7 @@ public class PrefixManager {
 				}
 
 			}
-			// Für alle Spieler die bereits Online sind den neuen Spieler setzen
+			// Fï¿½r alle Spieler die bereits Online sind den neuen Spieler setzen
 			Teams teams = Teams.get(p);
 			for(Player all : Bukkit.getOnlinePlayers()) {
 				Team t = all.getScoreboard().getTeam(teams.getTeamName());

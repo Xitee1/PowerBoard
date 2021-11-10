@@ -7,22 +7,25 @@ import java.util.HashMap;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitTask;
 
 import de.xite.scoreboard.main.Config;
 import de.xite.scoreboard.main.Main;
 import de.xite.scoreboard.utils.Placeholders;
 import de.xite.scoreboard.utils.UpgradeVersion;
 
-public class TabConfig {
+public class TabManager {
 	static Main pl = Main.pl;
-	public static HashMap<Integer, ArrayList<String>> headers = new HashMap<>();//line, values (animation stages)
+	public static HashMap<Integer, ArrayList<String>> headers = new HashMap<>(); // line, values (animation stages)
 	public static HashMap<Integer, ArrayList<String>> footers = new HashMap<>();
 	
-	public static HashMap<Player, HashMap<Integer, String>> currentHeader = new HashMap<>();//Player, HashMap[line, value]
-	public static HashMap<Player, HashMap<Integer, String>> currentFooter = new HashMap<>();//Player, HashMap[line, value]
+	public static HashMap<Player, HashMap<Integer, String>> currentHeader = new HashMap<>(); // Player, HashMap[line, value]
+	public static HashMap<Player, HashMap<Integer, String>> currentFooter = new HashMap<>(); // Player, HashMap[line, value]
+	
+	public static ArrayList<BukkitTask> scheduler = new ArrayList<>();
 	
 	public static boolean disabled = false;
-	public void register() {
+	public static void register() {
 		// ---- Initialize ---- //
 		File folder = new File(Main.pluginfolder);
 		if(folder == null || !folder.isDirectory()) {
@@ -82,6 +85,14 @@ public class TabConfig {
 		// Start the animation
 		startAnimation();
 	}
+	public static void unregister() {
+		for(BukkitTask task : scheduler)
+			task.cancel();
+		headers.clear();
+		footers.clear();
+		currentHeader.clear();
+		currentFooter.clear();
+	}
 	public static void setHeader(Player p, int line, String text) {
 		if(!currentHeader.containsKey(p))
 			currentHeader.put(p, new HashMap<>());
@@ -92,29 +103,30 @@ public class TabConfig {
 			currentFooter.put(p, new HashMap<>());
 		currentFooter.get(p).put(line, Placeholders.replace(p, text));
 	}
-	public void startAnimation() {//Start the animation
+	private static void startAnimation() {//Start the animation
 		File file = new File(Main.pluginfolder+"/tablist.yml");
 		YamlConfiguration cfg = YamlConfiguration.loadConfiguration(file);
 		
 		int interval = 20;
-		for(int line : headers.keySet()) {//For all lines (header)
+		for(int line : headers.keySet()) { // For all lines (header)
 			int speed = cfg.getInt("header."+line+".speed");
 			if(speed < 1)
 				speed = 1;
-			Bukkit.getScheduler().runTaskTimerAsynchronously(pl, new Runnable() {
-				int step = 0;
-				@Override
-				public void run() {
-					String text = headers.get(line).get(step);
-					for(Player all : Bukkit.getOnlinePlayers()) {
-						setHeader(all, line, text);
+			scheduler.add(
+				Bukkit.getScheduler().runTaskTimerAsynchronously(pl, new Runnable() {
+					int step = 0;
+					@Override
+					public void run() {
+						String text = headers.get(line).get(step);
+						for(Player all : Bukkit.getOnlinePlayers())
+							setHeader(all, line, text);
+						if(step >= headers.get(line).size()-1) {
+							step = 0;
+						}else
+							step++;
 					}
-					if(step >= headers.get(line).size()-1) {
-						step = 0;
-					}else
-						step++;
-				}
-			}, 0, speed);
+				}, 0, speed)
+			);
 			if(speed < interval)
 				interval = speed;
 		}
@@ -122,33 +134,34 @@ public class TabConfig {
 			int speed = cfg.getInt("footer."+line+".speed");
 			if(speed < 1)
 				speed = 1;
-			Bukkit.getScheduler().runTaskTimerAsynchronously(pl, new Runnable() {
-				int step = 0;
-				@Override
-				public void run() {
-					String text = footers.get(line).get(step);
-					for(Player all : Bukkit.getOnlinePlayers()) {
-						setFooter(all, line, text);
+			scheduler.add(
+				Bukkit.getScheduler().runTaskTimerAsynchronously(pl, new Runnable() {
+					int step = 0;
+					@Override
+					public void run() {
+						String text = footers.get(line).get(step);
+						for(Player all : Bukkit.getOnlinePlayers())
+							setFooter(all, line, text);
+						if(step >= footers.get(line).size()-1) {
+							step = 0;
+						}else
+							step++;
 					}
-					if(step >= footers.get(line).size()-1) {
-						step = 0;
-					}else
-						step++;
-				}
-			}, 0, speed);
+				}, 0, speed)
+			);
 			if(speed < interval)
 				interval = speed;
 		}
 		if(disabled)
 			interval = 20*10; // to not spam the console if there are errors
-		Bukkit.getScheduler().runTaskTimerAsynchronously(Main.pl, new Runnable() {
-			@Override
-			public void run() {
-				for(Player p : Bukkit.getOnlinePlayers()) {
-					if(TabConfig.currentHeader.containsKey(p) && TabConfig.currentFooter.containsKey(p)) // Prevent error messages
+		scheduler.add(
+			Bukkit.getScheduler().runTaskTimerAsynchronously(Main.pl, new Runnable() {
+				@Override
+				public void run() {
+					for(Player p : Bukkit.getOnlinePlayers())
 						Tabpackage.send(p); // Send Tablist
 				}
-			}
-		}, 20, interval);
+			}, 20, interval)
+		);
 	}
 }

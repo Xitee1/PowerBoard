@@ -2,7 +2,6 @@ package de.xite.scoreboard.modules.board;
 
 import java.io.File;
 import java.io.FilenameFilter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -61,7 +60,9 @@ public class ScoreboardManager {
 	
 	// Import
 	private void importScores(YamlConfiguration cfg) {
+		//for(String s : cfg.getConfigurationSection("").getValues(false).keySet()) {
 		for(String s : cfg.getConfigurationSection("").getValues(false).keySet()) {
+			//Main.pl.getLogger().info("String: "+s);
 			try {
 				int id = Integer.parseInt(s);
 				if(cfg.getStringList(id+".scores") != null && !cfg.getStringList(id+".scores").isEmpty()) {
@@ -74,7 +75,6 @@ public class ScoreboardManager {
 	        		if(cfg.getInt(id+".wait") != 0) {
 	        			cfg.set(id+".speed", cfg.getInt(id+".wait"));
 	        			cfg.set(id+".wait", null);
-	        			cfg.save(new File(Main.pluginfolder+"/"+name+".yml"));
 	        		}
 	        		
 	        		// Start the animation
@@ -83,7 +83,7 @@ public class ScoreboardManager {
 			}catch (Exception e) {}
 		}
 		if(scores.size() > 14) // Check if more than 14 scores
-			Main.pl.getLogger().warning("You have more than 14 scors in you scoreboard! Some scores cannot be displayed! This is a problem in Minecraft.");
+			Main.pl.getLogger().warning("You have more than 14 scors in you scoreboard! Some scores cannot be displayed! This is a limitation of Minecraft.");
 		
 	}
 	private void importTitle(YamlConfiguration cfg) {
@@ -91,11 +91,6 @@ public class ScoreboardManager {
 		if(cfg.getInt("titel.wait") != 0) {
 			cfg.set("titel.speed", cfg.getInt("titel.wait"));
 			cfg.set("titel.wait", null);
-			try {
-				cfg.save(new File(Main.pluginfolder+"/"+name+".yml"));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
 		}
 		
 		title.addAll(cfg.getStringList("titel.titles"));

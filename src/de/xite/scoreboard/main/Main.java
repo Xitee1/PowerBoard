@@ -11,13 +11,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+
 import de.xite.scoreboard.commands.ScoreboardCommand;
 import de.xite.scoreboard.listeners.ChatListener;
 import de.xite.scoreboard.listeners.JoinQuitListener;
 import de.xite.scoreboard.listeners.ScoreboardConditionListener;
 import de.xite.scoreboard.modules.board.ScoreboardManager;
 import de.xite.scoreboard.modules.board.ScoreboardPlayer;
-import de.xite.scoreboard.modules.tablist.TabConfig;
+import de.xite.scoreboard.modules.tablist.TabManager;
 import de.xite.scoreboard.utils.Placeholders;
 import de.xite.scoreboard.utils.Updater;
 import de.xite.scoreboard.utils.UpgradeVersion;
@@ -29,7 +30,7 @@ public class Main extends JavaPlugin implements Listener{
 	
 	public static String pluginfolder = "plugins/PowerBoard"; // plugin folder
 	public static String pr = ChatColor.GRAY+"["+ChatColor.YELLOW+"PowerBoard"+ChatColor.GRAY+"] "; // prefix
-	public static String hexColorBegin = "#", hexColorEnd = ""; // hex color Syntax
+	public static String hexColorBegin = "", hexColorEnd = ""; // hex color Syntax
 	
 	public static Version version; // Minecraft version
 	public static boolean debug = false;
@@ -46,9 +47,6 @@ public class Main extends JavaPlugin implements Listener{
 			Bukkit.getPluginManager().disablePlugin(pl);
 			return;
 		}
-		
-		if(pl.getConfig().getBoolean("debug")) // Check if the debug is enabled in the config.yml
-			debug = true;
 		
 		ExternalPlugins.initializePlugins(); // Load all external plugin APIs
 	    
@@ -79,10 +77,8 @@ public class Main extends JavaPlugin implements Listener{
 					for(Player all : Bukkit.getOnlinePlayers())
 						ScoreboardPlayer.setScoreboard(all);
 				// set tablist
-				if(pl.getConfig().getBoolean("tablist.text")) {
-					TabConfig tab = new TabConfig();
-					tab.register();
-				}
+				if(pl.getConfig().getBoolean("tablist.text"))
+					TabManager.register();
 			}
 		}, 30);
 	}
@@ -91,10 +87,15 @@ public class Main extends JavaPlugin implements Listener{
 		if(pl.getConfig().getBoolean("update.autoupdater"))
 			if(Updater.checkVersion())
 				Updater.downloadFile();
+		
 		if(pl.getConfig().getBoolean("scoreboard"))
 			for(Entry<Player, String> all : ScoreboardPlayer.players.entrySet())
 				ScoreboardPlayer.removeScoreboard(all.getKey(), true);
 		ScoreboardManager.unregisterAllScoreboards();
+		
+		if(pl.getConfig().getBoolean("tablist.text"))
+			TabManager.unregister();
+		
 		Placeholders.ph.clear();
 	}
     // ---- Utils ---- //
