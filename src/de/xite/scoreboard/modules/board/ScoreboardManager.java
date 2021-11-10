@@ -60,9 +60,7 @@ public class ScoreboardManager {
 	
 	// Import
 	private void importScores(YamlConfiguration cfg) {
-		//for(String s : cfg.getConfigurationSection("").getValues(false).keySet()) {
 		for(String s : cfg.getConfigurationSection("").getValues(false).keySet()) {
-			//Main.pl.getLogger().info("String: "+s);
 			try {
 				int id = Integer.parseInt(s);
 				if(cfg.getStringList(id+".scores") != null && !cfg.getStringList(id+".scores").isEmpty()) {
