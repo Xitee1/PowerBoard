@@ -2,24 +2,17 @@ package de.xite.scoreboard.main;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.RegisteredServiceProvider;
-import org.bukkit.plugin.ServicePriority;
-import org.bukkit.plugin.ServicesManager;
 
 import de.xite.scoreboard.depend.LuckPermsListener;
-import de.xite.scoreboard.depend.VaultChatImpl;
-import de.xite.scoreboard.depend.VaultPermissionImpl;
+import de.xite.scoreboard.depend.VaultAPI;
 import de.xite.scoreboard.utils.BStatsMetrics;
 import net.luckperms.api.LuckPerms;
-import net.milkbowl.vault.chat.Chat;
-import net.milkbowl.vault.economy.Economy;
-import net.milkbowl.vault.permission.Permission;
 
 public class ExternalPlugins {
 	static Main pl = Main.pl;
 	static Boolean debug = Main.debug;
 	
 	// APIs
-	public static Economy econ = null;
 	public static LuckPerms luckPerms = null;
 	// Supported Plugins
 	public static boolean hasVault = false;
@@ -32,7 +25,7 @@ public class ExternalPlugins {
 		if(Bukkit.getPluginManager().isPluginEnabled("Vault")) {
 			if(debug)
 				pl.getLogger().info("Loading Vault...");
-			if(setupEconomy()) {
+			if(VaultAPI.setupEconomy()) {
 				hasVault = true;
 				if(debug)
 					pl.getLogger().info("Successfully loaded Vault-Economy!");
@@ -72,24 +65,5 @@ public class ExternalPlugins {
 			pl.getLogger().warning("Could not send analytics to BStats!");
 		}
 	}
-	private static boolean setupEconomy() {
-		RegisteredServiceProvider<Economy> rsp = pl.getServer().getServicesManager().getRegistration(Economy.class);
-		if(rsp == null) {
-			pl.getLogger().warning("Error hooking into Vault-Economy! <- Ignore if you don't have a economy plugin.");
-			return false;
-		}
-		econ = rsp.getProvider();
-		return econ != null;
-	}
-	public static void setupChat() {
-	    ServicesManager servicesManager = pl.getServer().getServicesManager();
 
-	    Permission permission = new VaultPermissionImpl();
-
-	    servicesManager.register(Permission.class, permission, pl, ServicePriority.Highest);
-		
-	    servicesManager.register(Chat.class, new VaultChatImpl(permission), pl, ServicePriority.Highest);
-		
-		pl.getLogger().info("Registered Vault-Chat");
-	}
 }

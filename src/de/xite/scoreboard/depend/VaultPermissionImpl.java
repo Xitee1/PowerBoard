@@ -12,7 +12,7 @@ public class VaultPermissionImpl extends Permission {
 
 	@Override
 	public String getName() {
-		return "PowerBoard";
+		return null;
 	}
 
 	@Override

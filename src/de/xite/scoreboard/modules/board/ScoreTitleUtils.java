@@ -30,7 +30,7 @@ public class ScoreTitleUtils {
 				Main.pl.getLogger().warning("-> The scoreboard title is too long! The limit is 64 chars!");
 				if(sm != null)
 					Main.pl.getLogger().warning("-> Scoreboard: "+sm.getName());
-				Main.pl.getLogger().warning("-> Title: "+Main.pl.getConfig().getString("scoreboard.name"));
+				Main.pl.getLogger().warning("-> Title: "+title);
 				Main.pl.getLogger().warning("-> Player: "+p.getName());
 				Main.pl.getLogger().warning(" ");
 			}
@@ -43,7 +43,7 @@ public class ScoreTitleUtils {
 				Main.pl.getLogger().warning("-> The scoreboard title is too long! The limit is 16 chars!");
 				if(sm != null)
 					Main.pl.getLogger().warning("-> Scoreboard: "+sm.getName());
-				Main.pl.getLogger().warning("-> Title: "+Main.pl.getConfig().getString("scoreboard.name"));
+				Main.pl.getLogger().warning("-> Title: "+title);
 				Main.pl.getLogger().warning("-> Player: "+p.getName());
 				Main.pl.getLogger().warning(" ");
 			}
@@ -96,14 +96,14 @@ public class ScoreTitleUtils {
 		// ---- Set all scores ---- //
 		if(Main.getBukkitVersion().compareTo(new Version("1.13")) == 1 || Main.getBukkitVersion().equals(new Version("1.13"))) { // Under version 1.13+ you can just use up to 16 chars.
 			// Set the score for 1.13+
-			String[] s = getScorePrefixSuffix(score, 64, 126);
+			String[] s = getScorePrefixSuffix(score, 64, 128);
 			if(s == null) {
 				team.setPrefix(ChatColor.RED+"-too long-");
 				Main.pl.getLogger().warning(" ");
-				Main.pl.getLogger().warning("-> The scoreboard-score is too long! The limit is 126 chars!");
+				Main.pl.getLogger().warning("-> The scoreboard-score is too long! The limit is 128 chars!");
 				if(sm != null)
 					Main.pl.getLogger().warning("-> Scoreboard: "+sm.getName());
-				Main.pl.getLogger().warning("-> Score: \""+score+"\", chars: "+score.length());
+				Main.pl.getLogger().warning("-> Score: "+score);
 				Main.pl.getLogger().warning("-> Player: "+p.getName());
 				Main.pl.getLogger().warning(" ");
 			}else {
@@ -133,21 +133,17 @@ public class ScoreTitleUtils {
 	}
 	public static String[] getScorePrefixSuffix(String score, int limit, int maxchars) {
 		String[] s = new String[2];
-		s[1] = "";
 		if(score.length() > maxchars)
 			return null;
 		
-		if(score.length() <= maxchars && score.length() > limit) { // Check if suffix needed
-			String prefix = score.substring(0, limit);
-			s[0] = prefix; // Set the prefix
-			
-			String lastColor = ChatColor.getLastColors(prefix); // Try to get the last color from prefix
-			if(lastColor.length() == 0)
-				lastColor = ChatColor.WHITE+"";
-			
-			s[1] = lastColor+score.substring(limit);// Get last color + everything in the string after 16 chars
-		}else
+		if(score.length() > limit) { // Check if suffix is needed
+			s[0] = score.substring(0, limit); // Set the prefix
+			s[1] = ChatColor.getLastColors(s[0])+score.substring(limit); // Get last color + everything in the string after 16 chars
+		}else {
 			s[0] = score; // Set prefix
+			s[1] = "";
+		}
+			
 		return s;
 	}
 }

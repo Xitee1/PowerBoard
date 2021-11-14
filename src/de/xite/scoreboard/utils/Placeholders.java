@@ -10,6 +10,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import de.xite.scoreboard.api.CustomPlaceholders;
+import de.xite.scoreboard.depend.VaultAPI;
 import de.xite.scoreboard.main.ExternalPlugins;
 import de.xite.scoreboard.main.Main;
 import de.xite.scoreboard.versions.version_1_08;
@@ -152,9 +153,9 @@ public class Placeholders {
   				int decimals = pl.getConfig().getInt("placeholder.money-decimals");
   				// If the decimals are set to 0, cast it to int to remove the '.0'
   				if(decimals != 0) {
-  					s = s.replace("%player_money%", ""+Main.round(ExternalPlugins.econ.getBalance(p), decimals));
+  					s = s.replace("%player_money%", ""+Main.round(VaultAPI.econ.getBalance(p), decimals));
   				}else
-  					s = s.replace("%player_money%", ""+((int) ExternalPlugins.econ.getBalance(p)));
+  					s = s.replace("%player_money%", ""+((int) VaultAPI.econ.getBalance(p)));
   			}else {
   				pl.getLogger().severe("Could not get the player's money because you haven't Vault installed or set up! You need Vault and a money system that supports Vault on your server!");
   				s = s.replace("%player_money%", "Error: See console");
