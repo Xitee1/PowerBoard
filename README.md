@@ -25,12 +25,12 @@ CustomPlaceholders ph = new CustomPlaceholders() {
 ScoreboardAPI.registerCustomPlaceholders(ph);
 ```
 ```java
-// Set the scoreboard for a specified player
+// set / remove the scoreboard for a specified player
 ScoreboardAPI.setScoreboard(p);
 ScoreboardAPI.removeScoreboard(p);
 ```
 ```java
-// Set a complete custom Scoreboard
+// Set a whole custom Scoreboard
 // You have to disable the scoreboard in the config.yml!
 
 ScoreboardAPI.setScoreboard(p); // Set the scoreboard for the player
