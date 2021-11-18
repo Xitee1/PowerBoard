@@ -3,7 +3,7 @@ package de.xite.scoreboard.utils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-import de.xite.scoreboard.main.Main;
+import de.xite.scoreboard.main.PowerBoard;
 import de.xite.scoreboard.modules.ranks.PrefixManager;
 
 public class Teams {
@@ -43,27 +43,25 @@ public class Teams {
 	public String getPlaceholderName() {
 		return placeholderName;
 	}
-	public void setPlaceholderName(String name) {
-		this.placeholderName = name;
-	}
+
 	public String getPrefix() {
 		if(this.p == null) {
-			Main.pl.getLogger().severe("An error occured while reading data for the player "+p.getName()+"!");
+			PowerBoard.pl.getLogger().severe("An error occured while reading data for the player "+p.getName()+"!");
 			return null;
 		}
 		if(this.prefix == null) {
-			Main.pl.getLogger().severe("An error occured while reading the prefix of the player "+p.getName()+"! Maybe a wrong setting in your config.yml?");
+			PowerBoard.pl.getLogger().severe("An error occured while reading the prefix of the player "+p.getName()+"! Maybe a wrong setting in your config.yml?");
 			return null;
 		}
 		String prefix = Placeholders.replace(this.p, this.prefix);
-		if(Main.getBukkitVersion().compareTo(new Version("1.13")) == 1 || Main.getBukkitVersion().equals(new Version("1.13"))) { // Under version 1.13+ you can just use up to 16 chars.
+		if(PowerBoard.getBukkitVersion().compareTo(new Version("1.13")) == 1 || PowerBoard.getBukkitVersion().equals(new Version("1.13"))) { // Under version 1.13+ you can just use up to 16 chars.
 			if(prefix.length() > 64) {
-				Main.pl.getLogger().severe("The prefix is too long! The limit is 64 chars included colorcodes. Chars: "+prefix.length()+", Prefix: "+prefix);
+				PowerBoard.pl.getLogger().severe("The prefix is too long! The limit is 64 chars included colorcodes. Chars: "+prefix.length()+", Prefix: "+prefix);
 				return "too long";
 			}
 		}else {
 			if(prefix.length() > 16) {
-				Main.pl.getLogger().severe("The prefix is too long! The limit is 16 chars included colorcodes. Chars: "+prefix.length()+", Prefix: "+prefix);
+				PowerBoard.pl.getLogger().severe("The prefix is too long! The limit is 16 chars included colorcodes. Chars: "+prefix.length()+", Prefix: "+prefix);
 				return "too long";
 			}
 		}
@@ -71,22 +69,22 @@ public class Teams {
 	}
 	public String getSuffix() {
 		if(this.p == null) {
-			Main.pl.getLogger().severe("An error occured while reading data for the player "+p.getName()+"!");
+			PowerBoard.pl.getLogger().severe("An error occured while reading data for the player "+p.getName()+"!");
 			return null;
 		}
 		if(this.suffix == null) {
-			Main.pl.getLogger().severe("An error occured while reading the suffix of the player "+p.getName()+"! Maybe a wrong setting in your config.yml?");
+			PowerBoard.pl.getLogger().severe("An error occured while reading the suffix of the player "+p.getName()+"! Maybe a wrong setting in your config.yml?");
 			return null;
 		}
 		String suffix = Placeholders.replace(this.p, this.suffix);
-		if(Main.getBukkitVersion().compareTo(new Version("1.13")) == 1 || Main.getBukkitVersion().equals(new Version("1.13"))) { // Under version 1.13+ you can just use up to 16 chars.
+		if(PowerBoard.getBukkitVersion().compareTo(new Version("1.13")) == 1 || PowerBoard.getBukkitVersion().equals(new Version("1.13"))) { // Under version 1.13+ you can just use up to 16 chars.
 			if(suffix.length() > 64) {
-				Main.pl.getLogger().severe("The suffix is too long! The limit is 64 chars included colorcodes. Chars: "+suffix.length()+", Suffix: "+suffix);
+				PowerBoard.pl.getLogger().severe("The suffix is too long! The limit is 64 chars included colorcodes. Chars: "+suffix.length()+", Suffix: "+suffix);
 				return "too long";
 			}
 		}else {
 			if(suffix.length() > 16) {
-				Main.pl.getLogger().severe("The suffix is too long! The limit is 16 chars included colorcodes. Chars: "+suffix.length()+", Suffix: "+suffix);
+				PowerBoard.pl.getLogger().severe("The suffix is too long! The limit is 16 chars included colorcodes. Chars: "+suffix.length()+", Suffix: "+suffix);
 				return "too long";
 			}
 		}
@@ -95,11 +93,11 @@ public class Teams {
 	}
 	public ChatColor getNameColor() {
 		if(this.p == null) {
-			Main.pl.getLogger().severe("An error occured while reading data for the player "+p.getName()+"!");
+			PowerBoard.pl.getLogger().severe("An error occured while reading data for the player "+p.getName()+"!");
 			return ChatColor.WHITE;
 		}
 		if(this.nameColor == null) {
-			Main.pl.getLogger().severe("An error occured while reading the tablist-name-color of the player "+p.getName()+"! Maybe a wrong setting in your config.yml?");
+			PowerBoard.pl.getLogger().severe("An error occured while reading the tablist-name-color of the player "+p.getName()+"! Maybe a wrong setting in your config.yml?");
 			return ChatColor.WHITE;
 		}
 	
@@ -108,26 +106,26 @@ public class Teams {
 		try {
 			return ChatColor.getByChar(nameColorS);
 		}catch (Exception e) {
-			if(!(Main.pl.getConfig().getBoolean("ranks.luckperms-api.enable") || Main.pl.getConfig().getBoolean("ranks.luckperms.enable"))) {
-				Main.pl.getLogger().severe("The Name Color in the tablist could not be set! Please check your name-color-codes for the ranks (config.yml)! Current colorcode: "+nameColorS);
-			}
+			if(!PowerBoard.pl.getConfig().getBoolean("ranks.luckperms-api.enable"))
+				PowerBoard.pl.getLogger().severe("The Name Color in the tablist could not be set! Please check your name-color-codes for the ranks (config.yml)! Current colorcode: "+nameColorS);
+			
 			return ChatColor.WHITE;
 		}
 	}
 	public String getChat(String message) {
 		if(this.p == null) {
-			Main.pl.getLogger().severe("An error occured while reading data for the player "+p.getName()+"!");
+			PowerBoard.pl.getLogger().severe("An error occured while reading data for the player "+p.getName()+"!");
 			return null;
 		}
 		if(this.chatPrefix == null) {
-			Main.pl.getLogger().severe("An error occured while the player "+p.getName()+" was sending a chat message! Maybe he has no rank?");
+			PowerBoard.pl.getLogger().severe("An error occured while the player "+p.getName()+" was sending a chat message! Maybe he has no rank?");
 			return message;
 		}
-		if(!Main.pl.getConfig().getString("chat.colorperm").equals("none") && p.hasPermission(Main.pl.getConfig().getString("chat.colorperm"))) {
+		if(!PowerBoard.pl.getConfig().getString("chat.colorperm").equals("none") && p.hasPermission(PowerBoard.pl.getConfig().getString("chat.colorperm"))) {
 			message = ChatColor.translateAlternateColorCodes('&', message);
 			
-			if(Main.pl.getConfig().getBoolean("chat.allowHexColors")) {
-				String hex = Main.translateHexColor(message);
+			if(PowerBoard.pl.getConfig().getBoolean("chat.allowHexColors")) {
+				String hex = PowerBoard.translateHexColor(message);
 				if(!hex.equalsIgnoreCase("InvalidHexColor"))
 					message = hex;
 			}
@@ -137,13 +135,28 @@ public class Teams {
 	}
 	public String getTeamName() {
 		if(this.p == null) {
-			Main.pl.getLogger().severe("An error occured while reading data for the player "+p.getName()+"!");
+			PowerBoard.pl.getLogger().severe("An error occured while reading data for the player "+p.getName()+"!");
 			return null;
 		}
 		if(this.teamName == null) {
-			Main.pl.getLogger().severe("An error occured while reading the team-name of the player "+p.getName()+"! Maybe a wrong setting in your config.yml?");
+			PowerBoard.pl.getLogger().severe("An error occured while reading the team-name of the player "+p.getName()+"! Maybe a wrong setting in your config.yml?");
 			return null;
 		}
 		return this.teamName;
+	}
+	
+	
+	
+	public void setPlaceholderName(String name) {
+		this.placeholderName = name;
+	}
+	public void setPrefix(String prefix) {
+		this.prefix = prefix;
+	}
+	public void setSuffix(String suffix) {
+		this.suffix = suffix;
+	}
+	public void setNameColor(String color) {
+		this.nameColor = color;
 	}
 }

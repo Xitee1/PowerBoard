@@ -29,8 +29,8 @@ chat:
 ranks:
   # You can use the following permission systems:
   # - none (the player needs the specified permission)
-  # - PermissionsEx (Features: Seperate admin and owner rank's)
-  # - LuckPerms (Features: Seperate admin & owner rank's, auto update (no rejoin needed after group change), (optional) use prefixes you have set in luckperms)
+  # - LuckPerms (Features: Seperate admin & owner rank's, auto update (no rejoin needed after group change - only API!), (optional) use prefixes you have set in luckperms)
+  # - API (Only for devs - set this if you want to use the PowerBoard API only)
   # For more infos visit the wiki!
   permissionsystem: 'none'
   

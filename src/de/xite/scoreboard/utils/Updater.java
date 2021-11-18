@@ -10,10 +10,10 @@ import java.util.Scanner;
 
 import org.bukkit.Bukkit;
 
-import de.xite.scoreboard.main.Main;
+import de.xite.scoreboard.main.PowerBoard;
 
 public class Updater {
-	private static Main pl = Main.pl;
+	private static PowerBoard pl = PowerBoard.pl;
 	private static int pluginID = 73854;
 	public static String version;
     public static String getVersion() {
@@ -33,7 +33,7 @@ public class Updater {
     	if(version == null) {
     		version = getVersion();
     		// Set it to null again after an hour to check again
-    		Bukkit.getScheduler().runTaskLater(Main.pl, new Runnable() {
+    		Bukkit.getScheduler().runTaskLater(PowerBoard.pl, new Runnable() {
 				@Override
 				public void run() {
 					version = null;
@@ -48,7 +48,7 @@ public class Updater {
 	public static boolean downloadFile() {
 	    try {
 	    	pl.getLogger().info("Updater -> Downloading newest version...");
-			File file = new File("plugins/"+Main.pl.getDescription().getName()+".jar");
+			File file = new File("plugins/"+PowerBoard.pl.getDescription().getName()+".jar");
 			if(!file.exists()) {
 				try {
 					file.createNewFile();
@@ -57,7 +57,7 @@ public class Updater {
 		        	return false;
 		        } 
 			}
-	    	String url = "https://xitecraft.de/downloads/"+Main.pl.getDescription().getName()+".jar";
+	    	String url = "https://xitecraft.de/downloads/"+PowerBoard.pl.getDescription().getName()+".jar";
 		    HttpURLConnection connection = (HttpURLConnection)(new URL(url)).openConnection();
 		    connection.connect();
 		    FileOutputStream outputStream = new FileOutputStream(file);

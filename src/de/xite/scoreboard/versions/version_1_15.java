@@ -3,13 +3,13 @@ package de.xite.scoreboard.versions;
 import org.bukkit.craftbukkit.v1_15_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
-import de.xite.scoreboard.main.Main;
+import de.xite.scoreboard.main.PowerBoard;
 import net.minecraft.server.v1_15_R1.IChatBaseComponent;
 import net.minecraft.server.v1_15_R1.PacketPlayOutPlayerListHeaderFooter;
 
 
 public class version_1_15 {
-	static Main pl = Main.pl;
+	static PowerBoard pl = PowerBoard.pl;
 	public static Integer getPing(Player p) {
 		return ((CraftPlayer) p).getHandle().ping;
 	}

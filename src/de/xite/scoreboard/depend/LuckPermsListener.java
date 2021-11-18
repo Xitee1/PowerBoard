@@ -3,14 +3,14 @@ package de.xite.scoreboard.depend;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import de.xite.scoreboard.main.Main;
+import de.xite.scoreboard.main.PowerBoard;
 import de.xite.scoreboard.modules.ranks.PrefixManager;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.event.EventBus;
 import net.luckperms.api.event.user.UserDataRecalculateEvent;
 
 public class LuckPermsListener {
-    public LuckPermsListener(Main pl, LuckPerms api) {
+    public LuckPermsListener(PowerBoard pl, LuckPerms api) {
     	if(!pl.getConfig().getBoolean("tablist.ranks"))
     		return;
         // get the LuckPerms event bus
@@ -22,8 +22,10 @@ public class LuckPermsListener {
 				@Override
 				public void run() {
 		        	Player p = Bukkit.getPlayer(e.getUser().getUniqueId());
-		        	if(p != null)
-		            	PrefixManager.update(p);
+		        	if(p != null) {
+		        		PrefixManager.register(p);
+		        		PrefixManager.updateTeams(p);
+		        	}
 				}
 			}, 10);
         });

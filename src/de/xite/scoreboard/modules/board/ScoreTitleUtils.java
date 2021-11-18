@@ -9,7 +9,7 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
-import de.xite.scoreboard.main.Main;
+import de.xite.scoreboard.main.PowerBoard;
 import de.xite.scoreboard.utils.Placeholders;
 import de.xite.scoreboard.utils.Version;
 
@@ -21,31 +21,31 @@ public class ScoreTitleUtils {
 			return false;
 		if(usePlaceholders)
 			title = Placeholders.replace(p, title);
-		if(Main.getBukkitVersion().compareTo(new Version("1.13")) == 1 || Main.getBukkitVersion().equals(new Version("1.13"))) { // In version 1.13+ you can use more than 16 chars
-			if(title.length() <= 64) {
+		if(PowerBoard.getBukkitVersion().compareTo(new Version("1.13")) == 1 || PowerBoard.getBukkitVersion().equals(new Version("1.13"))) { // In version 1.13 you can use up to 128 chars in the title
+			if(title.length() <= 128) {
 				obj.setDisplayName(title);
 			}else {
 				obj.setDisplayName(ChatColor.RED+"-too long-");
-				Main.pl.getLogger().warning(" ");
-				Main.pl.getLogger().warning("-> The scoreboard title is too long! The limit is 64 chars!");
+				PowerBoard.pl.getLogger().warning(" ");
+				PowerBoard.pl.getLogger().warning("-> The scoreboard title is too long! The limit is 128 chars!");
 				if(sm != null)
-					Main.pl.getLogger().warning("-> Scoreboard: "+sm.getName());
-				Main.pl.getLogger().warning("-> Title: "+title);
-				Main.pl.getLogger().warning("-> Player: "+p.getName());
-				Main.pl.getLogger().warning(" ");
+					PowerBoard.pl.getLogger().warning("-> Scoreboard: "+sm.getName());
+				PowerBoard.pl.getLogger().warning("-> Title: "+title);
+				PowerBoard.pl.getLogger().warning("-> Player: "+p.getName());
+				PowerBoard.pl.getLogger().warning(" ");
 			}
 		}else {
 			if(title.length() <= 16) {
 				obj.setDisplayName(title);
 			}else {
 				obj.setDisplayName(ChatColor.RED+"-too long-");
-				Main.pl.getLogger().warning(" ");
-				Main.pl.getLogger().warning("-> The scoreboard title is too long! The limit is 16 chars!");
+				PowerBoard.pl.getLogger().warning(" ");
+				PowerBoard.pl.getLogger().warning("-> The scoreboard title is too long! The limit is 16 chars!");
 				if(sm != null)
-					Main.pl.getLogger().warning("-> Scoreboard: "+sm.getName());
-				Main.pl.getLogger().warning("-> Title: "+title);
-				Main.pl.getLogger().warning("-> Player: "+p.getName());
-				Main.pl.getLogger().warning(" ");
+					PowerBoard.pl.getLogger().warning("-> Scoreboard: "+sm.getName());
+				PowerBoard.pl.getLogger().warning("-> Title: "+title);
+				PowerBoard.pl.getLogger().warning("-> Player: "+p.getName());
+				PowerBoard.pl.getLogger().warning(" ");
 			}
 		}
 		if(sm != null)
@@ -83,8 +83,8 @@ public class ScoreTitleUtils {
 		Team team = board.getTeam("score-"+ScoreID);
 		if(team == null) {
 			team = board.registerNewTeam("score-"+ScoreID);	
-			if(Main.debug)
-				Main.pl.getLogger().info("Added Team: score-"+ScoreID);
+			if(PowerBoard.debug)
+				PowerBoard.pl.getLogger().info("Added Team: score-"+ScoreID);
 			team.addEntry(colorcode);
 			obj.getScore(colorcode).setScore(ScoreID);
 		}
@@ -94,18 +94,18 @@ public class ScoreTitleUtils {
 			score = Placeholders.replace(p, score);
 		
 		// ---- Set all scores ---- //
-		if(Main.getBukkitVersion().compareTo(new Version("1.13")) == 1 || Main.getBukkitVersion().equals(new Version("1.13"))) { // Under version 1.13+ you can just use up to 16 chars.
+		if(PowerBoard.getBukkitVersion().compareTo(new Version("1.13")) == 1 || PowerBoard.getBukkitVersion().equals(new Version("1.13"))) { // In version 1.13 you can use up to 64 chars in prefix/suffix
 			// Set the score for 1.13+
 			String[] s = getScorePrefixSuffix(score, 64, 128);
 			if(s == null) {
 				team.setPrefix(ChatColor.RED+"-too long-");
-				Main.pl.getLogger().warning(" ");
-				Main.pl.getLogger().warning("-> The scoreboard-score is too long! The limit is 128 chars!");
+				PowerBoard.pl.getLogger().warning(" ");
+				PowerBoard.pl.getLogger().warning("-> The scoreboard-score is too long! The limit is 128 chars!");
 				if(sm != null)
-					Main.pl.getLogger().warning("-> Scoreboard: "+sm.getName());
-				Main.pl.getLogger().warning("-> Score: "+score);
-				Main.pl.getLogger().warning("-> Player: "+p.getName());
-				Main.pl.getLogger().warning(" ");
+					PowerBoard.pl.getLogger().warning("-> Scoreboard: "+sm.getName());
+				PowerBoard.pl.getLogger().warning("-> Score: "+score);
+				PowerBoard.pl.getLogger().warning("-> Player: "+p.getName());
+				PowerBoard.pl.getLogger().warning(" ");
 			}else {
 				team.setPrefix(s[0]);
 				team.setSuffix(s[1]);
@@ -115,13 +115,13 @@ public class ScoreTitleUtils {
 			String[] s = getScorePrefixSuffix(score, 16, 30);
 			if(s == null) {
 				team.setPrefix(ChatColor.RED+"-too long-");
-				Main.pl.getLogger().warning(" ");
-				Main.pl.getLogger().warning("-> The scoreboard-score is too long! The limit is 30 chars!");
+				PowerBoard.pl.getLogger().warning(" ");
+				PowerBoard.pl.getLogger().warning("-> The scoreboard-score is too long! The limit is 30 chars!");
 				if(sm != null)
-					Main.pl.getLogger().warning("-> Scoreboard: "+sm.getName());
-				Main.pl.getLogger().warning("-> Score: \""+score+"\", chars: "+score.length());
-				Main.pl.getLogger().warning("-> Player: "+p.getName());
-				Main.pl.getLogger().warning(" ");
+					PowerBoard.pl.getLogger().warning("-> Scoreboard: "+sm.getName());
+				PowerBoard.pl.getLogger().warning("-> Score: \""+score+"\", chars: "+score.length());
+				PowerBoard.pl.getLogger().warning("-> Player: "+p.getName());
+				PowerBoard.pl.getLogger().warning(" ");
 			}else {
 				team.setPrefix(s[0]);
 				team.setSuffix(s[1]);

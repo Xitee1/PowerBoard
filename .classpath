@@ -6,7 +6,6 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/Mato/Documents/Programmieren/libraries/PermissionsEx.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Mato/Documents/Programmieren/libraries/Vault.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Mato/Documents/Programmieren/libraries/PlaceholderAPI-2.10.6.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Mato/Documents/Programmieren/libraries/luckperms-api-5.2.jar"/>

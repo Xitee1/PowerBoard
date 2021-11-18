@@ -5,7 +5,7 @@ import org.fusesource.jansi.Ansi;
 
 import de.leonhard.storage.Yaml;
 import de.leonhard.storage.internal.settings.ConfigSettings;
-import de.xite.scoreboard.main.Main;
+import de.xite.scoreboard.main.PowerBoard;
 
 public class SelfCheck {
 	public static boolean hasErrors = false;
@@ -16,7 +16,7 @@ public class SelfCheck {
 	static String g = "";
 	static String w = "";
 	
-	static Main pl = Main.pl;
+	static PowerBoard pl = PowerBoard.pl;
 	
 	public static boolean check() {
 		try {
@@ -26,7 +26,7 @@ public class SelfCheck {
 			w = Ansi.ansi().fg(Ansi.Color.WHITE).boldOff().toString();
 		}catch (NoClassDefFoundError e) {}
 		
-		Yaml cfg = new Yaml("config.yml", Main.pluginfolder);
+		Yaml cfg = new Yaml("config.yml", PowerBoard.pluginfolder);
 		cfg.setConfigSettings(ConfigSettings.PRESERVE_COMMENTS);
 		//---Begin the check---/
 		pl.getLogger().info(y+"self-check -> Checking for configuration errors.."+w);
@@ -115,7 +115,7 @@ public class SelfCheck {
 		//Check ranks
 		if(cfg.getConfigurationSection("ranks.list") != null) {
 			for(String s : cfg.getConfigurationSection("ranks.list").getValues(false).keySet()) {
-				if(Main.debug)
+				if(PowerBoard.debug)
 					pl.getLogger().info(y+"self-check -> Checking rank '"+s+"'"+w);
 				if(!cfg.isString("ranks.list."+s+".permission")) {
 					pl.getLogger().severe(r+"self-check -> Your rank named '"+s+"' has no valid permission set!"+w);

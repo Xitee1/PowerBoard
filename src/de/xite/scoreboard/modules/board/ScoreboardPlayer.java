@@ -11,13 +11,13 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
-import de.xite.scoreboard.main.Main;
+import de.xite.scoreboard.main.PowerBoard;
 import de.xite.scoreboard.modules.ranks.PrefixManager;
 import de.xite.scoreboard.utils.Teams;
 import de.xite.scoreboard.utils.Version;
 
 public class ScoreboardPlayer {
-	static Main pl = Main.pl;
+	static PowerBoard pl = PowerBoard.pl;
 	
 	// All registered scoreboards
 	public static HashMap<String, ScoreboardManager> scoreboards = new HashMap<>();
@@ -42,7 +42,7 @@ public class ScoreboardPlayer {
 			if(obj == null) {
 				board = Bukkit.getScoreboardManager().getNewScoreboard();
 				
-				if(Main.getBukkitVersion().compareTo(new Version("1.13")) == 1 || Main.getBukkitVersion().equals(new Version("1.13"))) { // only for version 1.13+
+				if(PowerBoard.getBukkitVersion().compareTo(new Version("1.13")) == 1 || PowerBoard.getBukkitVersion().equals(new Version("1.13"))) { // only for version 1.13+
 					obj = board.registerNewObjective("aaa", "bbb", "SBPlugin");
 				}else
 					obj = board.registerNewObjective("aaa", "bbb");
@@ -62,8 +62,8 @@ public class ScoreboardPlayer {
 		p.setScoreboard(board);
 		
 		// Debug
-		if(Main.debug)
-			Main.pl.getLogger().info("Scoreboard set for player "+p.getName());
+		if(PowerBoard.debug)
+			PowerBoard.pl.getLogger().info("Scoreboard set for player "+p.getName());
 		
 		// ---- Ranks ---- //
 		if(pl.getConfig().getBoolean("tablist.ranks"))
@@ -83,7 +83,7 @@ public class ScoreboardPlayer {
 		ScoreboardManager newScoreboard = getMatchingScoreboard(p);
 		if(newScoreboard == null)
 			return;
-		if(Main.debug)
+		if(PowerBoard.debug)
 			pl.getLogger().info("Changing "+p.getName()+"'s scoreboard to "+newScoreboard.getName());
 		// Check if update is required
 		if(!players.get(p).equals(newScoreboard.getName())) {
@@ -157,7 +157,7 @@ public class ScoreboardPlayer {
 		if(obj != null)
 			obj.unregister();
 		
-		if(Main.debug)
+		if(PowerBoard.debug)
 			pl.getLogger().info("Removed "+p.getName()+"'s scoreboard");
 	}
 }

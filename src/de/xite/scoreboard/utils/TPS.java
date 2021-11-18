@@ -2,7 +2,7 @@ package de.xite.scoreboard.utils;
 
 import org.bukkit.Bukkit;
 
-import de.xite.scoreboard.main.Main;
+import de.xite.scoreboard.main.PowerBoard;
 
 public class TPS implements Runnable {
 	public static int TICK_COUNT= 0;
@@ -24,7 +24,7 @@ public class TPS implements Runnable {
 		return ticks / (elapsed / 1000.0D);
 	}
 	public static void start() {
-		Bukkit.getScheduler().scheduleSyncRepeatingTask(Main.pl, new Runnable() {
+		Bukkit.getScheduler().scheduleSyncRepeatingTask(PowerBoard.pl, new Runnable() {
 			@Override
 			public void run() {
 				currentTPS = getTPS();

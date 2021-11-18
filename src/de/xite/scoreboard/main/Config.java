@@ -11,9 +11,9 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import de.xite.scoreboard.utils.UpgradeVersion;
 
 public class Config {
-	static Main pl = Main.pl;
+	static PowerBoard pl = PowerBoard.pl;
 	public static boolean loadConfig() {
-		File folder = new File(Main.pluginfolder);
+		File folder = new File(PowerBoard.pluginfolder);
 		if(folder == null || !folder.isDirectory())
 			folder.mkdirs();
 		
@@ -29,20 +29,20 @@ public class Config {
 				s = s.replace("{", "").replace("}", "").replace("(", "").replace(")", "");
 				String[] s2 = s.split("000000");
 				if(s2.length > 0)
-					Main.hexColorBegin = s2[0];
+					PowerBoard.hexColorBegin = s2[0];
 				if(s2.length > 1)
-					Main.hexColorEnd = s2[1];
+					PowerBoard.hexColorEnd = s2[1];
 			}else {
 				pl.getLogger().severe("You have an invalid HEX-Color syntax in your config!");
 			}
 		}
 		// Create scoreboard folder if not exists
-		File sbfolder = new File(Main.pluginfolder+"/scoreboards/");
+		File sbfolder = new File(PowerBoard.pluginfolder+"/scoreboards/");
 		if(!sbfolder.exists() || !sbfolder.isDirectory())
 			sbfolder.mkdir();
 		
 		// migrate to multiple scoreboards
-		File file = new File(Main.pluginfolder+"/scoreboard.yml");
+		File file = new File(PowerBoard.pluginfolder+"/scoreboard.yml");
 		if(file.exists())
 			UpgradeVersion.updateMultipleScoreboards();
 		
@@ -55,7 +55,7 @@ public class Config {
 	    	return false;
 		}*/
 		
-		Main.debug = pl.getConfig().getBoolean("debug"); // Check if the debug is enabled in the config.yml
+		PowerBoard.debug = pl.getConfig().getBoolean("debug"); // Check if the debug is enabled in the config.yml
 		
 		return true;
 	}
@@ -66,7 +66,7 @@ public class Config {
 	//----------------------//
 	public static void createDefaultScoreboard() {
 		// readme
-		File readme = new File(Main.pluginfolder+"/scoreboards/readme.txt");
+		File readme = new File(PowerBoard.pluginfolder+"/scoreboards/readme.txt");
 		if(!readme.exists()) {
 			try {
 				readme.createNewFile();
@@ -97,7 +97,7 @@ public class Config {
 			}
 		}
 		// default scoreboard
-		File file = new File(Main.pluginfolder+"/scoreboards/scoreboard.yml");
+		File file = new File(PowerBoard.pluginfolder+"/scoreboards/scoreboard.yml");
 		if(!file.exists()) {
 			try {
 				file.createNewFile();

@@ -12,7 +12,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
-import de.xite.scoreboard.main.Main;
+import de.xite.scoreboard.main.PowerBoard;
 
 public class ScoreboardManager {
 	// The name of the scoreboard
@@ -41,9 +41,9 @@ public class ScoreboardManager {
 		this.name = name;
 		
 		// Get the config
-		File f = new File(Main.pluginfolder+"/scoreboards/"+name+".yml");
+		File f = new File(PowerBoard.pluginfolder+"/scoreboards/"+name+".yml");
 		if(!f.exists()) {
-			Main.pl.getLogger().severe("Could not load Scoreboard named "+name+", because the config file does not exists!");
+			PowerBoard.pl.getLogger().severe("Could not load Scoreboard named "+name+", because the config file does not exists!");
 			return;
 		}
 		YamlConfiguration cfg = YamlConfiguration.loadConfiguration(f);
@@ -81,7 +81,7 @@ public class ScoreboardManager {
 			}catch (Exception e) {}
 		}
 		if(scores.size() > 14) // Check if more than 14 scores
-			Main.pl.getLogger().warning("You have more than 14 scors in you scoreboard! Some scores cannot be displayed! This is a limitation of Minecraft.");
+			PowerBoard.pl.getLogger().warning("You have more than 14 scors in you scoreboard! Some scores cannot be displayed! This is a limitation of Minecraft.");
 		
 	}
 	private void importTitle(YamlConfiguration cfg) {
@@ -100,17 +100,17 @@ public class ScoreboardManager {
 	private void startTitleAnimation(int speed) {
 		// check if scheduler is needed (don't schedule if higher than '9999')
 		if(speed >= 9999 || speed < 0) {
-			if(Main.debug)
-				Main.pl.getLogger().info("Scoreboard-Title (Name: "+name+"): no animation needed (speed higher than 9999 or negative)");
+			if(PowerBoard.debug)
+				PowerBoard.pl.getLogger().info("Scoreboard-Title (Name: "+name+"): no animation needed (speed higher than 9999 or negative)");
 			return;
 		}else
-			if(Main.debug)
-				Main.pl.getLogger().info("Scoreboard-Title (Name: "+name+"): animation started");
+			if(PowerBoard.debug)
+				PowerBoard.pl.getLogger().info("Scoreboard-Title (Name: "+name+"): animation started");
 		
 		currentTitleStep = 0;
 		// Start animation scheduler
 		scheduler.add(
-			Bukkit.getScheduler().runTaskTimerAsynchronously(Main.pl, new Runnable() {
+			Bukkit.getScheduler().runTaskTimerAsynchronously(PowerBoard.pl, new Runnable() {
 				@Override
 				public void run() {
 					if(players.size() != 0) {
@@ -131,16 +131,16 @@ public class ScoreboardManager {
 		
 		// check if scheduler is needed (don't schedule if higher than '9999')
 		if(speed >= 9999 || speed < 0) {
-			if(Main.debug)
-				Main.pl.getLogger().info("Scoreboard-Score (ID: "+id+", Name: "+name+"): no animation needed");
+			if(PowerBoard.debug)
+				PowerBoard.pl.getLogger().info("Scoreboard-Score (ID: "+id+", Name: "+name+"): no animation needed");
 			return;
 		}else
-			if(Main.debug)
-				Main.pl.getLogger().info("Scoreboard-Score (ID: "+id+", Name: "+name+"): animation started");
+			if(PowerBoard.debug)
+				PowerBoard.pl.getLogger().info("Scoreboard-Score (ID: "+id+", Name: "+name+"): animation started");
 			
 		// Start animation scheduler
 		scheduler.add(
-				Bukkit.getScheduler().runTaskTimerAsynchronously(Main.pl, new Runnable() {
+				Bukkit.getScheduler().runTaskTimerAsynchronously(PowerBoard.pl, new Runnable() {
 				@Override
 				public void run() {
 					if(players.size() != 0) {
@@ -148,7 +148,7 @@ public class ScoreboardManager {
 						for(Player p : players) {
 							int i = scores.size()-id-1;
 							ScoreboardManager sm = get(name);
-							Bukkit.getServer().getScheduler().runTask(Main.pl, new Runnable(){
+							Bukkit.getServer().getScheduler().runTask(PowerBoard.pl, new Runnable(){
 								@Override
 								public void run(){
 									ScoreTitleUtils.setScore(p, p.getScoreboard(), s, i, true, sm); // set the score
@@ -208,7 +208,7 @@ public class ScoreboardManager {
 	public static void registerAllScoreboards() {
 		ArrayList<String> boards = new ArrayList<>();
 		// Get all scoreboards from the scoreboard folder
-		File f = new File(Main.pluginfolder+"/scoreboards/");
+		File f = new File(PowerBoard.pluginfolder+"/scoreboards/");
 		FilenameFilter filter = new FilenameFilter() {
 			@Override
 			public boolean accept(File f, String name) {

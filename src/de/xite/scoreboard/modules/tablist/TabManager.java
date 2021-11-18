@@ -10,12 +10,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
 import de.xite.scoreboard.main.Config;
-import de.xite.scoreboard.main.Main;
+import de.xite.scoreboard.main.PowerBoard;
 import de.xite.scoreboard.utils.Placeholders;
 import de.xite.scoreboard.utils.UpgradeVersion;
 
 public class TabManager {
-	static Main pl = Main.pl;
+	static PowerBoard pl = PowerBoard.pl;
 	public static HashMap<Integer, ArrayList<String>> headers = new HashMap<>(); // line, values (animation stages)
 	public static HashMap<Integer, ArrayList<String>> footers = new HashMap<>();
 	
@@ -27,7 +27,7 @@ public class TabManager {
 	public static boolean disabled = false;
 	public static void register() {
 		// ---- Initialize ---- //
-		File folder = new File(Main.pluginfolder);
+		File folder = new File(PowerBoard.pluginfolder);
 		if(folder == null || !folder.isDirectory()) {
 			folder.mkdirs();
 		}
@@ -64,8 +64,8 @@ public class TabManager {
 					headers.get(i).add(header);
 				}
 			}catch (Exception e) {
-				Main.pl.getLogger().severe("Wrong tablist-header entry!");
-				Main.pl.getLogger().severe("Error in line: "+line);
+				PowerBoard.pl.getLogger().severe("Wrong tablist-header entry!");
+				PowerBoard.pl.getLogger().severe("Error in line: "+line);
 			}
 		}
 		// Footer
@@ -78,8 +78,8 @@ public class TabManager {
 					footers.get(i).add(footer);
 				}
 			}catch (Exception e) {
-				Main.pl.getLogger().severe("Wrong tablist-footer entry!");
-				Main.pl.getLogger().severe("Error in line: "+line);
+				PowerBoard.pl.getLogger().severe("Wrong tablist-footer entry!");
+				PowerBoard.pl.getLogger().severe("Error in line: "+line);
 			}
 		}
 		// Start the animation
@@ -104,7 +104,7 @@ public class TabManager {
 		currentFooter.get(p).put(line, Placeholders.replace(p, text));
 	}
 	private static void startAnimation() {//Start the animation
-		File file = new File(Main.pluginfolder+"/tablist.yml");
+		File file = new File(PowerBoard.pluginfolder+"/tablist.yml");
 		YamlConfiguration cfg = YamlConfiguration.loadConfiguration(file);
 		
 		int interval = 20;
@@ -155,7 +155,7 @@ public class TabManager {
 		if(disabled)
 			interval = 20*10; // to not spam the console if there are errors
 		scheduler.add(
-			Bukkit.getScheduler().runTaskTimerAsynchronously(Main.pl, new Runnable() {
+			Bukkit.getScheduler().runTaskTimerAsynchronously(PowerBoard.pl, new Runnable() {
 				@Override
 				public void run() {
 					for(Player p : Bukkit.getOnlinePlayers())

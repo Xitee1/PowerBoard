@@ -5,11 +5,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
-import de.xite.scoreboard.main.Main;
+import de.xite.scoreboard.main.PowerBoard;
 import de.xite.scoreboard.utils.Teams;
 
 public class ChatListener implements Listener{
-	static Main pl = Main.pl;
+	static PowerBoard pl = PowerBoard.pl;
 	@EventHandler
 	public void onChat(AsyncPlayerChatEvent e) {
 		Player p = e.getPlayer();

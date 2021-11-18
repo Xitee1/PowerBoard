@@ -25,8 +25,8 @@ import de.xite.scoreboard.utils.UpgradeVersion;
 import de.xite.scoreboard.utils.Version;
 import net.md_5.bungee.api.ChatColor;
 
-public class Main extends JavaPlugin implements Listener{
-	public static Main pl;
+public class PowerBoard extends JavaPlugin implements Listener{
+	public static PowerBoard pl;
 	
 	public static String pluginfolder = "plugins/PowerBoard"; // plugin folder
 	public static String pr = ChatColor.GRAY+"["+ChatColor.YELLOW+"PowerBoard"+ChatColor.GRAY+"] "; // prefix

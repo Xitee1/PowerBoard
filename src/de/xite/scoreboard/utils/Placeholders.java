@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
 import de.xite.scoreboard.api.CustomPlaceholders;
 import de.xite.scoreboard.depend.VaultAPI;
 import de.xite.scoreboard.main.ExternalPlugins;
-import de.xite.scoreboard.main.Main;
+import de.xite.scoreboard.main.PowerBoard;
 import de.xite.scoreboard.versions.version_1_08;
 import de.xite.scoreboard.versions.version_1_09;
 import de.xite.scoreboard.versions.version_1_10;
@@ -26,7 +26,7 @@ import de.xite.scoreboard.versions.version_1_17;
 import me.clip.placeholderapi.PlaceholderAPI;
 
 public class Placeholders {
-	static Main pl = Main.pl;
+	static PowerBoard pl = PowerBoard.pl;
 	static boolean tps = false;
 	public static ArrayList<String> deprecatedWarning = new ArrayList<>();
 	
@@ -75,7 +75,7 @@ public class Placeholders {
 				Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(pl, new TPS(), 100L, 1L);
 				TPS.start();
 			}
-			s = s.replace("%tps%", ""+Main.round(TPS.currentTPS, 1));
+			s = s.replace("%tps%", ""+PowerBoard.round(TPS.currentTPS, 1));
 		}
 		// Players on server
 		if(s.contains("%server_online_players%"))
@@ -153,7 +153,7 @@ public class Placeholders {
   				int decimals = pl.getConfig().getInt("placeholder.money-decimals");
   				// If the decimals are set to 0, cast it to int to remove the '.0'
   				if(decimals != 0) {
-  					s = s.replace("%player_money%", ""+Main.round(VaultAPI.econ.getBalance(p), decimals));
+  					s = s.replace("%player_money%", ""+PowerBoard.round(VaultAPI.econ.getBalance(p), decimals));
   				}else
   					s = s.replace("%player_money%", ""+((int) VaultAPI.econ.getBalance(p)));
   			}else {
@@ -176,25 +176,25 @@ public class Placeholders {
   		// Ping
   		if(s.contains("%player_ping%")) {
   			int ping = 0;
-  			if(Main.getBukkitVersion().equals(new Version("1.8"))) {
+  			if(PowerBoard.getBukkitVersion().equals(new Version("1.8"))) {
   				ping = version_1_08.getPing(p);
-  			}else if(Main.getBukkitVersion().equals(new Version("1.9"))) {
+  			}else if(PowerBoard.getBukkitVersion().equals(new Version("1.9"))) {
   				ping = version_1_09.getPing(p);
-  			}else if(Main.getBukkitVersion().equals(new Version("1.10"))) {
+  			}else if(PowerBoard.getBukkitVersion().equals(new Version("1.10"))) {
   				ping = version_1_10.getPing(p);
-  			}else if(Main.getBukkitVersion().equals(new Version("1.11"))) {
+  			}else if(PowerBoard.getBukkitVersion().equals(new Version("1.11"))) {
   				ping = version_1_11.getPing(p);
-  			}else if(Main.getBukkitVersion().equals(new Version("1.12"))) {
+  			}else if(PowerBoard.getBukkitVersion().equals(new Version("1.12"))) {
   				ping = version_1_12.getPing(p);
-  			}else if(Main.getBukkitVersion().equals(new Version("1.13"))) {
+  			}else if(PowerBoard.getBukkitVersion().equals(new Version("1.13"))) {
   				ping = version_1_13.getPing(p);
-  			}else if(Main.getBukkitVersion().equals(new Version("1.14"))) {
+  			}else if(PowerBoard.getBukkitVersion().equals(new Version("1.14"))) {
   				ping = version_1_14.getPing(p);
-  			}else if(Main.getBukkitVersion().equals(new Version("1.15"))) {
+  			}else if(PowerBoard.getBukkitVersion().equals(new Version("1.15"))) {
   				ping = version_1_15.getPing(p);
-  			}else if(Main.getBukkitVersion().equals(new Version("1.16"))) {
+  			}else if(PowerBoard.getBukkitVersion().equals(new Version("1.16"))) {
   				ping = version_1_16.getPing(p);
-  			}else if(Main.getBukkitVersion().equals(new Version("1.17"))) {
+  			}else if(PowerBoard.getBukkitVersion().equals(new Version("1.17"))) {
   				ping = version_1_17.getPing(p);
   			}
   			if(ping > 999) {
@@ -210,7 +210,7 @@ public class Placeholders {
   		// Replace colors (MC colorcodes)
   		s = ChatColor.translateAlternateColorCodes('&', s);
   		// Replace colors (HEX) - only 1.16+
-  		s = Main.translateHexColor(s);
+  		s = PowerBoard.translateHexColor(s);
   		// Replace PAPI if plugin prefered
   		if(ExternalPlugins.hasPapi && pl.getConfig().getBoolean("prefer-plugin-placeholders"))
   			s = PlaceholderAPI.setPlaceholders(p, s);

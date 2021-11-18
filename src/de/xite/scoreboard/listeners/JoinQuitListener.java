@@ -8,14 +8,14 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import de.xite.scoreboard.main.Main;
+import de.xite.scoreboard.main.PowerBoard;
 import de.xite.scoreboard.modules.board.ScoreboardPlayer;
 import de.xite.scoreboard.modules.tablist.TabManager;
 import de.xite.scoreboard.modules.tablist.Tabpackage;
 import de.xite.scoreboard.utils.Updater;
 
 public class JoinQuitListener implements Listener {
-	Main pl = Main.pl;
+	PowerBoard pl = PowerBoard.pl;
 	@EventHandler
 	public void onJoin(PlayerJoinEvent e) {
 		Player p = e.getPlayer();
@@ -23,11 +23,11 @@ public class JoinQuitListener implements Listener {
 		if(p.hasPermission("scoreboard.update") || p.isOp()) {
 			if(Updater.checkVersion()) {
 				if(pl.getConfig().getBoolean("update.notification")) {
-					p.sendMessage(Main.pr+ChatColor.RED+"A new update is available ("+ChatColor.AQUA+"v"+Updater.version+ChatColor.RED+")! Your version: "+ChatColor.AQUA+pl.getDescription().getVersion());
+					p.sendMessage(PowerBoard.pr+ChatColor.RED+"A new update is available ("+ChatColor.AQUA+"v"+Updater.version+ChatColor.RED+")! Your version: "+ChatColor.AQUA+pl.getDescription().getVersion());
 					if(pl.getConfig().getBoolean("update.autoupdater")) {
-						p.sendMessage(Main.pr+ChatColor.GREEN+"The plugin will be updated automatically after a server restart.");
+						p.sendMessage(PowerBoard.pr+ChatColor.GREEN+"The plugin will be updated automatically after a server restart.");
 					}else {
-						p.sendMessage(Main.pr+ChatColor.RED+"The auto-updater is disabled in your config.yml. Type /sb update or enable the auto-updater.");
+						p.sendMessage(PowerBoard.pr+ChatColor.RED+"The auto-updater is disabled in your config.yml. Type /sb update or enable the auto-updater.");
 					}
 				}
 			}

@@ -4,13 +4,13 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.ServicesManager;
 
-import de.xite.scoreboard.main.Main;
+import de.xite.scoreboard.main.PowerBoard;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 
 public class VaultAPI {
-	static Main pl = Main.pl;
+	static PowerBoard pl = PowerBoard.pl;
 	public static Economy econ = null;
 	
 	public static boolean setupEconomy() {

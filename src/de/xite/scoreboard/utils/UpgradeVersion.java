@@ -7,12 +7,12 @@ import java.util.ArrayList;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import de.xite.scoreboard.main.Main;
+import de.xite.scoreboard.main.PowerBoard;
 
 public class UpgradeVersion {
-	static Main pl = Main.pl;
+	static PowerBoard pl = PowerBoard.pl;
 	public static void rename() {
-		File newFolder = new File(Main.pluginfolder);
+		File newFolder = new File(PowerBoard.pluginfolder);
 		File oldFolder = new File("plugins/Scoreboard");
 		if(!newFolder.exists() && oldFolder.exists()) {
 			oldFolder.renameTo(newFolder);
@@ -28,8 +28,8 @@ public class UpgradeVersion {
 		pl.getLogger().info("Upgrading multiple scoreboard support..");
 		pl.getLogger().info("Moving files..");
 		
-		File oldFile = new File(Main.pluginfolder+"/scoreboard.yml");
-		File file = new File(Main.pluginfolder+"/scoreboards/scoreboard.yml");
+		File oldFile = new File(PowerBoard.pluginfolder+"/scoreboard.yml");
+		File file = new File(PowerBoard.pluginfolder+"/scoreboards/scoreboard.yml");
 		oldFile.renameTo(file);
 		
 		YamlConfiguration cfg = YamlConfiguration.loadConfiguration(file);
@@ -56,7 +56,7 @@ public class UpgradeVersion {
 	public static void upgradeDoubleTabConfig(File file) {
 		//Migrate from tablist_footer.yml and tablist_header.yml 
 		
-		File folder = new File(Main.pluginfolder);
+		File folder = new File(PowerBoard.pluginfolder);
 		File old_header = new File(folder, "tablist_header.yml");
 		File old_footer = new File(folder, "tablist_footer.yml");
 		if(old_header.exists() && old_footer.exists() && !file.exists()) {
@@ -75,8 +75,8 @@ public class UpgradeVersion {
 						cfg.set("header."+i+".speed", YamlConfiguration.loadConfiguration(old_header).getInt(i+".wait")*20);
 						cfg.set("header."+i+".lines", YamlConfiguration.loadConfiguration(old_header).getStringList(i+".lines"));
 					}catch (Exception e) {
-						Main.pl.getLogger().severe("Wrong tablist-header entry!");
-						Main.pl.getLogger().severe("Error in line: "+line);
+						PowerBoard.pl.getLogger().severe("Wrong tablist-header entry!");
+						PowerBoard.pl.getLogger().severe("Error in line: "+line);
 					}
 				}
 				//Footer
@@ -86,8 +86,8 @@ public class UpgradeVersion {
 						cfg.set("footer."+i+".speed", YamlConfiguration.loadConfiguration(old_footer).getInt(i+".wait")*20);
 						cfg.set("footer."+i+".lines", YamlConfiguration.loadConfiguration(old_footer).getStringList(i+".lines"));
 					}catch (Exception e) {
-						Main.pl.getLogger().severe("Wrong tablist-footer entry!");
-						Main.pl.getLogger().severe("Error in line: "+line);
+						PowerBoard.pl.getLogger().severe("Wrong tablist-footer entry!");
+						PowerBoard.pl.getLogger().severe("Error in line: "+line);
 					}
 				}
 				

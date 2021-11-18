@@ -9,14 +9,13 @@ import de.xite.scoreboard.utils.BStatsMetrics;
 import net.luckperms.api.LuckPerms;
 
 public class ExternalPlugins {
-	static Main pl = Main.pl;
-	static Boolean debug = Main.debug;
+	static PowerBoard pl = PowerBoard.pl;
+	static Boolean debug = PowerBoard.debug;
 	
 	// APIs
 	public static LuckPerms luckPerms = null;
 	// Supported Plugins
 	public static boolean hasVault = false;
-	public static boolean hasPex = false;
 	public static boolean hasPapi = false;
 	public static boolean hasLuckPerms = false;
 	
@@ -35,9 +34,6 @@ public class ExternalPlugins {
 		if(Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI"))
 			hasPapi = true;
 		
-		
-		if(Bukkit.getPluginManager().isPluginEnabled("PermissionsEx"))
-			hasPex = true;
 		if(Bukkit.getPluginManager().isPluginEnabled("LuckPerms")) {
 			hasLuckPerms = true;
 			RegisteredServiceProvider<LuckPerms> provider = Bukkit.getServicesManager().getRegistration(LuckPerms.class);
@@ -59,7 +55,7 @@ public class ExternalPlugins {
 			metrics.addCustomChart(new BStatsMetrics.SimplePie("setting_use_tablist_ranks", () -> pl.getConfig().getBoolean("tablist.ranks") ? "Aktiviert" : "Deaktiviert"));
 			metrics.addCustomChart(new BStatsMetrics.SimplePie("setting_use_chat", () -> pl.getConfig().getBoolean("chat.ranks") ? "Atktiviert" : "Deaktiviert"));
 			metrics.addCustomChart(new BStatsMetrics.SimplePie("setting_permsystem", () -> pl.getConfig().getString("ranks.permissionsystem").toLowerCase()));
-			if(Main.debug)
+			if(PowerBoard.debug)
 				pl.getLogger().info("Analytics sent to BStats");
 		} catch (Exception e) {
 			pl.getLogger().warning("Could not send analytics to BStats!");
