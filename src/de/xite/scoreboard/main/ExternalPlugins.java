@@ -37,9 +37,8 @@ public class ExternalPlugins {
 		if(Bukkit.getPluginManager().isPluginEnabled("LuckPerms")) {
 			hasLuckPerms = true;
 			RegisteredServiceProvider<LuckPerms> provider = Bukkit.getServicesManager().getRegistration(LuckPerms.class);
-			if(provider != null) {
+			if(provider != null)
 				luckPerms = provider.getProvider();
-			}
 			new LuckPermsListener(pl, luckPerms);
 		}
 		// BStats analytics

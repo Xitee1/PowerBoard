@@ -13,6 +13,7 @@ import de.xite.scoreboard.api.CustomPlaceholders;
 import de.xite.scoreboard.depend.VaultAPI;
 import de.xite.scoreboard.main.ExternalPlugins;
 import de.xite.scoreboard.main.PowerBoard;
+import de.xite.scoreboard.modules.ranks.PrefixManager;
 import de.xite.scoreboard.versions.version_1_08;
 import de.xite.scoreboard.versions.version_1_09;
 import de.xite.scoreboard.versions.version_1_10;
@@ -138,13 +139,16 @@ public class Placeholders {
   		// Rank displayname
   		if(s.contains("%player_rank%")) {
   			Teams teams = Teams.get(p);
+			if(teams == null) {
+				PrefixManager.register(p);
+				teams = Teams.get(p);
+			}
   			if(teams != null) {
   				if(teams.getPlaceholderName() == null) {
   					s = s.replace("%player_rank%", teams.getPrefix());
   				}else {
   					s = s.replace("%player_rank%", teams.getPlaceholderName());
   				}
-  				
   			}
   		}
   		// Money

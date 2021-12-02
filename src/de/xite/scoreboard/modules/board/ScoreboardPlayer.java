@@ -28,12 +28,6 @@ public class ScoreboardPlayer {
 	@SuppressWarnings("deprecation")
 	public static void setScoreboard(Player p) {
 		Scoreboard board = p.getScoreboard();
-		// ---- Ranks ---- //
-		if(pl.getConfig().getBoolean("tablist.ranks")) {
-			Teams teams = Teams.get(p);
-			if(teams == null)
-				PrefixManager.register(p);
-		}
 		
 		// ---- Scoreboard ---- //
 		if(pl.getConfig().getBoolean("tablist.ranks") || pl.getConfig().getBoolean("scoreboard")) { // Set obj if name == null, ranks, scoreboard

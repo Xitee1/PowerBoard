@@ -135,7 +135,7 @@ public class TabManager {
 			if(speed < 1)
 				speed = 1;
 			scheduler.add(
-				Bukkit.getScheduler().runTaskTimerAsynchronously(pl, new Runnable() {
+				Bukkit.getScheduler().runTaskTimer(pl, new Runnable() {
 					int step = 0;
 					@Override
 					public void run() {

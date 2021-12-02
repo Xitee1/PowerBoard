@@ -1,5 +1,6 @@
 package de.xite.scoreboard.modules.tablist;
 
+import java.util.ConcurrentModificationException;
 import java.util.Map.Entry;
 
 import org.bukkit.entity.Player;
@@ -27,19 +28,28 @@ public class Tabpackage {
 			pl.getLogger().severe("The tablist config file is empty or the header/footer is not configurated!");
 			return;
 		}
-		if(!TabManager.currentHeader.containsKey(p) || !TabManager.currentFooter.containsKey(p))
+		
+		// feel free to implement a better solution. I currently can't find a better way of avoiding this ConcurrentModificationException
+		try {
+			if(!TabManager.currentHeader.containsKey(p) || !TabManager.currentFooter.containsKey(p))
+				return;
+			for(Entry<Integer, String> e : TabManager.currentHeader.get(p).entrySet())
+				header += e.getValue()+"\n";
+			for(Entry<Integer, String> e : TabManager.currentFooter.get(p).entrySet())
+				footer += e.getValue()+"\n";
+			if(header.length() == 0 || footer.length() == 0)
+				return;
+		}catch (ConcurrentModificationException e) {
 			return;
-		for(Entry<Integer, String> e : TabManager.currentHeader.get(p).entrySet())
-			header += e.getValue()+"\n";
-		for(Entry<Integer, String> e : TabManager.currentFooter.get(p).entrySet())
-			footer += e.getValue()+"\n";
-		if(header.length() == 0 || footer.length() == 0)
-			return;
+		}
+
 		header = header.substring(0, header.length()-1); // remove the empty line at the end
 		footer = footer.substring(0, footer.length()-1); // remove the empty line at the end
 		
 		// Send tablist
-		if(PowerBoard.getBukkitVersion().compareTo(new Version("1.17")) == 1 || PowerBoard.getBukkitVersion().equals(new Version("1.17"))){
+		if(PowerBoard.getBukkitVersion().compareTo(new Version("1.18")) == 1 || PowerBoard.getBukkitVersion().equals(new Version("1.18"))){
+			version_1_17.sendTab(p, header, footer);
+		}else if(PowerBoard.getBukkitVersion().compareTo(new Version("1.17")) == 1 || PowerBoard.getBukkitVersion().equals(new Version("1.17"))){
 			version_1_17.sendTab(p, header, footer);
 		}else if(PowerBoard.getBukkitVersion().compareTo(new Version("1.16")) == 1 || PowerBoard.getBukkitVersion().equals(new Version("1.16"))){
 			version_1_16.sendTab(p, header, footer);
@@ -60,6 +70,6 @@ public class Tabpackage {
 		}else if(PowerBoard.getBukkitVersion().compareTo(new Version("1.8")) == 1 || PowerBoard.getBukkitVersion().equals(new Version("1.8"))){
 			version_1_08.sendTab(p, header, footer);
 		}else
-			pl.getLogger().severe("You are using a version that is not supported! If you think this version should work, please report it to our Discord server or GitHub!");
+			pl.getLogger().severe("You are using a version that is not supported!");
 	}
 }

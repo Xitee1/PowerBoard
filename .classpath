@@ -29,5 +29,6 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="D:/Daten/PluginTestServer/buildtools/spigot-1.18.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

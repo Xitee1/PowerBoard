@@ -18,8 +18,10 @@ import de.xite.scoreboard.listeners.JoinQuitListener;
 import de.xite.scoreboard.listeners.ScoreboardConditionListener;
 import de.xite.scoreboard.modules.board.ScoreboardManager;
 import de.xite.scoreboard.modules.board.ScoreboardPlayer;
+import de.xite.scoreboard.modules.ranks.PrefixManager;
 import de.xite.scoreboard.modules.tablist.TabManager;
 import de.xite.scoreboard.utils.Placeholders;
+import de.xite.scoreboard.utils.Teams;
 import de.xite.scoreboard.utils.Updater;
 import de.xite.scoreboard.utils.UpgradeVersion;
 import de.xite.scoreboard.utils.Version;
@@ -74,8 +76,17 @@ public class PowerBoard extends JavaPlugin implements Listener{
 			public void run() {
 				// set scoreboard and ranks
 				if(pl.getConfig().getBoolean("scoreboard") || pl.getConfig().getBoolean("tablist.ranks"))
-					for(Player all : Bukkit.getOnlinePlayers())
+					for(Player all : Bukkit.getOnlinePlayers()) {
+						// Register Teams if chat ranks or tablist ranks are used
+						if(pl.getConfig().getBoolean("chat.ranks") || pl.getConfig().getBoolean("tablist.ranks")) {
+							Teams teams = Teams.get(all);
+							if(teams == null)
+								PrefixManager.register(all);
+						}
+						
 						ScoreboardPlayer.setScoreboard(all);
+					}
+						
 				// set tablist
 				if(pl.getConfig().getBoolean("tablist.text"))
 					TabManager.register();

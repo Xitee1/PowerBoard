@@ -10,8 +10,10 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import de.xite.scoreboard.main.PowerBoard;
 import de.xite.scoreboard.modules.board.ScoreboardPlayer;
+import de.xite.scoreboard.modules.ranks.PrefixManager;
 import de.xite.scoreboard.modules.tablist.TabManager;
 import de.xite.scoreboard.modules.tablist.Tabpackage;
+import de.xite.scoreboard.utils.Teams;
 import de.xite.scoreboard.utils.Updater;
 
 public class JoinQuitListener implements Listener {
@@ -35,10 +37,19 @@ public class JoinQuitListener implements Listener {
 		Bukkit.getScheduler().runTaskLater(pl, new Runnable() { // Wait 0.25 seconds; Set the scoreboard if enabled
 			@Override
 			public void run() {
-				if(pl.getConfig().getBoolean("scoreboard") || pl.getConfig().getBoolean("tablist.ranks")) {
-					ScoreboardPlayer.setScoreboard(p);
+				// Register Teams if chat ranks or tablist ranks are used
+				if(pl.getConfig().getBoolean("chat.ranks") || pl.getConfig().getBoolean("tablist.ranks")) {
+					Teams teams = Teams.get(p);
+					if(teams == null)
+						PrefixManager.register(p);
 				}
-				if(pl.getConfig().getBoolean("tablist.text")) { // Set the Scoreboard text if enabled
+				
+				// Set the scoreboard if it is enabled or ranks are used
+				if(pl.getConfig().getBoolean("scoreboard") || pl.getConfig().getBoolean("tablist.ranks"))
+					ScoreboardPlayer.setScoreboard(p);
+				
+				// Set the tablist if enabled
+				if(pl.getConfig().getBoolean("tablist.text")) {
 					for(int line : TabManager.headers.keySet())
 						TabManager.setHeader(p, line, TabManager.headers.get(line).get(0));
 					for(int line : TabManager.footers.keySet())

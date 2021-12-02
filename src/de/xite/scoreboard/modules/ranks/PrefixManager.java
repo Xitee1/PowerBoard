@@ -112,8 +112,6 @@ public class PrefixManager {
 			}
 		}else if(pl.getConfig().getString("ranks.permissionsystem").equalsIgnoreCase("api")) {
 			//--- Use PowerBoardAPI ---//
-
-			
 			TeamSetEvent tse = new TeamSetEvent(p);
 			Bukkit.getPluginManager().callEvent(tse);
 			if (!tse.isCancelled()) {
