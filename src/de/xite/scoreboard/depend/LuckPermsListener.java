@@ -26,9 +26,9 @@ public class LuckPermsListener {
 						if(teams != null) {
 				        	PrefixManager.register(p);
 				        	if(pl.getConfig().getBoolean("tablist.ranks"))
-				        		PrefixManager.updateTeams(p);
+				        		if(PrefixManager.updateTeams(p))
+				        			pl.getLogger().info("(LuckPermsAPI) Updated player "+p.getName());
 				        }
-						pl.getLogger().info("(LuckPermsAPI) Updated player "+p.getName());
 					}
 				}
 			}, 10);

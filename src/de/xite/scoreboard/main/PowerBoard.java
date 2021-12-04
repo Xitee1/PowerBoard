@@ -20,6 +20,7 @@ import de.xite.scoreboard.modules.board.ScoreboardManager;
 import de.xite.scoreboard.modules.board.ScoreboardPlayer;
 import de.xite.scoreboard.modules.ranks.PrefixManager;
 import de.xite.scoreboard.modules.tablist.TabManager;
+import de.xite.scoreboard.modules.tablist.Tabpackage;
 import de.xite.scoreboard.utils.Placeholders;
 import de.xite.scoreboard.utils.Teams;
 import de.xite.scoreboard.utils.Updater;
@@ -74,18 +75,26 @@ public class PowerBoard extends JavaPlugin implements Listener{
 		Bukkit.getScheduler().runTaskLater(pl, new Runnable() {
 			@Override
 			public void run() {
-				// set scoreboard and ranks
-				if(pl.getConfig().getBoolean("scoreboard") || pl.getConfig().getBoolean("tablist.ranks"))
-					for(Player all : Bukkit.getOnlinePlayers()) {
-						// Register Teams if chat ranks or tablist ranks are used
-						if(pl.getConfig().getBoolean("chat.ranks") || pl.getConfig().getBoolean("tablist.ranks")) {
-							Teams teams = Teams.get(all);
-							if(teams == null)
-								PrefixManager.register(all);
-						}
-						
-						ScoreboardPlayer.setScoreboard(all);
+				for(Player all : Bukkit.getOnlinePlayers()) {
+					// Register Teams if chat ranks or tablist ranks are used
+					if(pl.getConfig().getBoolean("chat.ranks") || pl.getConfig().getBoolean("tablist.ranks")) {
+						Teams teams = Teams.get(all);
+						if(teams == null)
+							PrefixManager.register(all);
 					}
+					if(pl.getConfig().getBoolean("tablist.ranks"))
+						PrefixManager.setTeams(all);
+					if(pl.getConfig().getBoolean("scoreboard"))
+						ScoreboardPlayer.setScoreboard(all);
+					
+					if(pl.getConfig().getBoolean("tablist.text")) {
+						for(int line : TabManager.headers.keySet())
+							TabManager.setHeader(all, line, TabManager.headers.get(line).get(0));
+						for(int line : TabManager.footers.keySet())
+							TabManager.setFooter(all, line, TabManager.footers.get(line).get(0));
+						Tabpackage.send(all);
+					}
+				}
 						
 				// set tablist
 				if(pl.getConfig().getBoolean("tablist.text"))
@@ -99,9 +108,8 @@ public class PowerBoard extends JavaPlugin implements Listener{
 			if(Updater.checkVersion())
 				Updater.downloadFile();
 		
-		if(pl.getConfig().getBoolean("scoreboard"))
-			for(Entry<Player, String> all : ScoreboardPlayer.players.entrySet())
-				ScoreboardPlayer.removeScoreboard(all.getKey(), true);
+		for(Entry<Player, String> all : ScoreboardPlayer.players.entrySet())
+			ScoreboardPlayer.removeScoreboard(all.getKey(), true);
 		ScoreboardManager.unregisterAllScoreboards();
 		
 		if(pl.getConfig().getBoolean("tablist.text"))

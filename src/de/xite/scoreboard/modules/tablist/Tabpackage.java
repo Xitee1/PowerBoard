@@ -24,10 +24,8 @@ public class Tabpackage {
 		String header = "", footer = "";
 		
 		
-		if(TabManager.headers.isEmpty() || TabManager.footers.isEmpty()) {
-			pl.getLogger().severe("The tablist config file is empty or the header/footer is not configurated!");
+		if(TabManager.headers.isEmpty() || TabManager.footers.isEmpty())
 			return;
-		}
 		
 		// feel free to implement a better solution. I currently can't find a better way of avoiding this ConcurrentModificationException
 		try {

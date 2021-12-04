@@ -6,7 +6,6 @@ import java.util.HashMap;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
 import de.xite.scoreboard.api.TeamSetEvent;
@@ -186,43 +185,15 @@ public class PrefixManager {
 	
 		return false;
 	}
-	public static void updateTeams(Player p) {
-		if(updateDelay.contains(p))
-			return;
-		delay(p);
-		
-		try {
-			Teams teams = Teams.get(p);
-			for(Player all : Bukkit.getOnlinePlayers()) {
-				Team t = all.getScoreboard().getTeam(teams.getTeamName());
-				if(t == null)
-					t = all.getScoreboard().registerNewTeam(teams.getTeamName());
-				
-				String prefix = teams.getPrefix();
-				String suffix = teams.getSuffix();
-				ChatColor nameColor = teams.getNameColor();
-				
-				if(prefix.length() != 0)
-					t.setPrefix(prefix);
-				if(suffix.length() != 0)
-					t.setSuffix(suffix);
-				if(nameColor != null && PowerBoard.getBukkitVersion().compareTo(new Version("1.13")) == 1) // only for version 1.13+
-					t.setColor(nameColor);
-				t.addEntry(p.getName());
-			}
-		}catch (Exception e) {}
-		if(PowerBoard.debug)
-    		PowerBoard.pl.getLogger().info("Updated "+p.getName()+"'s team!");
-	}
-	public static void setTeams(Player p, Scoreboard board) {
-		delay(p);
+	public static void setTeams(Player p) {
+		delay(p, 120);
 		// Set for the new player all players that are already online
 		for(Player all : Bukkit.getOnlinePlayers()) {
 			Teams teams = Teams.get(all);
 			if(teams != null) {// Teams are set a few seconds after a player joined and have no team yet. This prevents errors.
-				Team t = board.getTeam(teams.getTeamName());
+				Team t = p.getScoreboard().getTeam(teams.getTeamName());
 				if(t == null)
-					t = board.registerNewTeam(teams.getTeamName());
+					t = p.getScoreboard().registerNewTeam(teams.getTeamName());
 				
 				ChatColor nameColor = teams.getNameColor();
 				
@@ -254,14 +225,46 @@ public class PrefixManager {
 			t.addEntry(p.getName());
 		}
 	}
-	private static void delay(Player p) {
+	
+	public static boolean updateTeams(Player p) {
+		if(updateDelay.contains(p))
+			return false;
+		delay(p, 40);
+		
+		try {
+			Teams teams = Teams.get(p);
+			for(Player all : Bukkit.getOnlinePlayers()) {
+				Team t = all.getScoreboard().getTeam(teams.getTeamName());
+				if(t == null)
+					t = all.getScoreboard().registerNewTeam(teams.getTeamName());
+				
+				String prefix = teams.getPrefix();
+				String suffix = teams.getSuffix();
+				ChatColor nameColor = teams.getNameColor();
+				
+				if(prefix.length() != 0)
+					t.setPrefix(prefix);
+				if(suffix.length() != 0)
+					t.setSuffix(suffix);
+				if(nameColor != null && PowerBoard.getBukkitVersion().compareTo(new Version("1.13")) == 1) // only for version 1.13+
+					t.setColor(nameColor);
+				t.addEntry(p.getName());
+			}
+		}catch (Exception e) {}
+		if(PowerBoard.debug)
+    		PowerBoard.pl.getLogger().info("Updated "+p.getName()+"'s team!");
+		return true;
+	}
+
+	private static void delay(Player p, int i) {
 		updateDelay.add(p);
 		Bukkit.getScheduler().runTaskLater(pl, new Runnable() {
 			@Override
 			public void run() {
-				updateDelay.remove(p);
+				if(updateDelay.contains(p))
+					updateDelay.remove(p);
 			}
-		}, 20); // wait one second before allow new update to save performance
+		}, i);
 	}
 	
 	

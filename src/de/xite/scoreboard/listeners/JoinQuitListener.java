@@ -43,9 +43,9 @@ public class JoinQuitListener implements Listener {
 					if(teams == null)
 						PrefixManager.register(p);
 				}
-				
-				// Set the scoreboard if it is enabled or ranks are used
-				if(pl.getConfig().getBoolean("scoreboard") || pl.getConfig().getBoolean("tablist.ranks"))
+				if(pl.getConfig().getBoolean("tablist.ranks"))
+					PrefixManager.setTeams(p);
+				if(pl.getConfig().getBoolean("scoreboard"))
 					ScoreboardPlayer.setScoreboard(p);
 				
 				// Set the tablist if enabled

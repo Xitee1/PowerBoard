@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
@@ -12,7 +11,6 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
 import de.xite.scoreboard.main.PowerBoard;
-import de.xite.scoreboard.modules.ranks.PrefixManager;
 import de.xite.scoreboard.utils.Teams;
 import de.xite.scoreboard.utils.Version;
 
@@ -30,27 +28,23 @@ public class ScoreboardPlayer {
 		Scoreboard board = p.getScoreboard();
 		
 		// ---- Scoreboard ---- //
-		if(pl.getConfig().getBoolean("tablist.ranks") || pl.getConfig().getBoolean("scoreboard")) { // Set obj if name == null, ranks, scoreboard
-			removeScoreboard(p, false);
-			Objective obj = board.getObjective(DisplaySlot.SIDEBAR);
-			if(obj == null) {
-				board = Bukkit.getScoreboardManager().getNewScoreboard();
-				
-				if(PowerBoard.getBukkitVersion().compareTo(new Version("1.13")) == 1 || PowerBoard.getBukkitVersion().equals(new Version("1.13"))) { // only for version 1.13+
-					obj = board.registerNewObjective("aaa", "bbb", "SBPlugin");
-				}else
-					obj = board.registerNewObjective("aaa", "bbb");
-			}
-			obj.setDisplaySlot(DisplaySlot.SIDEBAR);
+		removeScoreboard(p, false);
+		Objective obj = board.getObjective(DisplaySlot.SIDEBAR);
+		if(obj == null) {
+			// board = Bukkit.getScoreboardManager().getNewScoreboard();
+			
+			if(PowerBoard.getBukkitVersion().compareTo(new Version("1.13")) == 1 || PowerBoard.getBukkitVersion().equals(new Version("1.13"))) { // only for version 1.13+
+				obj = board.registerNewObjective("aaa", "bbb", "SBPlugin");
+			}else
+				obj = board.registerNewObjective("aaa", "bbb");
 		}
-		if(pl.getConfig().getBoolean("scoreboard")) { // Check if the scoreboard is enabled
-			ScoreboardManager sm = getMatchingScoreboard(p);
-			if(sm == null)
-				return;
-			sm.addPlayer(p);
-			ScoreTitleUtils.setTitle(p, board, sm.getCurrentTitle(), true, sm); // Get the current title and set it
-			ScoreTitleUtils.setScores(p, board, sm.getCurrentScores(), true, sm);
-		}
+		obj.setDisplaySlot(DisplaySlot.SIDEBAR);
+		ScoreboardManager sm = getMatchingScoreboard(p);
+		if(sm == null)
+			return;
+		sm.addPlayer(p);
+		ScoreTitleUtils.setTitle(p, board, sm.getCurrentTitle(), true, sm); // Get the current title and set it
+		ScoreTitleUtils.setScores(p, board, sm.getCurrentScores(), true, sm);
 		
 		// ---- Set the scoreboard ---- //
 		p.setScoreboard(board);
@@ -58,10 +52,6 @@ public class ScoreboardPlayer {
 		// Debug
 		if(PowerBoard.debug)
 			PowerBoard.pl.getLogger().info("Scoreboard set for player "+p.getName());
-		
-		// ---- Ranks ---- //
-		if(pl.getConfig().getBoolean("tablist.ranks"))
-			PrefixManager.setTeams(p, board);
 	}
 	public static void updateScoreboard(Player p) {
 		/* Config syntax: 
@@ -83,17 +73,6 @@ public class ScoreboardPlayer {
 		if(!players.get(p).equals(newScoreboard.getName())) {
 			ScoreboardPlayer.removeScoreboard(p, true);
 			setScoreboard(p);
-			/*
-			// Remove old scoreboard
-			ScoreboardManager.get(players.get(p)).removePlayer(p);
-			
-			// Update player's scoreboard
-			newScoreboard.addPlayer(p);
-			
-			Scoreboard board = p.getScoreboard();
-			ScoreTitleUtils.setTitle(p, board, newScoreboard.getCurrentTitle(), true, newScoreboard); // Get the current title and set it
-			ScoreTitleUtils.setScores(p, board, newScoreboard.getCurrentScores(), true, newScoreboard);
-			*/
 		}
 	}
 	public static ScoreboardManager getMatchingScoreboard(Player p) {
