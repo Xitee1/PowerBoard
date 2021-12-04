@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import de.xite.scoreboard.main.PowerBoard;
 import de.xite.scoreboard.modules.board.ScoreTitleUtils;
 import de.xite.scoreboard.modules.board.ScoreboardPlayer;
-import de.xite.scoreboard.modules.ranks.PrefixManager;
+import de.xite.scoreboard.modules.ranks.RankManager;
 import de.xite.scoreboard.utils.Placeholders;
 import de.xite.scoreboard.utils.Teams;
 
@@ -23,7 +23,7 @@ public class PowerBoardAPI {
 		ScoreboardPlayer.setScoreboard(p);
 	}
 	public static void removeScoreboard(Player p) {
-		ScoreboardPlayer.removeScoreboard(p, false);
+		ScoreboardPlayer.removeScoreboard(p);
 	}
 	
 	public static void setScoreboardTitle(Player p, String title, boolean usePlaceholders) {
@@ -63,7 +63,7 @@ public class PowerBoardAPI {
 		return true;
 	}
 	public static void updateTeams(Player p) {
-		PrefixManager.updateTeams(p);
+		RankManager.updateRanks(p);
 	}
 	
 	public String getPrefix(Player p) {

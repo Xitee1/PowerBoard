@@ -39,6 +39,7 @@ ranks:
   luckperms-api:
     enable: false
     chat-layout: '%prefix% %player_name% &7» ' # Placeholders: %displayname% (the group's displayname), %prefix% (the player/group's prefix), %name% (The player name)
+    prefix-suffix-space: false # Set a space behind the prefix and infront of the suffix
   
   ##########################################################################################
   ### If you have luckperms api enabled, ignore everything in the config section "list"!

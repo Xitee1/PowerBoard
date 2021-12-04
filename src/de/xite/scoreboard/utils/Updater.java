@@ -57,7 +57,7 @@ public class Updater {
 		        	return false;
 		        } 
 			}
-	    	String url = "https://xitecraft.de/downloads/"+PowerBoard.pl.getDescription().getName()+".jar";
+	    	String url = "https://github.com/Xitee1/PowerBoard/releases/latest/download/"+PowerBoard.pl.getDescription().getName()+".jar";
 		    HttpURLConnection connection = (HttpURLConnection)(new URL(url)).openConnection();
 		    connection.connect();
 		    FileOutputStream outputStream = new FileOutputStream(file);

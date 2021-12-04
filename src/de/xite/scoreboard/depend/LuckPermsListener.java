@@ -4,7 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import de.xite.scoreboard.main.PowerBoard;
-import de.xite.scoreboard.modules.ranks.PrefixManager;
+import de.xite.scoreboard.modules.ranks.RankManager;
 import de.xite.scoreboard.utils.Teams;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.event.EventBus;
@@ -24,10 +24,13 @@ public class LuckPermsListener {
 					if(p != null) {
 			  			Teams teams = Teams.get(p);
 						if(teams != null) {
-				        	PrefixManager.register(p);
-				        	if(pl.getConfig().getBoolean("tablist.ranks"))
-				        		if(PrefixManager.updateTeams(p))
+				        	if(pl.getConfig().getBoolean("tablist.ranks")) {
+				        		if(!RankManager.updateDelay.contains(p)) {
+					        		RankManager.register(p);
+					        		RankManager.updateRanks(p);
 				        			pl.getLogger().info("(LuckPermsAPI) Updated player "+p.getName());
+				        		}
+				        	}
 				        }
 					}
 				}

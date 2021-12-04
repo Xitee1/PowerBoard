@@ -1,7 +1,6 @@
 package de.xite.scoreboard.modules.ranks;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -17,12 +16,11 @@ import net.luckperms.api.LuckPerms;
 import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.user.User;
 
-public class PrefixManager {
+public class RankManager {
 	static PowerBoard pl = PowerBoard.pl;
 	
-	public static HashMap<Player, Teams> TeamsList = new HashMap<>();
 	public static int TeamCount = 0;
-	private static ArrayList<Player> updateDelay = new ArrayList<>();
+	public static ArrayList<Player> updateDelay = new ArrayList<>();
 	
 	public static boolean register(Player p) {
 		if(pl.getConfig().getBoolean("ranks.luckperms-api.enable")) {
@@ -64,6 +62,11 @@ public class PrefixManager {
 			prefix = user.getCachedData().getMetaData().getPrefix();
 			suffix = user.getCachedData().getMetaData().getSuffix();
 			displayname = group.getDisplayName();
+			
+			if(pl.getConfig().getBoolean("prefix.luckperms-api.prefix-suffix-space")) {
+				prefix = prefix+" ";
+				suffix = " "+suffix;
+			}
 			
 			if(prefix == null)
 				prefix = "";
@@ -185,7 +188,7 @@ public class PrefixManager {
 	
 		return false;
 	}
-	public static void setTeams(Player p) {
+	public static void setRanks(Player p) {
 		delay(p, 120);
 		// Set for the new player all players that are already online
 		for(Player all : Bukkit.getOnlinePlayers()) {
@@ -226,7 +229,7 @@ public class PrefixManager {
 		}
 	}
 	
-	public static boolean updateTeams(Player p) {
+	public static boolean updateRanks(Player p) {
 		if(updateDelay.contains(p))
 			return false;
 		delay(p, 40);

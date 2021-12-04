@@ -1,12 +1,15 @@
 package de.xite.scoreboard.utils;
 
+import java.util.HashMap;
+
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import de.xite.scoreboard.main.PowerBoard;
-import de.xite.scoreboard.modules.ranks.PrefixManager;
 
 public class Teams {
+	public static HashMap<Player, Teams> TeamsList = new HashMap<>();
+	
 	Player p;
 	String prefix;
 	String suffix;
@@ -25,16 +28,20 @@ public class Teams {
 	}
 	public static Teams addPlayer(Player p, String prefix, String suffix, String nameColor, String teamName, String chatPrefix, String placeholderName) {
 		Teams teams = new Teams(p, prefix, suffix, nameColor, teamName, chatPrefix, placeholderName);
-		PrefixManager.TeamsList.put(p, teams);
+		TeamsList.put(p, teams);
 		return teams;
 	}
 	public static void removePlayer(Player p) {
-		if(PrefixManager.TeamsList.containsKey(p))
-			PrefixManager.TeamsList.remove(p);
+		if(TeamsList.containsKey(p)) {
+			if(p.getScoreboard().getTeam(Teams.get(p).teamName) != null)
+				p.getScoreboard().getTeam(Teams.get(p).teamName).unregister();
+			
+			TeamsList.remove(p);
+		}
 	}
 	public static Teams get(Player p) {
-		if(PrefixManager.TeamsList.containsKey(p))
-			return PrefixManager.TeamsList.get(p);
+		if(TeamsList.containsKey(p))
+			return TeamsList.get(p);
 		return null;
 	}
 	public String getChatPrefix() {

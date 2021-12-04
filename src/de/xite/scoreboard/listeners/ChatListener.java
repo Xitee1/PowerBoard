@@ -20,12 +20,10 @@ public class ChatListener implements Listener{
 					String message = teams.getChat(e.getMessage());
 					message = message.replace("%", "%%"); //Fix the Chat % bug
 					e.setFormat(message);
-				}else {
+				}else
 					pl.getLogger().warning("The player "+p.getName()+" has no Rank! Make sure that he has the correct permissions.");
-				}
-			}else {
+			}else
 				pl.getLogger().warning("The player "+p.getName()+" has no team! Please rejoin and try it again. If the problem persist, please check your Plugin configuration!");
-			}
 		}
 	}
 }

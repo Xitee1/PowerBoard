@@ -2,7 +2,6 @@ package de.xite.scoreboard.main;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -18,7 +17,7 @@ import de.xite.scoreboard.listeners.JoinQuitListener;
 import de.xite.scoreboard.listeners.ScoreboardConditionListener;
 import de.xite.scoreboard.modules.board.ScoreboardManager;
 import de.xite.scoreboard.modules.board.ScoreboardPlayer;
-import de.xite.scoreboard.modules.ranks.PrefixManager;
+import de.xite.scoreboard.modules.ranks.RankManager;
 import de.xite.scoreboard.modules.tablist.TabManager;
 import de.xite.scoreboard.modules.tablist.Tabpackage;
 import de.xite.scoreboard.utils.Placeholders;
@@ -80,10 +79,10 @@ public class PowerBoard extends JavaPlugin implements Listener{
 					if(pl.getConfig().getBoolean("chat.ranks") || pl.getConfig().getBoolean("tablist.ranks")) {
 						Teams teams = Teams.get(all);
 						if(teams == null)
-							PrefixManager.register(all);
+							RankManager.register(all);
 					}
 					if(pl.getConfig().getBoolean("tablist.ranks"))
-						PrefixManager.setTeams(all);
+						RankManager.setRanks(all);
 					if(pl.getConfig().getBoolean("scoreboard"))
 						ScoreboardPlayer.setScoreboard(all);
 					
@@ -108,8 +107,10 @@ public class PowerBoard extends JavaPlugin implements Listener{
 			if(Updater.checkVersion())
 				Updater.downloadFile();
 		
-		for(Entry<Player, String> all : ScoreboardPlayer.players.entrySet())
-			ScoreboardPlayer.removeScoreboard(all.getKey(), true);
+		for(Player all : Bukkit.getOnlinePlayers()) {
+			ScoreboardPlayer.removeScoreboard(all);
+			Teams.removePlayer(all);
+		}
 		ScoreboardManager.unregisterAllScoreboards();
 		
 		if(pl.getConfig().getBoolean("tablist.text"))

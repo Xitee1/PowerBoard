@@ -11,7 +11,6 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
 import de.xite.scoreboard.main.PowerBoard;
-import de.xite.scoreboard.utils.Teams;
 import de.xite.scoreboard.utils.Version;
 
 public class ScoreboardPlayer {
@@ -28,7 +27,7 @@ public class ScoreboardPlayer {
 		Scoreboard board = p.getScoreboard();
 		
 		// ---- Scoreboard ---- //
-		removeScoreboard(p, false);
+		removeScoreboard(p);
 		Objective obj = board.getObjective(DisplaySlot.SIDEBAR);
 		if(obj == null) {
 			// board = Bukkit.getScoreboardManager().getNewScoreboard();
@@ -71,7 +70,7 @@ public class ScoreboardPlayer {
 			pl.getLogger().info("Changing "+p.getName()+"'s scoreboard to "+newScoreboard.getName());
 		// Check if update is required
 		if(!players.get(p).equals(newScoreboard.getName())) {
-			ScoreboardPlayer.removeScoreboard(p, true);
+			ScoreboardPlayer.removeScoreboard(p);
 			setScoreboard(p);
 		}
 	}
@@ -115,17 +114,17 @@ public class ScoreboardPlayer {
 		}
 		return ScoreboardManager.get(pl.getConfig().getString("scoreboard-default"));
 	}
-	public static void removeScoreboard(Player p, boolean removeTeams) {
+	public static void removeScoreboard(Player p) {
 		if(!players.containsKey(p))
 			return;
 		ScoreboardManager.get(players.get(p)).removePlayer(p);
 		players.remove(p);
 		
-		if(removeTeams) {
-			for(Team t : p.getScoreboard().getTeams())
+		for(Team t : p.getScoreboard().getTeams()) {
+			if(t.getName().startsWith("score-"))
 				t.unregister();
-			Teams.removePlayer(p);
 		}
+		
 		Objective obj = p.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
 		if(obj != null)
 			obj.unregister();
