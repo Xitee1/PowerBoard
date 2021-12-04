@@ -34,7 +34,6 @@ public class JoinQuitListener implements Listener {
 				}
 			}
 		}
-		p.sendMessage("hi");
 		Bukkit.getScheduler().runTaskLater(pl, new Runnable() { // Wait 0.25 seconds; Set the scoreboard if enabled
 			@Override
 			public void run() {

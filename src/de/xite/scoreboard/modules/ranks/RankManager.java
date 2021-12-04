@@ -63,15 +63,21 @@ public class RankManager {
 			suffix = user.getCachedData().getMetaData().getSuffix();
 			displayname = group.getDisplayName();
 			
-			if(pl.getConfig().getBoolean("prefix.luckperms-api.prefix-suffix-space")) {
-				prefix = prefix+" ";
-				suffix = " "+suffix;
-			}
+
 			
-			if(prefix == null)
+			if(prefix == null) {
 				prefix = "";
-			if(suffix == null)
+			}else
+				if(pl.getConfig().getBoolean("ranks.luckperms-api.prefix-suffix-space"))
+					prefix = prefix+" ";
+			
+			if(suffix == null) {
 				suffix = "";
+			}else
+				if(pl.getConfig().getBoolean("ranks.luckperms-api.prefix-suffix-space"))
+					suffix = " "+suffix;
+			
+			
 			if(displayname == null) {
 				PowerBoard.pl.getLogger().severe("The group "+group.getName()+" has no Displayname! "
 						+ "Give the group the permission 'displayname.<enter the displayname>', for example 'displayname.&4Owner'");
