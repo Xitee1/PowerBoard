@@ -16,7 +16,7 @@ public class Version implements Comparable<Version> {
         this.version = version;
     }
 
-    @Override 
+    @Override
     public int compareTo(Version that) {
         if(that == null)
             return 1;
@@ -36,7 +36,7 @@ public class Version implements Comparable<Version> {
         return 0;
     }
 
-    @Override 
+    @Override
     public boolean equals(Object that) {
         if(this == that)
             return true;
@@ -46,5 +46,4 @@ public class Version implements Comparable<Version> {
             return false;
         return this.compareTo((Version) that) == 0;
     }
-
 }

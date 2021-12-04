@@ -33,14 +33,14 @@ ranks:
   # - API (Only for devs - set this if you want to use the PowerBoard API only)
   # For more infos visit the wiki!
   permissionsystem: 'none'
-  
+
   # If you want to sync all your prefixes with all your servers or just want to use the prefixes that you have set for the groups in
   # LuckPerms, enable this setting. But make sure that you have configured the LuckPerms groups properly! More infos are in the wiki.
   luckperms-api:
     enable: false
     chat-layout: '%prefix% %player_name% &7» ' # Placeholders: %displayname% (the group's displayname), %prefix% (the player/group's prefix), %name% (The player name)
     prefix-suffix-space: false # Set a space behind the prefix and infront of the suffix
-  
+
   ##########################################################################################
   ### If you have luckperms api enabled, ignore everything in the config section "list"!
   ### You can add as many ranks as you want.
@@ -78,7 +78,7 @@ placeholder:
   date-format: 'dd.MM.yyyy'
   money-decimals: 2 # The maximum decimals for the placeholder %player_money%.
   preferLastPrefixColor: true # If you use ranks with luckperms-api, prefer the last colors from the prefix instead of the group-displayname to set the name-color
-  hexColorSyntax: '#000000' # Set the syntax to trigger hex colors. For example 'color:000000' or just '#000000' - whatever you want. WARNING NOT WORKING CHARS: { } ( ) 
+  hexColorSyntax: '#000000' # Set the syntax to trigger hex colors. For example 'color:000000' or just '#000000' - whatever you want. WARNING NOT WORKING CHARS: { } ( )
   world-names: # Replace world names for the %player_world% placeholder
     world: 'Overword'
     world_nether: 'Nether'
