@@ -21,7 +21,6 @@ public class JoinQuitListener implements Listener {
 	@EventHandler
 	public void onJoin(PlayerJoinEvent e) {
 		Player p = e.getPlayer();
-		p.setDisplayName(p.getName());
 		if(p.hasPermission("powerboard.update") || p.isOp()) {
 			if(Updater.checkVersion()) {
 				if(pl.getConfig().getBoolean("update.notification")) {
@@ -34,19 +33,20 @@ public class JoinQuitListener implements Listener {
 				}
 			}
 		}
-		Bukkit.getScheduler().runTaskLater(pl, new Runnable() { // Wait 0.25 seconds; Set the scoreboard if enabled
+		// Set a new scoreboard for the player to prevent bugs
+		if(pl.getConfig().getBoolean("tablist.ranks") || pl.getConfig().getBoolean("scoreboard"))
+			p.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
+		Bukkit.getScheduler().runTaskLater(pl, new Runnable() {
 			@Override
 			public void run() {
 				// Register Teams if chat ranks or tablist ranks are used
-				if(pl.getConfig().getBoolean("chat.ranks") || pl.getConfig().getBoolean("tablist.ranks")) {
-					Teams teams = Teams.get(p);
-					if(teams == null)
+				if(pl.getConfig().getBoolean("chat.ranks") || pl.getConfig().getBoolean("tablist.ranks"))
+					if(Teams.get(p) == null)
 						RankManager.register(p);
-				}
-				if(pl.getConfig().getBoolean("tablist.ranks"))
-					RankManager.setRanks(p);
 				if(pl.getConfig().getBoolean("scoreboard"))
 					ScoreboardPlayer.setScoreboard(p);
+				if(pl.getConfig().getBoolean("tablist.ranks"))
+					RankManager.setTablistRanks(p);
 				
 				// Set the tablist if enabled
 				if(pl.getConfig().getBoolean("tablist.text")) {
@@ -57,7 +57,7 @@ public class JoinQuitListener implements Listener {
 					Tabpackage.send(p);
 				}
 			}
-		}, 5);
+		}, 3);
 	}
 	@EventHandler
 	public void onQuit(PlayerQuitEvent e) {

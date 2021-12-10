@@ -11,7 +11,6 @@ import org.bukkit.scoreboard.Team;
 
 import de.xite.scoreboard.main.PowerBoard;
 import de.xite.scoreboard.utils.Placeholders;
-import de.xite.scoreboard.utils.Version;
 
 public class ScoreTitleUtils {
 	// ---- Set the scoreboard title ---- //
@@ -21,7 +20,7 @@ public class ScoreTitleUtils {
 			return false;
 		if(usePlaceholders)
 			title = Placeholders.replace(p, title);
-		if(PowerBoard.getBukkitVersion().compareTo(new Version("1.13")) == 1 || PowerBoard.getBukkitVersion().equals(new Version("1.13"))) { // In version 1.13 you can use up to 128 chars in the title
+		if(PowerBoard.aboveMC_1_13) { // In version 1.13 you can use up to 128 chars in the title
 			if(title.length() <= 128) {
 				obj.setDisplayName(title);
 			}else {
@@ -94,7 +93,7 @@ public class ScoreTitleUtils {
 			score = Placeholders.replace(p, score);
 		
 		// ---- Set all scores ---- //
-		if(PowerBoard.getBukkitVersion().compareTo(new Version("1.13")) == 1 || PowerBoard.getBukkitVersion().equals(new Version("1.13"))) { // In version 1.13 you can use up to 64 chars in prefix/suffix
+		if(PowerBoard.aboveMC_1_13) { // In version 1.13 you can use up to 64 chars in prefix/suffix
 			// Set the score for 1.13+
 			String[] s = getScorePrefixSuffix(score, 64, 128);
 			if(s == null) {

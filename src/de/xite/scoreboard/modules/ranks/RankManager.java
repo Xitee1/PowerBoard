@@ -11,7 +11,6 @@ import de.xite.scoreboard.api.TeamSetEvent;
 import de.xite.scoreboard.main.ExternalPlugins;
 import de.xite.scoreboard.main.PowerBoard;
 import de.xite.scoreboard.utils.Teams;
-import de.xite.scoreboard.utils.Version;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.user.User;
@@ -41,13 +40,18 @@ public class RankManager {
 				int loadedGroups = api.getGroupManager().getLoadedGroups().size();
 				i = loadedGroups - group.getWeight().getAsInt();
 				if(loadedGroups < group.getWeight().getAsInt()) {
-					PowerBoard.pl.getLogger().severe("Error in group "+group.getName()+": The group-weight needs to be smaller than the amount of groups!");
-					PowerBoard.pl.getLogger().severe("Read the wiki to see which weights you have to set: https://wiki.xitma.de/plugin.php?name=scoreboard#ranks");
-					i = 0;
+					PowerBoard.pl.getLogger().severe("---------------------------------------------------------------------------------------------------------------------------");
+					PowerBoard.pl.getLogger().severe("The group \""+group.getName()+"\" has no weight! Please set the weight with /lp group <group> setweight <weight>");
+					PowerBoard.pl.getLogger().severe("Read the wiki to see which weights you have to set: https://github.com/Xitee1/PowerBoard/wiki#configure-the-ranks-optional");
+					PowerBoard.pl.getLogger().severe("---------------------------------------------------------------------------------------------------------------------------");
+					return false;
 				}
 			}catch (Exception e) {
-				PowerBoard.pl.getLogger().severe("The group "+group.getName()+" has no weight! Please set weight with /lp group <group> setweight <weight>");
-				PowerBoard.pl.getLogger().severe("Read the wiki to see which weights you have to set: https://wiki.xitma.de/plugin.php?name=scoreboard#ranks");
+				PowerBoard.pl.getLogger().severe("---------------------------------------------------------------------------------------------------------------------------");
+				PowerBoard.pl.getLogger().severe("The group \""+group.getName()+"\" has no weight! Please set the weight with /lp group <group> setweight <weight>");
+				PowerBoard.pl.getLogger().severe("Read the wiki to see which weights you have to set: https://github.com/Xitee1/PowerBoard/wiki#configure-the-ranks-optional");
+				PowerBoard.pl.getLogger().severe("---------------------------------------------------------------------------------------------------------------------------");
+				return false;
 			}
 			String i2 = ""+i;
 			if(i < 10)
@@ -79,8 +83,10 @@ public class RankManager {
 			
 			
 			if(displayname == null) {
-				PowerBoard.pl.getLogger().severe("The group "+group.getName()+" has no Displayname! "
+				PowerBoard.pl.getLogger().severe("---------------------------------------------------------------------------------------------------------------------------");
+				PowerBoard.pl.getLogger().severe("The group \""+group.getName()+"\" has no Displayname! "
 						+ "Give the group the permission 'displayname.<enter the displayname>', for example 'displayname.&4Owner'");
+				PowerBoard.pl.getLogger().severe("---------------------------------------------------------------------------------------------------------------------------");
 				return false;
 			}
 			
@@ -94,17 +100,15 @@ public class RankManager {
 			}
 			chat = chat.replace("%prefix%", prefix).replace("%name%", p.getName()).replace("%displayname%", displayname); // Replace chat placeholders
 			
-			if(displayname.length() == 0)
-				displayname = prefix; // Make the displayname the prefix if the displayname is not set
 			// Get the name color and check for errors
 			if(pl.getConfig().getBoolean("placeholder.preferLastPrefixColor")) {
-				nameColor = ChatColor.getLastColors(ChatColor.translateAlternateColorCodes('&', displayname));
-				if(nameColor == null)
-					pl.getLogger().warning("Could not get the last color from the displayname of the rank "+group.getName()+". Make sure to put a colorcode at the end of your displayname, otherwise the player name will always be white.");
-			}else {
 				nameColor = ChatColor.getLastColors(ChatColor.translateAlternateColorCodes('&', prefix));
 				if(nameColor == null)
 					pl.getLogger().warning("Could not get the last color from "+p.getName()+"'s prefix. Make sure to put a colorcode at the end of your prefix, otherwise the player name will always be white.");
+			}else {
+				nameColor = ChatColor.getLastColors(ChatColor.translateAlternateColorCodes('&', displayname));
+				if(nameColor == null)
+					pl.getLogger().warning("Could not get the last color from the displayname of the rank "+group.getName()+". Make sure to put a colorcode at the end of your displayname, otherwise the player name will always be white.");
 			}
 			
 			if(PowerBoard.debug)
@@ -194,48 +198,55 @@ public class RankManager {
 	
 		return false;
 	}
-	public static void setRanks(Player p) {
+	public static void setTablistRanks(Player p) {
 		delay(p, 120);
-		// Set for the new player all players that are already online
+		// Set all players that are online for the new player
 		for(Player all : Bukkit.getOnlinePlayers()) {
-			Teams teams = Teams.get(all);
-			if(teams != null) {// Teams are set a few seconds after a player joined and have no team yet. This prevents errors.
-				Team t = p.getScoreboard().getTeam(teams.getTeamName());
+			if(all != p) {
+				Teams teams = Teams.get(all);
+				if(teams != null) {
+					Team t = p.getScoreboard().getTeam(teams.getTeamName());
+					if(t == null)
+						t = p.getScoreboard().registerNewTeam(teams.getTeamName());
+					
+					ChatColor nameColor = teams.getNameColor();
+					
+					t.setPrefix(teams.getPrefix());
+					t.setSuffix(teams.getSuffix());
+					if(nameColor != null && PowerBoard.aboveMC_1_13)
+						t.setColor(nameColor);
+					t.addEntry(all.getName());
+				}else
+					pl.getLogger().warning("Did not set "+all.getName()+"'s tablist rank for player "+p.getName()+"");
+			}
+		}
+		// Set the new player for all players that are online
+		Teams teams = Teams.get(p);
+		if(teams != null) {
+			for(Player all : Bukkit.getOnlinePlayers()) {
+				Team t = all.getScoreboard().getTeam(teams.getTeamName());
 				if(t == null)
-					t = p.getScoreboard().registerNewTeam(teams.getTeamName());
+					t = all.getScoreboard().registerNewTeam(teams.getTeamName());
 				
+				String prefix = teams.getPrefix();
+				String suffix = teams.getSuffix();
 				ChatColor nameColor = teams.getNameColor();
 				
-				t.setPrefix(teams.getPrefix());
-				t.setSuffix(teams.getSuffix());
-				if(nameColor != null && PowerBoard.getBukkitVersion().compareTo(new Version("1.13")) == 1) // only for version 1.13+
+				if(prefix.length() != 0)
+					t.setPrefix(prefix);
+				if(suffix.length() != 0)
+					t.setSuffix(suffix);
+				if(nameColor != null && PowerBoard.aboveMC_1_13)
 					t.setColor(nameColor);
 				t.addEntry(p.getName());
 			}
-
-		}
-		// Set for all players that are already online the new player
-		Teams teams = Teams.get(p);
-		for(Player all : Bukkit.getOnlinePlayers()) {
-			Team t = all.getScoreboard().getTeam(teams.getTeamName());
-			if(t == null)
-				t = all.getScoreboard().registerNewTeam(teams.getTeamName());
-			
-			String prefix = teams.getPrefix();
-			String suffix = teams.getSuffix();
-			ChatColor nameColor = teams.getNameColor();
-			
-			if(prefix.length() != 0)
-				t.setPrefix(prefix);
-			if(suffix.length() != 0)
-				t.setSuffix(suffix);
-			if(nameColor != null && PowerBoard.getBukkitVersion().compareTo(new Version("1.13")) == 1) // only for version 1.13+
-				t.setColor(nameColor);
-			t.addEntry(p.getName());
-		}
+		}else
+			pl.getLogger().severe("Did not set "+p.getName()+"'s rank for the already online players");
+		if(PowerBoard.debug)
+			pl.getLogger().info("Tablist ranks set for player "+p.getName());
 	}
 	
-	public static boolean updateRanks(Player p) {
+	public static boolean updateTablistRanks(Player p) {
 		if(updateDelay.contains(p))
 			return false;
 		delay(p, 40);
@@ -255,13 +266,13 @@ public class RankManager {
 					t.setPrefix(prefix);
 				if(suffix.length() != 0)
 					t.setSuffix(suffix);
-				if(nameColor != null && PowerBoard.getBukkitVersion().compareTo(new Version("1.13")) == 1) // only for version 1.13+
+				if(nameColor != null && PowerBoard.aboveMC_1_13)
 					t.setColor(nameColor);
 				t.addEntry(p.getName());
 			}
 		}catch (Exception e) {}
 		if(PowerBoard.debug)
-    		PowerBoard.pl.getLogger().info("Updated "+p.getName()+"'s team!");
+			pl.getLogger().info("Tablist ranks updated for player "+p.getName()+"!");
 		return true;
 	}
 

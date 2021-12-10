@@ -63,7 +63,7 @@ public class PowerBoardAPI {
 		return true;
 	}
 	public static void updateTeams(Player p) {
-		RankManager.updateRanks(p);
+		RankManager.updateTablistRanks(p);
 	}
 	
 	public String getPrefix(Player p) {

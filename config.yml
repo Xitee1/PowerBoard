@@ -77,7 +77,7 @@ placeholder:
   time-format: 'HH:mm' # If you don't know what to set here, have a look at this: https://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
   date-format: 'dd.MM.yyyy'
   money-decimals: 2 # The maximum decimals for the placeholder %player_money%.
-  preferLastPrefixColor: true # If you use ranks with luckperms-api, prefer the last colors from the prefix instead of the group-displayname to set the name-color
+  preferLastPrefixColor: false # If you use ranks with luckperms-api, prefer the last colors from the prefix instead of the group-displayname to set the name-color
   hexColorSyntax: '#000000' # Set the syntax to trigger hex colors. For example 'color:000000' or just '#000000' - whatever you want. WARNING NOT WORKING CHARS: { } ( )
   world-names: # Replace world names for the %player_world% placeholder
     world: 'Overword'

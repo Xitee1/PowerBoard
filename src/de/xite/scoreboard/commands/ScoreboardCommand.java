@@ -37,8 +37,6 @@ public class ScoreboardCommand implements CommandExecutor{
 				Config.loadConfig();
 				if(PowerBoard.pl.getConfig().getBoolean("scoreboard")) {
 					s.sendMessage(PowerBoard.pr+ChatColor.GRAY+"Reloading "+ChatColor.YELLOW+"scoreboards"+ChatColor.GRAY+"...");
-					for(Entry<Player, String> all : ScoreboardPlayer.players.entrySet())
-						ScoreboardPlayer.removeScoreboard(all.getKey());
 					ScoreboardManager.unregisterAllScoreboards();
 					ScoreboardManager.registerAllScoreboards();
 					ScoreboardPlayer.players.clear();
@@ -54,7 +52,7 @@ public class ScoreboardCommand implements CommandExecutor{
 					for(Player all : Bukkit.getOnlinePlayers()) {
 						Teams.removePlayer(all);
 						RankManager.register(all);
-						RankManager.setRanks(all);
+						RankManager.setTablistRanks(all);
 					}
 				}
 

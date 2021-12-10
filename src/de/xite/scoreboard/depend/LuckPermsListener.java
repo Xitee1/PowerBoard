@@ -27,7 +27,7 @@ public class LuckPermsListener {
 				        	if(pl.getConfig().getBoolean("tablist.ranks")) {
 				        		if(!RankManager.updateDelay.contains(p)) {
 					        		RankManager.register(p);
-					        		RankManager.updateRanks(p);
+					        		RankManager.updateTablistRanks(p);
 				        			pl.getLogger().info("(LuckPermsAPI) Updated player "+p.getName());
 				        		}
 				        	}

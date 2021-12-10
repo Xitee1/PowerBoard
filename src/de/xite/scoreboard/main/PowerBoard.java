@@ -7,7 +7,6 @@ import java.util.regex.Pattern;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -27,7 +26,7 @@ import de.xite.scoreboard.utils.UpgradeVersion;
 import de.xite.scoreboard.utils.Version;
 import net.md_5.bungee.api.ChatColor;
 
-public class PowerBoard extends JavaPlugin implements Listener{
+public class PowerBoard extends JavaPlugin {
 	public static PowerBoard pl;
 	
 	public static String pluginfolder = "plugins/PowerBoard"; // plugin folder
@@ -35,6 +34,7 @@ public class PowerBoard extends JavaPlugin implements Listener{
 	public static String hexColorBegin = "", hexColorEnd = ""; // hex color Syntax
 	
 	public static Version version; // Minecraft version
+	public static boolean aboveMC_1_13 = false;
 	public static boolean debug = false;
 	
 	@Override
@@ -42,6 +42,9 @@ public class PowerBoard extends JavaPlugin implements Listener{
 		// ---- Load the plugin ----//
 		pl = this;
 		version = getBukkitVersion();
+		// In 1.13+ a lot of things have changed. For example 128 Chars in the scoreboard instead of 16
+		if(PowerBoard.getBukkitVersion().compareTo(new Version("1.13")) == 0 || PowerBoard.getBukkitVersion().compareTo(new Version("1.13")) == 1)
+			aboveMC_1_13 = true;
 		
 		UpgradeVersion.rename(); // rename from "scoreboard" to "powerboard"
 		
@@ -65,7 +68,6 @@ public class PowerBoard extends JavaPlugin implements Listener{
 		pm.registerEvents(new JoinQuitListener(), this);
 		pm.registerEvents(new ChatListener(), this);
 		pm.registerEvents(new ScoreboardConditionListener(), this);
-		pm.registerEvents(this, this);
 		
 		// ---- Load Modules ---- //
 		if(pl.getConfig().getBoolean("scoreboard"))
@@ -82,7 +84,7 @@ public class PowerBoard extends JavaPlugin implements Listener{
 							RankManager.register(all);
 					}
 					if(pl.getConfig().getBoolean("tablist.ranks"))
-						RankManager.setRanks(all);
+						RankManager.setTablistRanks(all);
 					if(pl.getConfig().getBoolean("scoreboard"))
 						ScoreboardPlayer.setScoreboard(all);
 					
@@ -126,7 +128,8 @@ public class PowerBoard extends JavaPlugin implements Listener{
 		String version = s.substring(0, s.lastIndexOf("-R")).replace("_", ".");
 		pl.getLogger().info("Detected Server Version (original): "+s);
 		pl.getLogger().info("Detected Server Version (extracted): "+version);
-		// compareTo: 1 = a equals or is newer than b
+		// compareTo: 1 = a is newer than b
+		// compareTo: 0 = equals
 		// compareTo: -1 = a is older than b
 		return new Version(version);
 	}

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
@@ -11,7 +12,6 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
 import de.xite.scoreboard.main.PowerBoard;
-import de.xite.scoreboard.utils.Version;
 
 public class ScoreboardPlayer {
 	static PowerBoard pl = PowerBoard.pl;
@@ -30,9 +30,7 @@ public class ScoreboardPlayer {
 		removeScoreboard(p);
 		Objective obj = board.getObjective(DisplaySlot.SIDEBAR);
 		if(obj == null) {
-			// board = Bukkit.getScoreboardManager().getNewScoreboard();
-			
-			if(PowerBoard.getBukkitVersion().compareTo(new Version("1.13")) == 1 || PowerBoard.getBukkitVersion().equals(new Version("1.13"))) { // only for version 1.13+
+			if(PowerBoard.aboveMC_1_13) {
 				obj = board.registerNewObjective("aaa", "bbb", "SBPlugin");
 			}else
 				obj = board.registerNewObjective("aaa", "bbb");
@@ -42,7 +40,7 @@ public class ScoreboardPlayer {
 		if(sm == null)
 			return;
 		sm.addPlayer(p);
-		ScoreTitleUtils.setTitle(p, board, sm.getCurrentTitle(), true, sm); // Get the current title and set it
+		ScoreTitleUtils.setTitle(p, board, sm.getCurrentTitle(), true, sm);
 		ScoreTitleUtils.setScores(p, board, sm.getCurrentScores(), true, sm);
 		
 		// ---- Set the scoreboard ---- //
@@ -53,13 +51,6 @@ public class ScoreboardPlayer {
 			PowerBoard.pl.getLogger().info("Scoreboard set for player "+p.getName());
 	}
 	public static void updateScoreboard(Player p) {
-		/* Config syntax: 
-		conditions:
-		  - world:world AND permission:some.permission
-		  - world:world AND permission:some.other.permission
-		  - world:world AND gamemode:creative
-		  - world:world_nether
-		*/
 		if(!players.containsKey(p))
 			return;
 
@@ -75,6 +66,13 @@ public class ScoreboardPlayer {
 		}
 	}
 	public static ScoreboardManager getMatchingScoreboard(Player p) {
+		/* Config syntax: 
+		conditions:
+		  - world:world AND permission:some.permission
+		  - world:world AND permission:some.other.permission
+		  - world:world AND gamemode:creative
+		  - world:world_nether
+		*/
 		for(Entry<String, ScoreboardManager> e : scoreboards.entrySet()) {
 			ScoreboardManager sm = e.getValue();
 			if(sm == null) {
@@ -128,7 +126,6 @@ public class ScoreboardPlayer {
 		Objective obj = p.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
 		if(obj != null)
 			obj.unregister();
-		
 		if(PowerBoard.debug)
 			pl.getLogger().info("Removed "+p.getName()+"'s scoreboard");
 	}

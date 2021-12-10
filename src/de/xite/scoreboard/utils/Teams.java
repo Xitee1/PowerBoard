@@ -61,7 +61,7 @@ public class Teams {
 			return null;
 		}
 		String prefix = Placeholders.replace(this.p, this.prefix);
-		if(PowerBoard.getBukkitVersion().compareTo(new Version("1.13")) == 1 || PowerBoard.getBukkitVersion().equals(new Version("1.13"))) { // Under version 1.13+ you can just use up to 16 chars.
+		if(PowerBoard.aboveMC_1_13) {
 			if(prefix.length() > 64) {
 				PowerBoard.pl.getLogger().severe("The prefix is too long! The limit is 64 chars included colorcodes. Chars: "+prefix.length()+", Prefix: "+prefix);
 				return "too long";
@@ -84,7 +84,7 @@ public class Teams {
 			return null;
 		}
 		String suffix = Placeholders.replace(this.p, this.suffix);
-		if(PowerBoard.getBukkitVersion().compareTo(new Version("1.13")) == 1 || PowerBoard.getBukkitVersion().equals(new Version("1.13"))) { // Under version 1.13+ you can just use up to 16 chars.
+		if(PowerBoard.aboveMC_1_13) {
 			if(suffix.length() > 64) {
 				PowerBoard.pl.getLogger().severe("The suffix is too long! The limit is 64 chars included colorcodes. Chars: "+suffix.length()+", Suffix: "+suffix);
 				return "too long";
