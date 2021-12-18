@@ -1,7 +1,5 @@
  package de.xite.scoreboard.commands;
 
-import java.util.Map.Entry;
-
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

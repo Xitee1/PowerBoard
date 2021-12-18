@@ -13,6 +13,7 @@ public class version_1_12 {
 	public static Integer getPing(Player p) {
 		return ((CraftPlayer) p).getHandle().ping;
 	}
+	@SuppressWarnings("deprecation")
 	public static void sendTab(Player p, String header, String footer) {
          IChatBaseComponent tabheader = ChatSerializer.a("{\"text\": \"" + header + "\"}");
          IChatBaseComponent tabfooter = ChatSerializer.a("{\"text\": \"" + footer + "\"}");

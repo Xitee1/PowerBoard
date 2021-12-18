@@ -13,6 +13,7 @@ public class version_1_10 {
 	public static Integer getPing(Player p) {
 		return ((CraftPlayer) p).getHandle().ping;
 	}
+	@SuppressWarnings("deprecation")
 	public static void sendTab(Player player, String head, String foot){
 	    IChatBaseComponent header = new ChatMessage(head);
 	    IChatBaseComponent footer = new ChatMessage(foot);
