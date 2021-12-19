@@ -23,7 +23,6 @@ import de.xite.scoreboard.versions.version_1_13;
 import de.xite.scoreboard.versions.version_1_14;
 import de.xite.scoreboard.versions.version_1_15;
 import de.xite.scoreboard.versions.version_1_16;
-import de.xite.scoreboard.versions.version_1_17;
 import me.clip.placeholderapi.PlaceholderAPI;
 
 public class Placeholders {
@@ -180,35 +179,35 @@ public class Placeholders {
   		// Ping
   		if(s.contains("%player_ping%")) {
   			int ping = 0;
-  			if(PowerBoard.getBukkitVersion().equals(new Version("1.8"))) {
-  				ping = version_1_08.getPing(p);
-  			}else if(PowerBoard.getBukkitVersion().equals(new Version("1.9"))) {
-  				ping = version_1_09.getPing(p);
-  			}else if(PowerBoard.getBukkitVersion().equals(new Version("1.10"))) {
-  				ping = version_1_10.getPing(p);
-  			}else if(PowerBoard.getBukkitVersion().equals(new Version("1.11"))) {
-  				ping = version_1_11.getPing(p);
-  			}else if(PowerBoard.getBukkitVersion().equals(new Version("1.12"))) {
-  				ping = version_1_12.getPing(p);
-  			}else if(PowerBoard.getBukkitVersion().equals(new Version("1.13"))) {
-  				ping = version_1_13.getPing(p);
-  			}else if(PowerBoard.getBukkitVersion().equals(new Version("1.14"))) {
-  				ping = version_1_14.getPing(p);
-  			}else if(PowerBoard.getBukkitVersion().equals(new Version("1.15"))) {
-  				ping = version_1_15.getPing(p);
-  			}else if(PowerBoard.getBukkitVersion().equals(new Version("1.16"))) {
+  			
+  			if(new Version("1.17").compareTo(PowerBoard.getBukkitVersion()) >= 0) {
+  				ping = p.getPing();
+  			}else if(new Version("1.16").compareTo(PowerBoard.getBukkitVersion()) >= 0) {
   				ping = version_1_16.getPing(p);
-  			}else if(PowerBoard.getBukkitVersion().equals(new Version("1.17"))) {
-  				ping = version_1_17.getPing(p);
-  			}
+  			}else if(new Version("1.15").compareTo(PowerBoard.getBukkitVersion()) >= 0) {
+  				ping = version_1_15.getPing(p);
+  			}else if(new Version("1.14").compareTo(PowerBoard.getBukkitVersion()) >= 0) {
+  				ping = version_1_14.getPing(p);
+  			}else if(new Version("1.13").compareTo(PowerBoard.getBukkitVersion()) >= 0) {
+  				ping = version_1_13.getPing(p);
+  			}else if(new Version("1.12").compareTo(PowerBoard.getBukkitVersion()) >= 0) {
+  				ping = version_1_12.getPing(p);
+  			}else if(new Version("1.11").compareTo(PowerBoard.getBukkitVersion()) >= 0) {
+  				ping = version_1_11.getPing(p);
+  			}else if(new Version("1.10").compareTo(PowerBoard.getBukkitVersion()) >= 0) {
+  				ping = version_1_10.getPing(p);
+  			}else if(new Version("1.9").compareTo(PowerBoard.getBukkitVersion()) >= 0) {
+  				ping = version_1_09.getPing(p);
+  			}else if(new Version("1.8").compareTo(PowerBoard.getBukkitVersion()) >= 0) {
+  				ping = version_1_08.getPing(p);
+  			}else
+				pl.getLogger().severe("You are using a unsupported Minecraft version!");
+  			
   			if(ping > 999) {
   				s = s.replace("%player_ping%", ChatColor.RED+"999+");
   			}else
   				s = s.replace("%player_ping%", ping+"");
   		}
-  		
-  		
-  		
   			
   		// -------------------------------------//
   		// Replace colors (MC colorcodes)

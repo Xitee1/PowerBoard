@@ -67,8 +67,6 @@ public class RankManager {
 			suffix = user.getCachedData().getMetaData().getSuffix();
 			displayname = group.getDisplayName();
 			
-
-			
 			if(prefix == null) {
 				prefix = "";
 			}else
@@ -149,15 +147,15 @@ public class RankManager {
 						i2 = "0"+i;
 					
 					String permission = pl.getConfig().getString("ranks.list."+line+".permission");
-					String prefix = pl.getConfig().getString("ranks.list."+line+".prefix");
-					String suffix = pl.getConfig().getString("ranks.list."+line+".suffix");
-					String nameColor = pl.getConfig().getString("ranks.list."+line+".nameColor").replace("&", "");
-					String chatPrefix = pl.getConfig().getString("ranks.list."+line+".chatPrefix");
-					String placeholderName = pl.getConfig().getString("ranks.list."+line+".placeholder-name");
 					String team;
 					
 					//--- LuckPerms (without API) ---//
 					if(ExternalPlugins.luckPerms != null && pl.getConfig().getString("ranks.permissionsystem").equalsIgnoreCase("luckperms")) {
+						String prefix = pl.getConfig().getString("ranks.list."+line+".prefix");
+						String suffix = pl.getConfig().getString("ranks.list."+line+".suffix");
+						String nameColor = pl.getConfig().getString("ranks.list."+line+".nameColor").replace("&", "");
+						String chatPrefix = pl.getConfig().getString("ranks.list."+line+".chatPrefix");
+						String placeholderName = pl.getConfig().getString("ranks.list."+line+".placeholder-name");
 						if(isPlayerInGroup(p, permission)) {
 							if(PowerBoard.debug)
 								pl.getLogger().info("The player "+p.getName()+" has now the rank (luckperms): Prefix: "+prefix+"; Suffix: "+suffix+"; Group: "+permission);
@@ -171,6 +169,11 @@ public class RankManager {
 					}else {
 						//---None---//
 						if(p.hasPermission(permission)) {
+							String prefix = pl.getConfig().getString("ranks.list."+line+".prefix");
+							String suffix = pl.getConfig().getString("ranks.list."+line+".suffix");
+							String nameColor = pl.getConfig().getString("ranks.list."+line+".nameColor").replace("&", "");
+							String chatPrefix = pl.getConfig().getString("ranks.list."+line+".chatPrefix");
+							String placeholderName = pl.getConfig().getString("ranks.list."+line+".placeholder-name");
 							if(PowerBoard.debug)
 								pl.getLogger().info("The player "+p.getName()+" has now the rank (permission/none): Prefix: "+prefix+"; Suffix: "+suffix+"; Permission: "+permission);
 							
@@ -213,24 +216,27 @@ public class RankManager {
 					
 					t.setPrefix(teams.getPrefix());
 					t.setSuffix(teams.getSuffix());
-					if(nameColor != null && PowerBoard.aboveMC_1_13)
+					if(PowerBoard.aboveMC_1_13 && nameColor != null)
 						t.setColor(nameColor);
+						
 					t.addEntry(all.getName());
 				}else
 					pl.getLogger().warning("Did not set "+all.getName()+"'s tablist rank for player "+p.getName()+"");
 			}
 		}
-		// Set the new player for all players that are online
+		
 		Teams teams = Teams.get(p);
+		// Set the new player for all players that are online
 		if(teams != null) {
+			String prefix = teams.getPrefix();
+			String suffix = teams.getSuffix();
+			ChatColor nameColor = teams.getNameColor();
+			p.setPlayerListName(prefix+p.getDisplayName()+suffix);
+			
 			for(Player all : Bukkit.getOnlinePlayers()) {
 				Team t = all.getScoreboard().getTeam(teams.getTeamName());
 				if(t == null)
 					t = all.getScoreboard().registerNewTeam(teams.getTeamName());
-				
-				String prefix = teams.getPrefix();
-				String suffix = teams.getSuffix();
-				ChatColor nameColor = teams.getNameColor();
 				
 				if(prefix.length() != 0)
 					t.setPrefix(prefix);
@@ -253,22 +259,25 @@ public class RankManager {
 		
 		try {
 			Teams teams = Teams.get(p);
-			for(Player all : Bukkit.getOnlinePlayers()) {
-				Team t = all.getScoreboard().getTeam(teams.getTeamName());
-				if(t == null)
-					t = all.getScoreboard().registerNewTeam(teams.getTeamName());
-				
+			if(teams != null) {
 				String prefix = teams.getPrefix();
 				String suffix = teams.getSuffix();
 				ChatColor nameColor = teams.getNameColor();
+				p.setPlayerListName(prefix+p.getDisplayName()+suffix);
 				
-				if(prefix.length() != 0)
-					t.setPrefix(prefix);
-				if(suffix.length() != 0)
-					t.setSuffix(suffix);
-				if(nameColor != null && PowerBoard.aboveMC_1_13)
-					t.setColor(nameColor);
-				t.addEntry(p.getName());
+				for(Player all : Bukkit.getOnlinePlayers()) {
+					Team t = all.getScoreboard().getTeam(teams.getTeamName());
+					if(t == null)
+						t = all.getScoreboard().registerNewTeam(teams.getTeamName());
+					
+					if(prefix.length() != 0)
+						t.setPrefix(prefix);
+					if(suffix.length() != 0)
+						t.setSuffix(suffix);
+					if(nameColor != null && PowerBoard.aboveMC_1_13)
+						t.setColor(nameColor);
+					t.addEntry(p.getName());
+				}
 			}
 		}catch (Exception e) {}
 		if(PowerBoard.debug)

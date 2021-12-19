@@ -1,13 +1,11 @@
 name: PowerBoard
-version: 3.5.2
+version: 3.5.3
 author: Xitee
 softdepend: [PermissionsEx, Vault, PlaceholderAPI, LuckPerms]
 main: de.xite.scoreboard.main.PowerBoard
 api-version: 1.13
 commands:
    sb:
-      description: Manage the plugin
-   scoreboard:
       description: Manage the plugin
    pb:
       description: Manage the plugin

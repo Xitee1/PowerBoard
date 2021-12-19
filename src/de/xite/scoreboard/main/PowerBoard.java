@@ -43,7 +43,7 @@ public class PowerBoard extends JavaPlugin {
 		pl = this;
 		version = getBukkitVersion();
 		// In 1.13+ a lot of things have changed. For example 128 Chars in the scoreboard instead of 16
-		if(PowerBoard.getBukkitVersion().compareTo(new Version("1.13")) == 0 || PowerBoard.getBukkitVersion().compareTo(new Version("1.13")) == 1)
+		if(PowerBoard.getBukkitVersion().compareTo(new Version("1.13")) >= 0)
 			aboveMC_1_13 = true;
 		
 		UpgradeVersion.rename(); // rename from "scoreboard" to "powerboard"
@@ -61,7 +61,6 @@ public class PowerBoard extends JavaPlugin {
 		}
 		// ---- Register commands and events ---- //
 		getCommand("sb").setExecutor(new ScoreboardCommand());
-		getCommand("scoreboard").setExecutor(new ScoreboardCommand());
 		getCommand("pb").setExecutor(new ScoreboardCommand());
 		getCommand("powerboard").setExecutor(new ScoreboardCommand());
 		PluginManager pm = Bukkit.getPluginManager();

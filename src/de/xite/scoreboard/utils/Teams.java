@@ -60,19 +60,7 @@ public class Teams {
 			PowerBoard.pl.getLogger().severe("An error occured while reading the prefix of the player "+p.getName()+"! Maybe a wrong setting in your config.yml?");
 			return null;
 		}
-		String prefix = Placeholders.replace(this.p, this.prefix);
-		if(PowerBoard.aboveMC_1_13) {
-			if(prefix.length() > 64) {
-				PowerBoard.pl.getLogger().severe("The prefix is too long! The limit is 64 chars included colorcodes. Chars: "+prefix.length()+", Prefix: "+prefix);
-				return "too long";
-			}
-		}else {
-			if(prefix.length() > 16) {
-				PowerBoard.pl.getLogger().severe("The prefix is too long! The limit is 16 chars included colorcodes. Chars: "+prefix.length()+", Prefix: "+prefix);
-				return "too long";
-			}
-		}
-		return prefix;
+		return Placeholders.replace(this.p, this.prefix);
 	}
 	public String getSuffix() {
 		if(this.p == null) {
@@ -83,20 +71,7 @@ public class Teams {
 			PowerBoard.pl.getLogger().severe("An error occured while reading the suffix of the player "+p.getName()+"! Maybe a wrong setting in your config.yml?");
 			return null;
 		}
-		String suffix = Placeholders.replace(this.p, this.suffix);
-		if(PowerBoard.aboveMC_1_13) {
-			if(suffix.length() > 64) {
-				PowerBoard.pl.getLogger().severe("The suffix is too long! The limit is 64 chars included colorcodes. Chars: "+suffix.length()+", Suffix: "+suffix);
-				return "too long";
-			}
-		}else {
-			if(suffix.length() > 16) {
-				PowerBoard.pl.getLogger().severe("The suffix is too long! The limit is 16 chars included colorcodes. Chars: "+suffix.length()+", Suffix: "+suffix);
-				return "too long";
-			}
-		}
-		
-		return suffix;
+		return Placeholders.replace(this.p, this.suffix);
 	}
 	public ChatColor getNameColor() {
 		if(this.p == null) {
@@ -113,9 +88,6 @@ public class Teams {
 		try {
 			return ChatColor.getByChar(nameColorS);
 		}catch (Exception e) {
-			if(!PowerBoard.pl.getConfig().getBoolean("ranks.luckperms-api.enable"))
-				PowerBoard.pl.getLogger().severe("The Name Color in the tablist could not be set! Please check your name-color-codes for the ranks (config.yml)! Current colorcode: "+nameColorS);
-			
 			return ChatColor.WHITE;
 		}
 	}

@@ -17,8 +17,9 @@ public class PowerBoardAPI {
 	public static void registerCustomPlaceholders(CustomPlaceholders ph) {
 		Placeholders.ph.add(ph);
 	}
-	
+	// ---------------------//
 	// ---- Scoreboard ---- //
+	// ---------------------//
 	public static void setScoreboard(Player p) {
 		ScoreboardPlayer.setScoreboard(p);
 	}
@@ -39,8 +40,10 @@ public class PowerBoardAPI {
 			PowerBoard.pl.getLogger().severe("Failed to set the Scoreboard-Scores! The scoreboard is not registered yet - please set the scoreboard first with 'setScoreboard(p);' !");
 	}
 	
-	
+	// ----------------//
 	// ---- Ranks ---- //
+	// ----------------//
+	// Set
 	public static boolean setPrefix(Player p, String prefix) {
 		Teams t = Teams.get(p);
 		if(t == null)
@@ -52,20 +55,17 @@ public class PowerBoardAPI {
 		Teams t = Teams.get(p);
 		if(t == null)
 			return false;
-		t.setPrefix(suffix);
+		t.setSuffix(suffix);
 		return true;
 	}
 	public static boolean setNameColorChar(Player p, String colorChar) {
 		Teams t = Teams.get(p);
 		if(t == null)
 			return false;
-		t.setPrefix(colorChar);
+		t.setNameColor(colorChar);
 		return true;
 	}
-	public static void updateTeams(Player p) {
-		RankManager.updateTablistRanks(p);
-	}
-	
+	// Get
 	public String getPrefix(Player p) {
 		Teams t = Teams.get(p);
 		if(t == null)
@@ -83,5 +83,9 @@ public class PowerBoardAPI {
 		if(t == null)
 			return null;
 		return t.getNameColor();
+	}
+	// Utils
+	public static void updateTablistRanks(Player p) {
+		RankManager.updateTablistRanks(p);
 	}
 }

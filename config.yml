@@ -38,8 +38,13 @@ ranks:
   # LuckPerms, enable this setting. But make sure that you have configured the LuckPerms groups properly! More infos are in the wiki.
   luckperms-api:
     enable: false
-    chat-layout: '%prefix% %player_name% &7» ' # Placeholders: %displayname% (the group's displayname), %prefix% (the player/group's prefix), %name% (The player name)
     prefix-suffix-space: false # Set a space behind the prefix and infront of the suffix
+    chat-layout: '%prefix% %player_name% &7» ' # This is the fallback chat-prefix
+    chat-prefix:
+      owner: '&4Owner &7| &4%player_name% &7» '
+      admin: '&cAdmin &7| &c%player_name% &7» '
+      player: '&7Player | %player_name% » '
+    
 
   ##########################################################################################
   ### If you have luckperms api enabled, ignore everything in the config section "list"!
@@ -51,22 +56,22 @@ ranks:
       permission: 'rank.owner' # If the permission system above is not "none", replace the permission with the name of the group - more infos in the wiki
       prefix: '&4Owner &7| &4'
       suffix: ' &7[&eTeam&7]'
-      nameColor: '4' # This is the color of the player's name in the tablist. It only works for the version 1.13+
-      chatPrefix: '&7[&cOwner&7] &7%player_name% » '
+      nameColor: '4' # This is the color code of the player's name in the tablist. It only works for the version 1.13+ and no HEX colors are supported.
+      chatPrefix: '&7[&cOwner&7] %player_name% » '
       placeholder-name: 'Owner' # This will replace the %rank% placeholder
     admin:
       permission: 'rank.admin'
       prefix: '&cAdmin &7| &c'
       suffix: ' &7[&eTeam&7]'
       nameColor: 'c'
-      chatPrefix: '&7[&4Admin&7] &7%player_name% » '
+      chatPrefix: '&7[&4Admin&7] %player_name% » '
       placeholder-name: 'Admin'
     player:
       permission: 'rank.player'
       prefix: '&7Player | '
       suffix: ''
       nameColor: '7'
-      chatPrefix: '&7[&aPlayer&7] &7%player_name% » '
+      chatPrefix: '&7[&aPlayer&7] %player_name% » '
       placeholder-name: 'Player'
 
 ####################
@@ -77,7 +82,6 @@ placeholder:
   time-format: 'HH:mm' # If you don't know what to set here, have a look at this: https://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
   date-format: 'dd.MM.yyyy'
   money-decimals: 2 # The maximum decimals for the placeholder %player_money%.
-  preferLastPrefixColor: false # If you use ranks with luckperms-api, prefer the last colors from the prefix instead of the group-displayname to set the name-color
   hexColorSyntax: '#000000' # Set the syntax to trigger hex colors. For example 'color:000000' or just '#000000' - whatever you want. WARNING NOT WORKING CHARS: { } ( )
   world-names: # Replace world names for the %player_world% placeholder
     world: 'Overword'
