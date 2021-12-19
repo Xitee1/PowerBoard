@@ -212,10 +212,21 @@ public class RankManager {
 					if(t == null)
 						t = p.getScoreboard().registerNewTeam(teams.getTeamName());
 					
+					String prefix = teams.getPrefix();
+					String suffix = teams.getSuffix();
 					ChatColor nameColor = teams.getNameColor();
 					
-					t.setPrefix(teams.getPrefix());
-					t.setSuffix(teams.getSuffix());
+					if(PowerBoard.aboveMC_1_13) {
+						if(prefix.length() != 0)
+							t.setPrefix(prefix.substring(0, 64));
+						if(suffix.length() != 0)
+							t.setSuffix(suffix.substring(0, 64));
+					}else {
+						if(prefix.length() != 0)
+							t.setPrefix(prefix.substring(0, 16));
+						if(suffix.length() != 0)
+							t.setSuffix(suffix.substring(0, 16));
+					}
 					if(PowerBoard.aboveMC_1_13 && nameColor != null)
 						t.setColor(nameColor);
 						
@@ -238,12 +249,20 @@ public class RankManager {
 				if(t == null)
 					t = all.getScoreboard().registerNewTeam(teams.getTeamName());
 				
-				if(prefix.length() != 0)
-					t.setPrefix(prefix);
-				if(suffix.length() != 0)
-					t.setSuffix(suffix);
+				if(PowerBoard.aboveMC_1_13) {
+					if(prefix.length() != 0)
+						t.setPrefix(prefix.substring(0, 64));
+					if(suffix.length() != 0)
+						t.setSuffix(suffix.substring(0, 64));
+				}else {
+					if(prefix.length() != 0)
+						t.setPrefix(prefix.substring(0, 16));
+					if(suffix.length() != 0)
+						t.setSuffix(suffix.substring(0, 16));
+				}
 				if(nameColor != null && PowerBoard.aboveMC_1_13)
 					t.setColor(nameColor);
+				
 				t.addEntry(p.getName());
 			}
 		}else
@@ -270,10 +289,17 @@ public class RankManager {
 					if(t == null)
 						t = all.getScoreboard().registerNewTeam(teams.getTeamName());
 					
-					if(prefix.length() != 0)
-						t.setPrefix(prefix);
-					if(suffix.length() != 0)
-						t.setSuffix(suffix);
+					if(PowerBoard.aboveMC_1_13) {
+						if(prefix.length() != 0)
+							t.setPrefix(prefix.substring(0, 64));
+						if(suffix.length() != 0)
+							t.setSuffix(suffix.substring(0, 64));
+					}else {
+						if(prefix.length() != 0)
+							t.setPrefix(prefix.substring(0, 16));
+						if(suffix.length() != 0)
+							t.setSuffix(suffix.substring(0, 16));
+					}
 					if(nameColor != null && PowerBoard.aboveMC_1_13)
 						t.setColor(nameColor);
 					t.addEntry(p.getName());
