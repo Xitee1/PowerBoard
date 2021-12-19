@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
 import de.xite.scoreboard.depend.LuckPermsListener;
+import de.xite.scoreboard.depend.PlaceholderAPIExpansion;
 import de.xite.scoreboard.depend.VaultAPI;
 import de.xite.scoreboard.utils.BStatsMetrics;
 import net.luckperms.api.LuckPerms;
@@ -31,8 +32,11 @@ public class ExternalPlugins {
 			}
 			//setupChat();
 		}
-		if(Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI"))
+		if(Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
 			hasPapi = true;
+			new PlaceholderAPIExpansion().register();
+		}
+			
 		
 		if(Bukkit.getPluginManager().isPluginEnabled("LuckPerms")) {
 			hasLuckPerms = true;

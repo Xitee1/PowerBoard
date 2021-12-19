@@ -180,25 +180,25 @@ public class Placeholders {
   		if(s.contains("%player_ping%")) {
   			int ping = 0;
   			
-  			if(new Version("1.17").compareTo(PowerBoard.getBukkitVersion()) >= 0) {
+  			if(PowerBoard.getBukkitVersion().compareTo(new Version("1.17")) >= 0) {
   				ping = p.getPing();
-  			}else if(new Version("1.16").compareTo(PowerBoard.getBukkitVersion()) >= 0) {
+  			}else if(PowerBoard.getBukkitVersion().compareTo(new Version("1.16")) >= 0) {
   				ping = version_1_16.getPing(p);
-  			}else if(new Version("1.15").compareTo(PowerBoard.getBukkitVersion()) >= 0) {
+  			}else if(PowerBoard.getBukkitVersion().compareTo(new Version("1.15")) >= 0) {
   				ping = version_1_15.getPing(p);
-  			}else if(new Version("1.14").compareTo(PowerBoard.getBukkitVersion()) >= 0) {
+  			}else if(PowerBoard.getBukkitVersion().compareTo(new Version("1.14")) >= 0) {
   				ping = version_1_14.getPing(p);
-  			}else if(new Version("1.13").compareTo(PowerBoard.getBukkitVersion()) >= 0) {
+  			}else if(PowerBoard.getBukkitVersion().compareTo(new Version("1.13")) >= 0) {
   				ping = version_1_13.getPing(p);
-  			}else if(new Version("1.12").compareTo(PowerBoard.getBukkitVersion()) >= 0) {
+  			}else if(PowerBoard.getBukkitVersion().compareTo(new Version("1.12")) >= 0) {
   				ping = version_1_12.getPing(p);
-  			}else if(new Version("1.11").compareTo(PowerBoard.getBukkitVersion()) >= 0) {
+  			}else if(PowerBoard.getBukkitVersion().compareTo(new Version("1.11")) >= 0) {
   				ping = version_1_11.getPing(p);
-  			}else if(new Version("1.10").compareTo(PowerBoard.getBukkitVersion()) >= 0) {
+  			}else if(PowerBoard.getBukkitVersion().compareTo(new Version("1.10")) >= 0) {
   				ping = version_1_10.getPing(p);
-  			}else if(new Version("1.9").compareTo(PowerBoard.getBukkitVersion()) >= 0) {
+  			}else if(PowerBoard.getBukkitVersion().compareTo(new Version("1.9")) >= 0) {
   				ping = version_1_09.getPing(p);
-  			}else if(new Version("1.8").compareTo(PowerBoard.getBukkitVersion()) >= 0) {
+  			}else if(PowerBoard.getBukkitVersion().compareTo(new Version("1.8")) >= 0) {
   				ping = version_1_08.getPing(p);
   			}else
 				pl.getLogger().severe("You are using a unsupported Minecraft version!");

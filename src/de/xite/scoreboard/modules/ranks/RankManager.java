@@ -99,15 +99,10 @@ public class RankManager {
 			chat = chat.replace("%prefix%", prefix).replace("%name%", p.getName()).replace("%displayname%", displayname); // Replace chat placeholders
 			
 			// Get the name color and check for errors
-			if(pl.getConfig().getBoolean("placeholder.preferLastPrefixColor")) {
-				nameColor = ChatColor.getLastColors(ChatColor.translateAlternateColorCodes('&', prefix));
-				if(nameColor == null)
-					pl.getLogger().warning("Could not get the last color from "+p.getName()+"'s prefix. Make sure to put a colorcode at the end of your prefix, otherwise the player name will always be white.");
-			}else {
-				nameColor = ChatColor.getLastColors(ChatColor.translateAlternateColorCodes('&', displayname));
-				if(nameColor == null)
-					pl.getLogger().warning("Could not get the last color from the displayname of the rank "+group.getName()+". Make sure to put a colorcode at the end of your displayname, otherwise the player name will always be white.");
-			}
+			nameColor = ChatColor.getLastColors(ChatColor.translateAlternateColorCodes('&', prefix));
+			if(nameColor == null)
+				pl.getLogger().warning("Could not get the last color from "+p.getName()+"'s prefix. Make sure to put a colorcode at the end of your prefix, otherwise the player name will always be white.");
+
 			
 			if(PowerBoard.debug)
 				pl.getLogger().info("The player "+p.getName()+" has the rank (luckperms-api): Prefix: "+prefix+"; Suffix: "+suffix+"; NamColor: "+nameColor+"; Displayname: "+displayname+"; Group: "+group.getName());
@@ -153,9 +148,9 @@ public class RankManager {
 					if(ExternalPlugins.luckPerms != null && pl.getConfig().getString("ranks.permissionsystem").equalsIgnoreCase("luckperms")) {
 						String prefix = pl.getConfig().getString("ranks.list."+line+".prefix");
 						String suffix = pl.getConfig().getString("ranks.list."+line+".suffix");
-						String nameColor = pl.getConfig().getString("ranks.list."+line+".nameColor").replace("&", "");
 						String chatPrefix = pl.getConfig().getString("ranks.list."+line+".chatPrefix");
 						String placeholderName = pl.getConfig().getString("ranks.list."+line+".placeholder-name");
+						String nameColor = ChatColor.getLastColors(ChatColor.translateAlternateColorCodes('&', prefix));
 						if(isPlayerInGroup(p, permission)) {
 							if(PowerBoard.debug)
 								pl.getLogger().info("The player "+p.getName()+" has now the rank (luckperms): Prefix: "+prefix+"; Suffix: "+suffix+"; Group: "+permission);
@@ -171,9 +166,9 @@ public class RankManager {
 						if(p.hasPermission(permission)) {
 							String prefix = pl.getConfig().getString("ranks.list."+line+".prefix");
 							String suffix = pl.getConfig().getString("ranks.list."+line+".suffix");
-							String nameColor = pl.getConfig().getString("ranks.list."+line+".nameColor").replace("&", "");
 							String chatPrefix = pl.getConfig().getString("ranks.list."+line+".chatPrefix");
 							String placeholderName = pl.getConfig().getString("ranks.list."+line+".placeholder-name");
+							String nameColor = ChatColor.getLastColors(ChatColor.translateAlternateColorCodes('&', prefix));
 							if(PowerBoard.debug)
 								pl.getLogger().info("The player "+p.getName()+" has now the rank (permission/none): Prefix: "+prefix+"; Suffix: "+suffix+"; Permission: "+permission);
 							
@@ -251,14 +246,14 @@ public class RankManager {
 				
 				if(PowerBoard.aboveMC_1_13) {
 					if(prefix.length() != 0)
-						t.setPrefix(prefix.substring(0, 64));
+						t.setPrefix(prefix.substring(0, Math.min(prefix.length(), 64)));
 					if(suffix.length() != 0)
-						t.setSuffix(suffix.substring(0, 64));
+						t.setSuffix(suffix.substring(0, Math.min(suffix.length(), 64)));
 				}else {
 					if(prefix.length() != 0)
-						t.setPrefix(prefix.substring(0, 16));
+						t.setPrefix(prefix.substring(0, Math.min(prefix.length(), 16)));
 					if(suffix.length() != 0)
-						t.setSuffix(suffix.substring(0, 16));
+						t.setSuffix(suffix.substring(0, Math.min(suffix.length(), 16)));
 				}
 				if(nameColor != null && PowerBoard.aboveMC_1_13)
 					t.setColor(nameColor);
@@ -291,14 +286,14 @@ public class RankManager {
 					
 					if(PowerBoard.aboveMC_1_13) {
 						if(prefix.length() != 0)
-							t.setPrefix(prefix.substring(0, 64));
+							t.setPrefix(prefix.substring(0, Math.min(prefix.length(), 64)));
 						if(suffix.length() != 0)
-							t.setSuffix(suffix.substring(0, 64));
+							t.setSuffix(suffix.substring(0, Math.min(suffix.length(), 64)));
 					}else {
 						if(prefix.length() != 0)
-							t.setPrefix(prefix.substring(0, 16));
+							t.setPrefix(prefix.substring(0, Math.min(prefix.length(), 16)));
 						if(suffix.length() != 0)
-							t.setSuffix(suffix.substring(0, 16));
+							t.setSuffix(suffix.substring(0, Math.min(suffix.length(), 16)));
 					}
 					if(nameColor != null && PowerBoard.aboveMC_1_13)
 						t.setColor(nameColor);

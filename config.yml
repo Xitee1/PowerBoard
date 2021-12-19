@@ -56,21 +56,18 @@ ranks:
       permission: 'rank.owner' # If the permission system above is not "none", replace the permission with the name of the group - more infos in the wiki
       prefix: '&4Owner &7| &4'
       suffix: ' &7[&eTeam&7]'
-      nameColor: '4' # This is the color code of the player's name in the tablist. It only works for the version 1.13+ and no HEX colors are supported.
       chatPrefix: '&7[&cOwner&7] %player_name% » '
       placeholder-name: 'Owner' # This will replace the %rank% placeholder
     admin:
       permission: 'rank.admin'
       prefix: '&cAdmin &7| &c'
       suffix: ' &7[&eTeam&7]'
-      nameColor: 'c'
       chatPrefix: '&7[&4Admin&7] %player_name% » '
       placeholder-name: 'Admin'
     player:
       permission: 'rank.player'
       prefix: '&7Player | '
       suffix: ''
-      nameColor: '7'
       chatPrefix: '&7[&aPlayer&7] %player_name% » '
       placeholder-name: 'Player'
 
