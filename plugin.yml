@@ -1,5 +1,5 @@
 name: PowerBoard
-version: 3.5.4
+version: 3.5.5
 author: Xitee
 softdepend: [PermissionsEx, Vault, PlaceholderAPI, LuckPerms]
 main: de.xite.scoreboard.main.PowerBoard

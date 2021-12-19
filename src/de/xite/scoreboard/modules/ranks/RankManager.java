@@ -213,14 +213,14 @@ public class RankManager {
 					
 					if(PowerBoard.aboveMC_1_13) {
 						if(prefix.length() != 0)
-							t.setPrefix(prefix.substring(0, 64));
+							t.setPrefix(prefix.substring(0, Math.min(prefix.length(), 64)));
 						if(suffix.length() != 0)
-							t.setSuffix(suffix.substring(0, 64));
+							t.setSuffix(suffix.substring(0, Math.min(suffix.length(), 64)));
 					}else {
 						if(prefix.length() != 0)
-							t.setPrefix(prefix.substring(0, 16));
+							t.setPrefix(prefix.substring(0, Math.min(prefix.length(), 16)));
 						if(suffix.length() != 0)
-							t.setSuffix(suffix.substring(0, 16));
+							t.setSuffix(suffix.substring(0, Math.min(suffix.length(), 16)));
 					}
 					if(PowerBoard.aboveMC_1_13 && nameColor != null)
 						t.setColor(nameColor);
