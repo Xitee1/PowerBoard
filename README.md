@@ -1,10 +1,8 @@
+# PowerBoard
 [![](https://img.shields.io/github/downloads/Xitee1/PowerBoard/total?color=44be16&label=Downloads)]()
 [![](https://img.shields.io/discord/800477577684844585?color=44be16&label=Discord)]()
 [![](https://img.shields.io/github/v/release/Xitee1/PowerBoard?label=Release)]()
-
-
-# PowerBoard
-Scoreboard + Tablist + Prefix + Chat | Animated
+### Scoreboard + Tablist + Prefix + Chat | Animated
 
 Download: https://www.spigotmc.org/resources/scoreboard-tablist-prefix-chat-animated.73854/
 
