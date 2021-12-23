@@ -1,12 +1,21 @@
-# PowerBoard
+# PowerBoard: Scoreboard + Tablist + Prefix + Chat | Animated
 [![](https://img.shields.io/github/downloads/Xitee1/PowerBoard/total?color=44be16&label=Downloads)]()
 [![](https://img.shields.io/discord/800477577684844585?color=44be16&label=Discord)]()
 [![](https://img.shields.io/github/v/release/Xitee1/PowerBoard?label=Release)]()
-### Scoreboard + Tablist + Prefix + Chat | Animated
 
-Download: https://www.spigotmc.org/resources/scoreboard-tablist-prefix-chat-animated.73854/
+PowerBoard is an Open Source project for your Minecraft Server.
+Normally you would need for everything like ranks, tablist and scoreboard an extra plugin. And these plugins aren't always so good and are missing some features like animations and are lacking of performance.
+PowerBoard tries to put all these things into one plugin and make these perfect.
 
-Wiki: https://github.com/Xitee1/PowerBoard/wiki
+It is already really powerful. But of course there are also always a few bugs. So feel free to join this project and contribute to it.
+
+[Download](https://github.com/Xitee1/PowerBoard/releases)
+
+[SpigotMC](https://www.spigotmc.org/resources/73854/)
+
+[Wiki](https://github.com/Xitee1/PowerBoard/wiki)
+
+[Discord](https://discord.gg/p95cB9YQFJ)
 
 # Developer API
 Click [here](https://github.com/Xitee1/PowerBoard/wiki/How-to-use-the-API).
