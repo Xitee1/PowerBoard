@@ -46,3 +46,14 @@ ScoreboardAPI.setScoreboardScores(p, scores, false); // The boolean indicates if
 // Update a single score
 ScoreboardAPI.setScoreboardScore(p, "Score 3 Updated", 2, false); // The score with the text "Score 3" has now been changed to "Score 3 Updated"
 ```
+# Donate
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/donate?hosted_button_id=6XBBMV2PAQT5S)
+
+
+Bitcoin: bc1q6eh8mpkyu5pne7m72f4lyh6fw4k4ugpvzjfljd
+
+![image](https://user-images.githubusercontent.com/59659167/147228233-1b2ed89c-f9ab-499a-862a-30a9520cd7c6.png)
+
+Note to Bitcoin:
+1. I hope this works. I have a Bitcoin wallet and know how to use it. But I'm not exactly an expert.
+2. I can't give you the Donator rank in the Discord server because.. well.. it's anonym, so I can't verify you actually donated.
