@@ -1,0 +1,127 @@
+# Here you can customize the screboard.
+# You can add as many animation steps as you like.
+# 
+# For every score (line) you can set a different speed.
+# You can set up to 14 scores. For that just add a new number, like "'7':"
+# 
+# If you have static scores (no animations or updates needed): Set the 'speed' value to '9999' or higher. Then the scheduler won't start to save performance.
+# Note: Specify the speed in ticks, not seconds. 20 ticks = one second
+# 
+# If you want to use multiple scoreboards, you have to set conditions for all scoreboards, except for the default one.
+
+titel:
+  speed: 6
+  titles:
+  - '&4PowerBoard'
+  - '&4PowerBoard'
+  - '&cPowerBoard'
+  - '&cPowerBoard'
+  - '&6PowerBoard'
+  - '&6PowerBoard'
+  - '&ePowerBoard'
+  - '&ePowerBoard'
+  - '&2PowerBoard'
+  - '&2PowerBoard'
+  - '&aPowerBoard'
+  - '&aPowerBoard'
+  - '&bPowerBoard'
+  - '&bPowerBoard'
+  - '&3PowerBoard'
+  - '&3PowerBoard'
+  - '&1PowerBoard'
+  - '&1PowerBoard'
+  - '&9PowerBoard'
+  - '&9PowerBoard'
+  - '&dPowerBoard'
+  - '&dPowerBoard'
+  - '&5PowerBoard'
+  - '&5PowerBoard'
+  - '&fPowerBoard'
+  - '&fPowerBoard'
+  - '&7PowerBoard'
+  - '&7PowerBoard'
+  - '&8PowerBoard'
+  - '&8PowerBoard'
+  - '&0PowerBoard'
+  - '&0PowerBoard'
+  - '&aPowerBoard'
+  - '&aPowerBoard'
+  - '&f&oPowerBoard'
+  - '&f&kPowerBoard'
+  - '&f&mPowerBoard'
+  - '&f&mPowerBoard'
+  - '&f&o&nPowerBoard'
+  - ' '
+'0':
+  speed: 9999
+  scores:
+  - -Not animated-
+'1':
+  speed: 9999
+  scores:
+  - ' '
+'2':
+  speed: 13
+  scores:
+  - '&a-A-'
+  - '&b-An-'
+  - '&c-Ani-'
+  - '&d-Anim-'
+  - '&e-Anima-'
+  - '&f-Animat-'
+  - '&6-Animate-'
+  - '&3-Animated-'
+  - '&3-Animated- \'
+  - '&3-Animated- |'
+  - '&3-Animated- /'
+  - '&3-Animated- -'
+  - '&3-Animated- \'
+  - '&3-Animated- |'
+  - '&3-Animated-'
+  - '&6-Animate-'
+  - '&f-Animat-'
+  - '&e-Anima-'
+  - '&d-Anim-'
+  - '&c-Ani-'
+  - '&b-An-'
+  - '&a-A-'
+'3':
+  speed: 99999
+  scores:
+  - ' '
+'4':
+  speed: 99999
+  scores:
+  - '&dInformations:'
+'5':
+  speed: 30
+  scores:
+  - '&bPlayers:'
+  - '&bYour rank:'
+  - '&bYour name:'
+  - '&bTime:'
+  - '&bDate:'
+  - '&bWorld:'
+  - '&bYour ping:'
+  - '&bYour hunger level:'
+  - '&bYour saturation:'
+  - '&bYour hearts:'
+  - '&bServer TPS:'
+  - '&bServer RAM:'
+'6':
+  speed: 30
+  scores:
+  - '&a%server_online_players%&7/&a%server_max_players%'
+  - '&a%player_rank%'
+  - '&a%player_name%'
+  - '&a%time%'
+  - '&a%date%'
+  - '&a%player_world%'
+  - '&a%player_ping%'
+  - '&a%player_food%'
+  - '&a%player_saturation%'
+  - '&a%player_health%'
+  - '&a%tps%'
+  - '&a%mem_used%/%mem_total%'
+conditions:
+- '&Add conditions here'

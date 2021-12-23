@@ -1,0 +1,54 @@
+# Here you can customize the tablist.
+# You can add as many animation steps as you like.
+# For every line you can set a different speed.
+# 
+# To add a new line, just add a new number like "'3':"
+# If you have static lines (no animations or updates needed): Set the 'speed' value to '9999' or higher. Then the scheduler won't start to save performance.
+# Note: Specify the speed in ticks, not seconds. 20 ticks = one second
+
+header:
+  '1':
+    speed: 5
+    lines:
+    - '&bLocation: &aX: %player_loc_x%; Y: %player_loc_y%; Z: %player_loc_z%'
+  '2':
+    speed: 99999
+    lines:
+    - ' '
+footer:
+  '1':
+    speed: 99999
+    lines:
+    - ' '
+  '2':
+    speed: 99999
+    lines:
+    - '&dInformations:'
+  '3':
+    speed: 30
+    lines:
+    - '&bPlayers:'
+    - '&bYour rank:'
+    - '&bYour name:'
+    - '&bTime:'
+    - '&bDate:'
+    - '&bWorld:'
+    - '&bYour ping:'
+    - '&bYour hunger level:'
+    - '&bYour saturation:'
+    - '&bYour hearts:'
+    - '&bServer TPS:'
+  '4':
+    speed: 30
+    lines:
+    - '&a%server_online_players%&7/&a%server_max_players%'
+    - '&a%player_rank%'
+    - '&a%player_name%'
+    - '&a%time%'
+    - '&a%date%'
+    - '&a%player_world%'
+    - '&a%player_ping%'
+    - '&a%player_food%'
+    - '&a%player_saturation%'
+    - '&a%player_health%'
+    - '&a%tps%'
