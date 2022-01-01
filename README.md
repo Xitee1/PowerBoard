@@ -5,7 +5,7 @@
 
 PowerBoard is an Open Source project for your Minecraft Server.
 Normally you would need for everything like ranks, tablist and scoreboard an extra plugin. And these plugins aren't always so good and are missing some features like animations and are lacking of performance.
-PowerBoard tries to put all these things into one plugin and make these perfect.
+PowerBoard tries to put all these things into one plugin and to make these perfect.
 
 It is already really powerful. But of course there are also always a few bugs. So feel free to join this project and contribute to it.
 
