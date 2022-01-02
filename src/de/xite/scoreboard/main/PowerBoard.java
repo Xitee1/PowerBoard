@@ -76,6 +76,8 @@ public class PowerBoard extends JavaPlugin {
 		// ---- Register commands and events ---- //
 		getCommand("pb").setExecutor(new ScoreboardCommand());
 		getCommand("powerboard").setExecutor(new ScoreboardCommand());
+		getCommand("pb").setTabCompleter(new ScoreboardCommand());
+		getCommand("powerboard").setTabCompleter(new ScoreboardCommand());
 		PluginManager pm = Bukkit.getPluginManager();
 		pm.registerEvents(new JoinQuitListener(), this);
 		pm.registerEvents(new ChatListener(), this);

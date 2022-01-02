@@ -1,9 +1,13 @@
  package de.xite.scoreboard.commands;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import de.xite.scoreboard.main.Config;
@@ -17,7 +21,7 @@ import de.xite.scoreboard.utils.Teams;
 import de.xite.scoreboard.utils.Updater;
 import net.md_5.bungee.api.ChatColor;
 
-public class ScoreboardCommand implements CommandExecutor{
+public class ScoreboardCommand implements CommandExecutor, TabCompleter {
 	String designLine = PowerBoard.pr+ChatColor.GRAY+"X"+ChatColor.YELLOW+""+ChatColor.STRIKETHROUGH+"-----"+ChatColor.GOLD+"Scoreboard"+ChatColor.YELLOW+""+ChatColor.STRIKETHROUGH+"-----"+ChatColor.GRAY+"X";
 	PowerBoard pl = PowerBoard.pl;
 	
@@ -133,5 +137,31 @@ public class ScoreboardCommand implements CommandExecutor{
 			s.sendMessage(PowerBoard.pr+ChatColor.RED+"/pb debug "+ChatColor.DARK_GRAY+"- "+ChatColor.GRAY+"Toggle the debug.");
 			s.sendMessage(designLine);
 		}
+	}
+	@Override
+	public List<String> onTabComplete(CommandSender s, Command cmd, String alias, String[] args) {
+		List<String> list = new ArrayList<String>();
+		if(s instanceof Player) {
+			Player p = (Player) s;
+			if(args.length == 1) {
+				list.add("info");
+				if(p.hasPermission("powerboard.toggle.*"))
+					list.add("toggle");
+				if(p.hasPermission("powerboard.reload"))
+					list.add("reload");
+				if(p.hasPermission("powerboard.update"))
+					list.add("update");
+				if(p.hasPermission("powerboard.debug"))
+					list.add("debug");
+			}
+		}else {
+			if(args.length == 1) {
+				list.add("info");
+				list.add("reload");
+				list.add("update");
+				list.add("debug");
+			}
+		}
+		return list;
 	}
 }
