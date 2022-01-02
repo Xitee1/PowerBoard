@@ -5,17 +5,24 @@ import org.bukkit.Bukkit;
 import de.xite.scoreboard.main.PowerBoard;
 
 public class TPS implements Runnable {
-	public static int TICK_COUNT= 0;
-	public static long[] TICKS= new long[600];
-	public static long LAST_TICK= 0L;
+	private static int TICK_COUNT= 0;
+	private static long[] TICKS= new long[600];
 	
 	public static double currentTPS = 20;
 
-	public static double getTPS() {
-		return getTPS(100);
+	public void run() {
+		TICKS[(TICK_COUNT% TICKS.length)] = System.currentTimeMillis();
+		TICK_COUNT+= 1;
 	}
-
-	public static double getTPS(int ticks) {
+	
+	public static double getTPS() {
+		return MathUtils.round(currentTPS, 1);
+	}
+	
+	private static double calculateTPS() {
+		return calculateTPS(100);
+	}
+	private static double calculateTPS(int ticks) {
 		if(TICK_COUNT < ticks)
 			return 20.0D;
 		int target = (TICK_COUNT - 1 - ticks) % TICKS.length;
@@ -27,16 +34,10 @@ public class TPS implements Runnable {
 		Bukkit.getScheduler().scheduleSyncRepeatingTask(PowerBoard.pl, new Runnable() {
 			@Override
 			public void run() {
-				currentTPS = getTPS();
+				currentTPS = calculateTPS();
 			}
 		}, 0, 20);
 	}
 	
-	
-	public void run() {
-		TICKS[(TICK_COUNT% TICKS.length)] = System.currentTimeMillis();
 
-		TICK_COUNT+= 1;
-	}
-	
 }

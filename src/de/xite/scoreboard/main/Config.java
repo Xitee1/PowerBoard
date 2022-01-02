@@ -5,10 +5,16 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.FileNotFoundException;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 
+import de.xite.scoreboard.utils.Placeholders;
 import de.xite.scoreboard.utils.UpgradeVersion;
+
+ 
+import org.apache.commons.lang.Validate;
+import org.bukkit.configuration.InvalidConfigurationException;
 
 public class Config {
 	static PowerBoard pl = PowerBoard.pl;
@@ -29,9 +35,9 @@ public class Config {
 				s = s.replace("{", "").replace("}", "").replace("(", "").replace(")", "");
 				String[] s2 = s.split("000000");
 				if(s2.length > 0)
-					PowerBoard.hexColorBegin = s2[0];
+					Placeholders.hexColorBegin = s2[0];
 				if(s2.length > 1)
-					PowerBoard.hexColorEnd = s2[1];
+					Placeholders.hexColorEnd = s2[1];
 			}else {
 				pl.getLogger().severe("You have an invalid HEX-Color syntax in your config!");
 			}
@@ -41,13 +47,17 @@ public class Config {
 		if(!sbfolder.exists() || !sbfolder.isDirectory())
 			sbfolder.mkdir();
 		
-		// migrate to multiple scoreboards
-		File file = new File(PowerBoard.pluginfolder+"/scoreboard.yml");
-		if(file.exists())
-			UpgradeVersion.updateMultipleScoreboards();
+		// Migrate to multiple scoreboards - migration will be removed on v3.6
+		UpgradeVersion.updateMultipleScoreboards();
 		
 		// create default scoreboard.yml
 		createDefaultScoreboard();
+		
+		// Migrate from tablist_footer.yml and tablist_header.yml - migration will be removed on v3.6
+		UpgradeVersion.upgradeDoubleTabConfig();
+		
+		// Create the tablist.yml file if not exists
+		Config.createDefaultTablist();
 		
 		// run self check
 		/*if(SelfCheck.check()) { 
@@ -234,7 +244,7 @@ public class Config {
 				score_7.add("&a%player_food%");
 				score_7.add("&a%player_saturation%");
 				score_7.add("&a%player_health%");
-				score_7.add("&a%tps%");
+				score_7.add("&a%server_tps%");
 				score_7.add("&a%mem_used%/%mem_total%");
 				cfg.addDefault("6.speed", 30);
 				cfg.addDefault("6.scores", score_7);
@@ -253,7 +263,8 @@ public class Config {
 	}
 	
 	// Create tablist.yml file
-	public static void createDefaultTablist(File file) {
+	public static void createDefaultTablist() {
+		File file = new File(PowerBoard.pluginfolder+"/tablist.yml");
 		if(!file.exists()) {
 			try {
 				file.createNewFile();
@@ -315,7 +326,7 @@ public class Config {
 				footer4.add("&a%player_food%");
 				footer4.add("&a%player_saturation%");
 				footer4.add("&a%player_health%");
-				footer4.add("&a%tps%");
+				footer4.add("&a%server_tps%");
 				cfg.set("footer.4.speed", 30);
 				cfg.set("footer.4.lines", footer4);
 				//Save
@@ -327,4 +338,26 @@ public class Config {
 			}
 		}
 	}
+	
+	
+	public static YamlConfiguration loadConfiguration(File file) {
+	    Validate.notNull(file, "File cannot be null");
+	 
+	    YamlConfiguration config = new YamlConfiguration();
+	 
+	    try {
+	        config.load(file);
+	    } catch (FileNotFoundException ex) {
+	    	pl.getLogger().severe("Failed to load configuration '"+file+"'! File does not exists.");
+	        return null;
+	    } catch (IOException ex) {
+	        return null;
+	    } catch (InvalidConfigurationException ex) {
+	    	pl.getLogger().severe("Cannot read configuration '"+file+"'!");
+	        return null;
+	    }
+	 
+	    return config;
+	}
+	 
 }

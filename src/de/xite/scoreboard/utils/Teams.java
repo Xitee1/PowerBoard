@@ -17,6 +17,7 @@ public class Teams {
 	String teamName;
 	String chatPrefix;
 	String placeholderName;
+	
 	public Teams(Player p, String prefix, String suffix, String nameColor, String teamName, String chatPrefix, String placeholderName) {
 		this.p = p;
 		this.prefix = prefix;
@@ -104,7 +105,7 @@ public class Teams {
 			message = ChatColor.translateAlternateColorCodes('&', message);
 			
 			if(PowerBoard.pl.getConfig().getBoolean("chat.allowHexColors")) {
-				String hex = PowerBoard.translateHexColor(message);
+				String hex = Placeholders.translateHexColor(message);
 				if(!hex.equalsIgnoreCase("InvalidHexColor"))
 					message = hex;
 			}

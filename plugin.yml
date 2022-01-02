@@ -5,8 +5,6 @@ softdepend: [PermissionsEx, Vault, PlaceholderAPI, LuckPerms]
 main: de.xite.scoreboard.main.PowerBoard
 api-version: 1.13
 commands:
-   sb:
-      description: Manage the plugin
    pb:
       description: Manage the plugin
    powerboard:

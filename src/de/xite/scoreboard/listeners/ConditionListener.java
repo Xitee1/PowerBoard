@@ -7,13 +7,14 @@ import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 
 import de.xite.scoreboard.main.PowerBoard;
+import de.xite.scoreboard.modules.board.ScoreboardManager;
 import de.xite.scoreboard.modules.board.ScoreboardPlayer;
 
-public class ScoreboardConditionListener implements Listener {
+public class ConditionListener implements Listener {
 	
 	@EventHandler
 	public void GameModeSwitchEvent(PlayerGameModeChangeEvent e) {
-		if(ScoreboardPlayer.scoreboards.size() > 1)
+		if(ScoreboardManager.scoreboards.size() > 1)
 			Bukkit.getScheduler().runTaskLater(PowerBoard.pl, new Runnable() {
 				@Override
 				public void run() {
@@ -24,12 +25,14 @@ public class ScoreboardConditionListener implements Listener {
 	
 	@EventHandler
 	public void WorldSwitchEvent(PlayerChangedWorldEvent e) {
-		if(ScoreboardPlayer.scoreboards.size() > 1)
-			Bukkit.getScheduler().runTaskLater(PowerBoard.pl, new Runnable() {
-				@Override
-				public void run() {
+		Bukkit.getScheduler().runTaskLater(PowerBoard.pl, new Runnable() {
+			@Override
+			public void run() {
+				if(ScoreboardManager.scoreboards.size() > 1) { // Only if there are more than 1 scoreboards
 					ScoreboardPlayer.updateScoreboard(e.getPlayer());
 				}
-			}, 5);
+				
+			}
+		}, 5);
 	}
 }

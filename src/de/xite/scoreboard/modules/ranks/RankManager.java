@@ -8,12 +8,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Team;
 
 import de.xite.scoreboard.api.TeamSetEvent;
+import de.xite.scoreboard.depend.LuckPermsRanks;
 import de.xite.scoreboard.main.ExternalPlugins;
 import de.xite.scoreboard.main.PowerBoard;
 import de.xite.scoreboard.utils.Teams;
-import net.luckperms.api.LuckPerms;
-import net.luckperms.api.model.group.Group;
-import net.luckperms.api.model.user.User;
 
 public class RankManager {
 	static PowerBoard pl = PowerBoard.pl;
@@ -23,100 +21,10 @@ public class RankManager {
 	
 	public static boolean register(Player p) {
 		if(pl.getConfig().getBoolean("ranks.luckperms-api.enable")) {
-			//--- LuckPerms (with API) ---//
+			return LuckPermsRanks.registerLuckPermsAPIRank(p);
 			
-			if(ExternalPlugins.luckPerms == null) {
-				pl.getLogger().severe("LuckPerms-API enabled, but LuckPerms is not installed!");
-				return false;
-			}
-			//Get user and rank data from LuckPerms
-			LuckPerms api = ExternalPlugins.luckPerms;
-			User user = api.getUserManager().getUser(p.getUniqueId());
-			Group group = api.getGroupManager().getGroup(user.getPrimaryGroup());
-			
-			// Get the team name
-			int i = 0;
-			try {
-				int loadedGroups = api.getGroupManager().getLoadedGroups().size();
-				i = loadedGroups - group.getWeight().getAsInt();
-				if(loadedGroups < group.getWeight().getAsInt()) {
-					PowerBoard.pl.getLogger().severe("---------------------------------------------------------------------------------------------------------------------------");
-					PowerBoard.pl.getLogger().severe("The group \""+group.getName()+"\" has no weight! Please set the weight with /lp group <group> setweight <weight>");
-					PowerBoard.pl.getLogger().severe("Read the wiki to see which weights you have to set: https://github.com/Xitee1/PowerBoard/wiki#configure-the-ranks-optional");
-					PowerBoard.pl.getLogger().severe("---------------------------------------------------------------------------------------------------------------------------");
-					return false;
-				}
-			}catch (Exception e) {
-				PowerBoard.pl.getLogger().severe("---------------------------------------------------------------------------------------------------------------------------");
-				PowerBoard.pl.getLogger().severe("The group \""+group.getName()+"\" has no weight! Please set the weight with /lp group <group> setweight <weight>");
-				PowerBoard.pl.getLogger().severe("Read the wiki to see which weights you have to set: https://github.com/Xitee1/PowerBoard/wiki#configure-the-ranks-optional");
-				PowerBoard.pl.getLogger().severe("---------------------------------------------------------------------------------------------------------------------------");
-				return false;
-			}
-			String i2 = ""+i;
-			if(i < 10)
-				i2 = "0"+i;
-			
-			TeamCount++;
-			String team = i2+"team-"+TeamCount;
-			
-			String suffix = "", prefix = "", displayname = "", nameColor = "";
-			
-			// Get the data
-			prefix = user.getCachedData().getMetaData().getPrefix();
-			suffix = user.getCachedData().getMetaData().getSuffix();
-			displayname = group.getDisplayName();
-			
-			if(prefix == null) {
-				prefix = "";
-			}else
-				if(pl.getConfig().getBoolean("ranks.luckperms-api.prefix-suffix-space"))
-					prefix = prefix+" ";
-			
-			if(suffix == null) {
-				suffix = "";
-			}else
-				if(pl.getConfig().getBoolean("ranks.luckperms-api.prefix-suffix-space"))
-					suffix = " "+suffix;
-			
-			
-			if(displayname == null) {
-				PowerBoard.pl.getLogger().severe("---------------------------------------------------------------------------------------------------------------------------");
-				PowerBoard.pl.getLogger().severe("The group \""+group.getName()+"\" has no Displayname! "
-						+ "Give the group the permission 'displayname.<enter the displayname>', for example 'displayname.&4Owner'");
-				PowerBoard.pl.getLogger().severe("---------------------------------------------------------------------------------------------------------------------------");
-				return false;
-			}
-			
-			// Get the chat syntax and check for errors
-			String chat = pl.getConfig().getString("ranks.luckperms-api.chat-layout");
-			if(chat == null)// Check for old configuration - remove v4.5
-				chat = pl.getConfig().getString("ranks.luckperms.chat-layout");
-			if(chat == null) {// Send error if there is no chat
-				pl.getLogger().severe("The rank "+group.getName()+" has no valid chat configuration! Please check the setting 'chat-layout' in the 'luckperms-api' section in your config.yml.");
-				chat = "(invalid config) %name% > ";
-			}
-			chat = chat.replace("%prefix%", prefix).replace("%name%", p.getName()).replace("%displayname%", displayname); // Replace chat placeholders
-			
-			// Get the name color and check for errors
-			nameColor = ChatColor.getLastColors(ChatColor.translateAlternateColorCodes('&', prefix));
-			if(nameColor == null)
-				pl.getLogger().warning("Could not get the last color from "+p.getName()+"'s prefix. Make sure to put a colorcode at the end of your prefix, otherwise the player name will always be white.");
-
-			
-			if(PowerBoard.debug)
-				pl.getLogger().info("The player "+p.getName()+" has the rank (luckperms-api): Prefix: "+prefix+"; Suffix: "+suffix+"; NamColor: "+nameColor+"; Displayname: "+displayname+"; Group: "+group.getName());
-			
-			// Register the player with all the collected data
-			try {
-				Teams.addPlayer(p, prefix, suffix, nameColor, team, chat, displayname);
-				return true;
-			}catch (Exception e) {
-				// If somehow something does no work, send a error message to configure the rank properly.
-				pl.getLogger().severe("The player "+p.getName()+" could not be added to a team! Please check your rank configuration!");
-			}
 		}else if(pl.getConfig().getString("ranks.permissionsystem").equalsIgnoreCase("api")) {
-			//--- Use PowerBoardAPI ---//
+			// Use PowerBoardAPI as perm system
 			TeamSetEvent tse = new TeamSetEvent(p);
 			Bukkit.getPluginManager().callEvent(tse);
 			if (!tse.isCancelled()) {
@@ -130,8 +38,8 @@ public class RankManager {
 				
 				Teams.addPlayer(p, tse.getPrefix(), tse.getSuffix(), tse.getNameColorChar(), team, tse.getChatPrefix(), tse.getPlaceholderName());
 			}
-			
 			return true;
+			
 		}else {
 			//--- Other PermSystems ---//
 			int i = 0;
@@ -151,7 +59,7 @@ public class RankManager {
 						String chatPrefix = pl.getConfig().getString("ranks.list."+line+".chatPrefix");
 						String placeholderName = pl.getConfig().getString("ranks.list."+line+".placeholder-name");
 						String nameColor = ChatColor.getLastColors(ChatColor.translateAlternateColorCodes('&', prefix));
-						if(isPlayerInGroup(p, permission)) {
+						if(LuckPermsRanks.isPlayerInGroup(p, permission)) {
 							if(PowerBoard.debug)
 								pl.getLogger().info("The player "+p.getName()+" has now the rank (luckperms): Prefix: "+prefix+"; Suffix: "+suffix+"; Group: "+permission);
 							TeamCount++;
@@ -237,7 +145,8 @@ public class RankManager {
 			String prefix = teams.getPrefix();
 			String suffix = teams.getSuffix();
 			ChatColor nameColor = teams.getNameColor();
-			p.setPlayerListName(prefix+p.getDisplayName()+suffix);
+			if(pl.getConfig().getBoolean("ranks.useUnlimitedLongRanks"))
+				p.setPlayerListName(prefix+p.getDisplayName()+suffix);
 			
 			for(Player all : Bukkit.getOnlinePlayers()) {
 				Team t = all.getScoreboard().getTeam(teams.getTeamName());
@@ -277,7 +186,8 @@ public class RankManager {
 				String prefix = teams.getPrefix();
 				String suffix = teams.getSuffix();
 				ChatColor nameColor = teams.getNameColor();
-				p.setPlayerListName(prefix+p.getDisplayName()+suffix);
+				if(pl.getConfig().getBoolean("ranks.useUnlimitedLongRanks"))
+					p.setPlayerListName(prefix+p.getDisplayName()+suffix);
 				
 				for(Player all : Bukkit.getOnlinePlayers()) {
 					Team t = all.getScoreboard().getTeam(teams.getTeamName());
@@ -315,22 +225,5 @@ public class RankManager {
 					updateDelay.remove(p);
 			}
 		}, i);
-	}
-	
-	
-	// LuckPerms without API
-	public static boolean isPlayerInGroup(Player p, String g) {
-		LuckPerms api = ExternalPlugins.luckPerms;
-		User user = api.getUserManager().getUser(p.getUniqueId());
-		String group = user.getPrimaryGroup();
-		if(PowerBoard.debug)
-			PowerBoard.pl.getLogger().info("Checking "+p.getName()+"'s group: "+group);
-		if(g.equalsIgnoreCase(group)) {
-			return true;
-		}else {
-			if(PowerBoard.debug)
-				PowerBoard.pl.getLogger().info(p.getName()+" has no valid group!");
-		}
-	    return false;
 	}
 }

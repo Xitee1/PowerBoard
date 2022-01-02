@@ -25,7 +25,7 @@ public class PlaceholderAPIExpansion extends PlaceholderExpansion {
     @Override
     public String onPlaceholderRequest(Player p, String placeholder) {
         if(placeholder.equalsIgnoreCase("tps"))
-            return PowerBoard.round(TPS.currentTPS, 1)+"";
+            return TPS.getTPS()+"";
     	
     	if(p == null)
     		return "Player not online";

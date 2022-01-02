@@ -25,6 +25,9 @@ public class UpgradeVersion {
 	}
 	
 	public static void updateMultipleScoreboards() {
+		if(!new File(PowerBoard.pluginfolder+"/scoreboard.yml").exists())
+			return;
+		
 		pl.getLogger().info("Upgrading multiple scoreboard support..");
 		pl.getLogger().info("Moving files..");
 		
@@ -53,9 +56,9 @@ public class UpgradeVersion {
 				+ "There is a new option where you can set the conditions.");
 		pl.getLogger().info("----- Upgrade successful! -----");
 	}
-	public static void upgradeDoubleTabConfig(File file) {
-		//Migrate from tablist_footer.yml and tablist_header.yml 
-		
+	public static void upgradeDoubleTabConfig() {
+		// Migrate from tablist_footer.yml and tablist_header.yml 
+		File file = new File(PowerBoard.pluginfolder+"/tablist.yml");
 		File folder = new File(PowerBoard.pluginfolder);
 		File old_header = new File(folder, "tablist_header.yml");
 		File old_footer = new File(folder, "tablist_footer.yml");

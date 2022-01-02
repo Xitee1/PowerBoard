@@ -1,10 +1,5 @@
 package de.xite.scoreboard.main;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
@@ -12,14 +7,14 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import de.xite.scoreboard.commands.ScoreboardCommand;
 import de.xite.scoreboard.listeners.ChatListener;
+import de.xite.scoreboard.listeners.ConditionListener;
 import de.xite.scoreboard.listeners.JoinQuitListener;
-import de.xite.scoreboard.listeners.ScoreboardConditionListener;
 import de.xite.scoreboard.modules.board.ScoreboardManager;
 import de.xite.scoreboard.modules.board.ScoreboardPlayer;
 import de.xite.scoreboard.modules.ranks.RankManager;
-import de.xite.scoreboard.modules.tablist.TabManager;
-import de.xite.scoreboard.modules.tablist.Tabpackage;
-import de.xite.scoreboard.utils.Placeholders;
+import de.xite.scoreboard.modules.tablist.TablistManager;
+import de.xite.scoreboard.modules.tablist.TablistPlayer;
+import de.xite.scoreboard.utils.TPS;
 import de.xite.scoreboard.utils.Teams;
 import de.xite.scoreboard.utils.Updater;
 import de.xite.scoreboard.utils.UpgradeVersion;
@@ -31,7 +26,6 @@ public class PowerBoard extends JavaPlugin {
 	
 	public static String pluginfolder = "plugins/PowerBoard"; // plugin folder
 	public static String pr = ChatColor.GRAY+"["+ChatColor.YELLOW+"PowerBoard"+ChatColor.GRAY+"] "; // prefix
-	public static String hexColorBegin = "", hexColorEnd = ""; // hex color Syntax
 	
 	public static Version version; // Minecraft version
 	public static boolean aboveMC_1_13 = false;
@@ -39,42 +33,67 @@ public class PowerBoard extends JavaPlugin {
 	
 	@Override
 	public void onEnable() {
-		// ---- Load the plugin ----//
+		// Initialize variables
 		pl = this;
+		pl.getLogger().info("--------------------------------------------------");
+		pl.getLogger().info("--------------- Loading PowerBoard ---------------");
+		pl.getLogger().info(" ");
+		
 		version = getBukkitVersion();
-		// In 1.13+ a lot of things have changed. For example 128 Chars in the scoreboard instead of 16
+		
+		// In 1.13+ a lot of things have changed. For example 128 Chars in the scoreboard instead of 32
 		if(PowerBoard.getBukkitVersion().compareTo(new Version("1.13")) >= 0)
 			aboveMC_1_13 = true;
 		
-		UpgradeVersion.rename(); // rename from "scoreboard" to "powerboard"
+		// Migrate from old versions:
+		UpgradeVersion.rename(); // Rename Scoreboard to PowerBoard - migration will be removed on v3.6
 		
-		if(!Config.loadConfig()) { // load the config.yml
+		// Load the config - disable plugin if failed
+		if(!Config.loadConfig()) {
 			Bukkit.getPluginManager().disablePlugin(pl);
 			return;
 		}
 		
-		ExternalPlugins.initializePlugins(); // Load all external plugin APIs
+		// Load all external plugin APIs
+		ExternalPlugins.initializePlugins(); 
+		
+		// Start TPS calculator
+		Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(pl, new TPS(), 100L, 1L);
+		TPS.start();
 	    
-		if(Updater.checkVersion()) { // Check for updates
-			pl.getLogger().info("-> A new version (v."+Updater.version+") is available! Your version: "+pl.getDescription().getVersion());
-			pl.getLogger().info("-> Update me! :)");
-		}
+		// Check for updates
+		Bukkit.getScheduler().runTaskAsynchronously(pl, new Runnable() {
+			@Override
+			public void run() {
+				if(Updater.checkVersion()) { 
+					pl.getLogger().info("-> A new version (v."+Updater.getVersion()+") is available! Your version: "+pl.getDescription().getVersion());
+					pl.getLogger().info("-> Update me! :)");
+				}
+			}
+		});
+
+		
 		// ---- Register commands and events ---- //
-		getCommand("sb").setExecutor(new ScoreboardCommand());
 		getCommand("pb").setExecutor(new ScoreboardCommand());
 		getCommand("powerboard").setExecutor(new ScoreboardCommand());
 		PluginManager pm = Bukkit.getPluginManager();
 		pm.registerEvents(new JoinQuitListener(), this);
 		pm.registerEvents(new ChatListener(), this);
-		pm.registerEvents(new ScoreboardConditionListener(), this);
+		pm.registerEvents(new ConditionListener(), this);
 		
-		// ---- Load Modules ---- //
+		// ---- Load modules ---- //
+		// scoreboard
 		if(pl.getConfig().getBoolean("scoreboard"))
 			ScoreboardManager.registerAllScoreboards();
+		
+		// tablist
+		if(pl.getConfig().getBoolean("tablist.text"))
+			TablistManager.registerAllTablists();
 		
 		Bukkit.getScheduler().runTaskLater(pl, new Runnable() {
 			@Override
 			public void run() {
+				pl.getLogger().info("Registering players...");
 				for(Player all : Bukkit.getOnlinePlayers()) {
 					// Register Teams if chat ranks or tablist ranks are used
 					if(pl.getConfig().getBoolean("chat.ranks") || pl.getConfig().getBoolean("tablist.ranks")) {
@@ -84,41 +103,39 @@ public class PowerBoard extends JavaPlugin {
 					}
 					if(pl.getConfig().getBoolean("tablist.ranks"))
 						RankManager.setTablistRanks(all);
+					
 					if(pl.getConfig().getBoolean("scoreboard"))
 						ScoreboardPlayer.setScoreboard(all);
 					
-					if(pl.getConfig().getBoolean("tablist.text")) {
-						for(int line : TabManager.headers.keySet())
-							TabManager.setHeader(all, line, TabManager.headers.get(line).get(0));
-						for(int line : TabManager.footers.keySet())
-							TabManager.setFooter(all, line, TabManager.footers.get(line).get(0));
-						Tabpackage.send(all);
-					}
+					if(pl.getConfig().getBoolean("tablist.text"))
+						TablistPlayer.addPlayer(all, null);
 				}
-						
-				// set tablist
-				if(pl.getConfig().getBoolean("tablist.text"))
-					TabManager.register();
+				pl.getLogger().info("All players have been registered.");
 			}
 		}, 30);
+		pl.getLogger().info(" ");
+		pl.getLogger().info("--------------- PowerBoard  loaded ---------------");
+		pl.getLogger().info("--------------------------------------------------");
 	}
 	@Override
 	public void onDisable() {
+		// Download newest version if update is available
 		if(pl.getConfig().getBoolean("update.autoupdater"))
 			if(Updater.checkVersion())
 				Updater.downloadFile();
 		
+		// Unregister scoreboards and teams
 		for(Player all : Bukkit.getOnlinePlayers()) {
 			ScoreboardPlayer.removeScoreboard(all);
 			Teams.removePlayer(all);
 		}
 		ScoreboardManager.unregisterAllScoreboards();
 		
+		// Unregister tablist
 		if(pl.getConfig().getBoolean("tablist.text"))
-			TabManager.unregister();
-		
-		Placeholders.ph.clear();
+			TablistManager.unregisterAllTablists();
 	}
+	
     // ---- Utils ---- //
 	public static Version getBukkitVersion() {
 		if(version != null)
@@ -132,34 +149,4 @@ public class PowerBoard extends JavaPlugin {
 		// compareTo: -1 = a is older than b
 		return new Version(version);
 	}
-
-    public static double round(double value, int places) {
-    	if (places < 0) throw new IllegalArgumentException();
-
-        BigDecimal bd = BigDecimal.valueOf(value);
-        bd = bd.setScale(places, RoundingMode.HALF_UP);
-        return bd.doubleValue();
-    }
-    
-    // Credit to https://www.spigotmc.org/threads/hex-color-code-translate.449748/#post-3867804
-    public final static char COLOR_CHAR = ChatColor.COLOR_CHAR;
-    public static String translateHexColor(String message) {
-    	try {
-            final Pattern hexPattern = Pattern.compile(hexColorBegin + "([A-Fa-f0-9]{6})" + hexColorEnd);
-            Matcher matcher = hexPattern.matcher(message);
-            StringBuffer buffer = new StringBuffer(message.length() + 4 * 8);
-            while (matcher.find()) {
-                String group = matcher.group(1);
-                matcher.appendReplacement(buffer, COLOR_CHAR + "x"
-                        + COLOR_CHAR + group.charAt(0) + COLOR_CHAR + group.charAt(1)
-                        + COLOR_CHAR + group.charAt(2) + COLOR_CHAR + group.charAt(3)
-                        + COLOR_CHAR + group.charAt(4) + COLOR_CHAR + group.charAt(5)
-                        );
-            }
-            return matcher.appendTail(buffer).toString();
-    	}catch (Exception e) {
-    		pl.getLogger().severe("You have an invalid HEX-Color-Code! Please check the syntax! String: "+message);
-    		return "InvalidHexColor";
-		}
-    }
 }

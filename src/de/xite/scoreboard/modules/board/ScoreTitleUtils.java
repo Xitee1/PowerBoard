@@ -81,9 +81,7 @@ public class ScoreTitleUtils {
 		}
 		Team team = board.getTeam("score-"+ScoreID);
 		if(team == null) {
-			team = board.registerNewTeam("score-"+ScoreID);	
-			if(PowerBoard.debug)
-				PowerBoard.pl.getLogger().info("Added Team: score-"+ScoreID);
+			team = board.registerNewTeam("score-"+ScoreID);
 			team.addEntry(colorcode);
 			obj.getScore(colorcode).setScore(ScoreID);
 		}

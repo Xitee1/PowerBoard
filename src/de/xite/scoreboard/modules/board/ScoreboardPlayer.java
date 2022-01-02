@@ -15,9 +15,6 @@ import de.xite.scoreboard.main.PowerBoard;
 public class ScoreboardPlayer {
 	static PowerBoard pl = PowerBoard.pl;
 	
-	// All registered scoreboards
-	public static HashMap<String, ScoreboardManager> scoreboards = new HashMap<>();
-	
 	// All players with scoreboards
 	public static HashMap<Player, String> players = new HashMap<>(); // Player; Scoreboard config file name
 	
@@ -60,7 +57,7 @@ public class ScoreboardPlayer {
 			pl.getLogger().info("Changing "+p.getName()+"'s scoreboard to "+newScoreboard.getName());
 		// Check if update is required
 		if(!players.get(p).equals(newScoreboard.getName())) {
-			ScoreboardPlayer.removeScoreboard(p);
+			removeScoreboard(p);
 			setScoreboard(p);
 		}
 	}
@@ -72,10 +69,14 @@ public class ScoreboardPlayer {
 		  - world:world AND gamemode:creative
 		  - world:world_nether
 		*/
-		for(Entry<String, ScoreboardManager> e : scoreboards.entrySet()) {
+		for(Entry<String, ScoreboardManager> e : ScoreboardManager.scoreboards.entrySet()) {
 			ScoreboardManager sm = e.getValue();
 			if(sm == null) {
-				pl.getLogger().severe("Could not set scoreboard '"+sm+"'! File does not exists!");
+				pl.getLogger().severe("There was a error loading a scoreboard. Please check your configs.");
+				return null;
+			}
+			if(sm.conditions == null) {
+				pl.getLogger().severe("Could not get scoreboard '"+sm.getName()+"'! Probably a config error.");
 				return null;
 			}
 			for(String condition : sm.conditions) { // For all "OR" conditions (lines)

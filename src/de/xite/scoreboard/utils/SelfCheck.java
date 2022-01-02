@@ -1,6 +1,7 @@
 package de.xite.scoreboard.utils;
 
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.fusesource.jansi.Ansi;
 
 import de.leonhard.storage.Yaml;
@@ -18,7 +19,7 @@ public class SelfCheck {
 	
 	static PowerBoard pl = PowerBoard.pl;
 	
-	public static boolean check() {
+	public static boolean checkConfig() {
 		try {
 			r = Ansi.ansi().fg(Ansi.Color.RED).boldOff().toString();
 			y = Ansi.ansi().fg(Ansi.Color.YELLOW).boldOff().toString();
@@ -186,7 +187,7 @@ public class SelfCheck {
 			Bukkit.getScheduler().runTaskLater(pl, new Runnable() {
 				@Override
 				public void run() {
-					check();
+					checkConfig();
 				}
 			}, 20*60*30);
 		}
@@ -194,4 +195,11 @@ public class SelfCheck {
 		return false;
 	}
 	
+	public static boolean checkTablist(String name, YamlConfiguration cfg) {
+		if(!(cfg.contains("header") || cfg.contains("footer"))) {
+			pl.getLogger().severe("You have an error in your Tablist '"+name+"'! Please check it for typing errors. Look closely.");
+			return false;
+		}
+		return true;
+	}
 }
