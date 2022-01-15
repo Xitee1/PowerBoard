@@ -1,7 +1,6 @@
 package de.xite.scoreboard.main;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +11,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import de.xite.scoreboard.utils.Placeholders;
 import de.xite.scoreboard.utils.UpgradeVersion;
 
- 
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.InvalidConfigurationException;
 
@@ -28,6 +26,9 @@ public class Config {
 		pl.saveDefaultConfig();
 		pl.reloadConfig();
 		
+		// Check if the debug is enabled in the config.yml
+		PowerBoard.debug = pl.getConfig().getBoolean("debug");
+		
 		// Register hex color syntax
 		String s = pl.getConfig().getString("placeholder.hexColorSyntax");
 		if(s.length() != 0) {
@@ -42,31 +43,28 @@ public class Config {
 				pl.getLogger().severe("You have an invalid HEX-Color syntax in your config!");
 			}
 		}
+		
 		// Create scoreboard folder if not exists
 		File sbfolder = new File(PowerBoard.pluginfolder+"/scoreboards/");
 		if(!sbfolder.exists() || !sbfolder.isDirectory())
 			sbfolder.mkdir();
 		
-		// Migrate to multiple scoreboards - migration will be removed on v3.6
+		// Create tablist folder if not exists
+		//File tabfolder = new File(PowerBoard.pluginfolder+"/tablists/");
+		//if(!tabfolder.exists() || !tabfolder.isDirectory())
+			//tabfolder.mkdir();
+		
+		// Migrate to multiple scoreboards - migration will be removed on v3.7
 		UpgradeVersion.updateMultipleScoreboards();
 		
 		// create default scoreboard.yml
 		createDefaultScoreboard();
 		
-		// Migrate from tablist_footer.yml and tablist_header.yml - migration will be removed on v3.6
+		// migrate from tablist_footer.yml and tablist_header.yml - migration will be removed on v3.6
 		UpgradeVersion.upgradeDoubleTabConfig();
 		
-		// Create the tablist.yml file if not exists
+		// create default tablist.yml
 		Config.createDefaultTablist();
-		
-		// run self check
-		/*if(SelfCheck.check()) { 
-	    	pl.getLogger().severe("self-check -> Fatal errors were found! Please fix you config! Disabling Plugin...");
-	    	return false;
-		}*/
-		
-		PowerBoard.debug = pl.getConfig().getBoolean("debug"); // Check if the debug is enabled in the config.yml
-		
 		return true;
 	}
 	
@@ -75,56 +73,19 @@ public class Config {
 	// Create default files //
 	//----------------------//
 	public static void createDefaultScoreboard() {
-		// readme
-		File readme = new File(PowerBoard.pluginfolder+"/scoreboards/readme.txt");
-		if(readme.exists())
-			readme.delete(); // Generate every restart new because I may make some change on it
-		try {
-			readme.createNewFile();
-			FileWriter myWriter = new FileWriter(readme);
-			myWriter.write("How to use multiple scoreboards:\n"
-					+ "1. Set the default scoreboard in the config.yml. The name of the scoreboard is the filename.\n\n"
-					+ "2. Now copy the default scoreboard file and rename it to whatever you want. The filename will become the scoreboard name.\n\n"
-					+ "3. Open the copied file and go to the end. There you can configurate the conditions to apply the scoreboard. Examples are below.\n\n"
-					+ "4. The scoreboard you've set as default doesn't really needs conditions because it will automatically be set when a player joins the server.\n\n\n"
-					+ "Examples:\n"
-					+ "Apply if a player is in creative mode OR has a permission:\n"
-					+ "- 'gamemode:creative'\n"
-					+ "- 'permission:some.permission'\n\n"
-					+ "Apply if a player is in creative mode OR surival mode AND has a permission:\n"
-					+ "- 'gamemode:creative AND permission:some.permission'\n"
-					+ "- 'gamemode.survival AND permission:some.permission'\n\n"
-					+ "Apply the above, but only in a specific world:\n"
-					+ "- 'gamemode:creative AND permission:some.permission AND world:world_nether'\n"
-					+ "- 'gamemode.survival AND permission:some.permission AND world:world_nether'\n\n"
-					+ "Now you should understand how it works. If you want OR, add a new line. If you want AND, write 'AND' followed by the condition.\n\n"
-					+ "Here are all conditions you can use:\n"
-					+ "- world:<world>\n"
-					+ "- permission:<permission>\n"
-					+ "- gamemode:<survival/creative/adventure/spectator>");
-			myWriter.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 		// default scoreboard
 		File file = new File(PowerBoard.pluginfolder+"/scoreboards/scoreboard.yml");
 		if(!file.exists()) {
 			try {
 				file.createNewFile();
-				YamlConfiguration cfg;
-				try {
-					cfg = YamlConfiguration.loadConfiguration(file);
-				}catch (Exception e) {
-					pl.getLogger().severe("You have errors in the tablist.yml file! Please check for spacing and typo errors!");
-					return;
-				}
-				cfg.options().header("Here you can customize the screboard.\n"
+				YamlConfiguration cfg = YamlConfiguration.loadConfiguration(file);
+				cfg.options().header("Here you can customize the scoreboard.\n"
 						+ "You can add as many animation steps as you like.\n\n"
 						+ "For every score (line) you can set a different speed.\n"
-						+ "You can set up to 14 scores. For that just add a new number, like \"'7':\"\n\n"
+						+ "You can set up to 14 scores. For that, just add a new number like \"'7':\"\n\n"
 						+ "If you have static scores (no animations or updates needed): Set the 'speed' value to '9999' or higher. Then the scheduler won't start to save performance.\n"
 						+ "Note: Specify the speed in ticks, not seconds. 20 ticks = one second\n\n"
-						+ "If you want to use multiple scoreboards, you have to set conditions for all scoreboards, except for the default one.\n");
+						+ "To use multiple scoreboards, read this wiki: https://github.com/Xitee1/PowerBoard/wiki/Create-and-use-multiple-scoreboards\n");
 				//Titel
 				ArrayList<String> title = new ArrayList<String>();
 				title.add("&4PowerBoard");
@@ -171,13 +132,13 @@ public class Config {
 				cfg.addDefault("titel.titles", title);
 				
 				//Scores
-				ArrayList<String> score_1 = new ArrayList<String>();
-				ArrayList<String> score_2 = new ArrayList<String>();
-				ArrayList<String> score_3 = new ArrayList<String>();
-				ArrayList<String> score_4 = new ArrayList<String>();
-				ArrayList<String> score_5 = new ArrayList<String>();
-				ArrayList<String> score_6 = new ArrayList<String>();
-				ArrayList<String> score_7 = new ArrayList<String>();
+				ArrayList<String> score_1 = new ArrayList<>();
+				ArrayList<String> score_2 = new ArrayList<>();
+				ArrayList<String> score_3 = new ArrayList<>();
+				ArrayList<String> score_4 = new ArrayList<>();
+				ArrayList<String> score_5 = new ArrayList<>();
+				ArrayList<String> score_6 = new ArrayList<>();
+				ArrayList<String> score_7 = new ArrayList<>();
 				score_1.add("-Not animated-");
 				cfg.addDefault("0.speed", 9999);
 				cfg.addDefault("0.scores", score_1);
@@ -359,5 +320,4 @@ public class Config {
 	 
 	    return config;
 	}
-	 
 }

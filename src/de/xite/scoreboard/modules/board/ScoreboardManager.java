@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
@@ -218,7 +217,7 @@ public class ScoreboardManager {
 		return this.name;
 	}
 	
-	public static void unregister(ScoreboardManager sm ) {
+	public static void unregister(ScoreboardManager sm) {
 		for(BukkitTask task : sm.scheduler)
 			task.cancel();
 		scoreboards.remove(sm.getName());

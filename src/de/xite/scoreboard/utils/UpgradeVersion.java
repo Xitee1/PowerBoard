@@ -28,7 +28,7 @@ public class UpgradeVersion {
 		if(!new File(PowerBoard.pluginfolder+"/scoreboard.yml").exists())
 			return;
 		
-		pl.getLogger().info("Upgrading multiple scoreboard support..");
+		pl.getLogger().info("Upgrading multiple scoreboard support.");
 		pl.getLogger().info("Moving files..");
 		
 		File oldFile = new File(PowerBoard.pluginfolder+"/scoreboard.yml");
@@ -40,7 +40,7 @@ public class UpgradeVersion {
 				+ "You can add as many animation steps as you like.\n"
 				+ "If you want a empty line, just set one animation step that is empty.\n\n"
 				+ "For every score (line) you can set a different speed.\n"
-				+ "You can set up to 14 scores. For that just add a new number, like '7':\n\n"
+				+ "You can set up to 14 scores. For that, just add a new number like '7':\n\n"
 				+ "If you have static scores (no animations or updates needed): Set the 'speed' value to '9999' or higher. Then the scheduler won't start to save performance.\n"
 				+ "Note: Specify the speed in ticks, not seconds. 20 ticks = one second\n\n"
 				+ "If you want to use multiple scoreboards, you have to set conditions for all scoreboards, except for the default one.\n");

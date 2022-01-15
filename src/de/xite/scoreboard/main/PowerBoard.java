@@ -46,7 +46,7 @@ public class PowerBoard extends JavaPlugin {
 			aboveMC_1_13 = true;
 		
 		// Migrate from old versions:
-		UpgradeVersion.rename(); // Rename Scoreboard to PowerBoard - migration will be removed on v3.6
+		UpgradeVersion.rename(); // Rename Scoreboard to PowerBoard - migration will be removed on v3.7
 		
 		// Load the config - disable plugin if failed
 		if(!Config.loadConfig()) {
