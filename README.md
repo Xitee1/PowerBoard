@@ -15,7 +15,7 @@ It is already really powerful. But of course there are also always a few bugs. S
 
 [Wiki](https://github.com/Xitee1/PowerBoard/wiki)
 
-[Discord](https://discord.gg/p95cB9YQFJ)
+[Discord](https://discord.gg/VqK3ctsbz7)
 
 # Developer API
 Click [here](https://github.com/Xitee1/PowerBoard/wiki/How-to-use-the-API).
