@@ -9,6 +9,7 @@ import de.xite.scoreboard.main.PowerBoard;
 
 public class Teams {
 	public static HashMap<Player, Teams> TeamsList = new HashMap<>();
+	private static int TeamCount = 0;
 	
 	Player p;
 	String prefix;
@@ -18,17 +19,29 @@ public class Teams {
 	String chatPrefix;
 	String placeholderName;
 	
-	public Teams(Player p, String prefix, String suffix, String nameColor, String teamName, String chatPrefix, String placeholderName) {
+	public Teams(Player p, String prefix, String suffix, String nameColor, String chatPrefix, String placeholderName, int weight) {
 		this.p = p;
 		this.prefix = prefix;
 		this.suffix = suffix;
 		this.nameColor = nameColor;
-		this.teamName = teamName;
 		this.chatPrefix = chatPrefix;
 		this.placeholderName = placeholderName;
+		
+		
+		if(weight < 0 || weight > 999) {
+			PowerBoard.pl.getLogger().warning("---------------------------------------------------------------------------------------------------------------------------");
+			PowerBoard.pl.getLogger().warning("Warning! You cannot use negative or above 999 weights! Player \""+p.getName()+"\". This will cause issues with the tablist sorting.");
+			PowerBoard.pl.getLogger().warning("---------------------------------------------------------------------------------------------------------------------------");
+		}
+		
+		TeamCount++;
+		this.teamName = String.format("%03d", weight)
+				+"team-"
+				+TeamCount;
+		PowerBoard.pl.getLogger().info("Team: "+teamName);
 	}
-	public static Teams addPlayer(Player p, String prefix, String suffix, String nameColor, String teamName, String chatPrefix, String placeholderName) {
-		Teams teams = new Teams(p, prefix, suffix, nameColor, teamName, chatPrefix, placeholderName);
+	public static Teams addPlayer(Player p, String prefix, String suffix, String nameColor, String chatPrefix, String placeholderName, int weight) {
+		Teams teams = new Teams(p, prefix, suffix, nameColor, chatPrefix, placeholderName, weight);
 		TeamsList.put(p, teams);
 		return teams;
 	}

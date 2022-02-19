@@ -5,7 +5,6 @@ import org.bukkit.entity.Player;
 
 import de.xite.scoreboard.main.ExternalPlugins;
 import de.xite.scoreboard.main.PowerBoard;
-import de.xite.scoreboard.modules.ranks.RankManager;
 import de.xite.scoreboard.utils.Teams;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.model.group.Group;
@@ -26,17 +25,9 @@ public class LuckPermsRanks {
 		Group group = api.getGroupManager().getGroup(user.getPrimaryGroup());
 		
 		// Get the team name
-		int i = 0;
+		int weight = 0;
 		try {
-			int loadedGroups = api.getGroupManager().getLoadedGroups().size();
-			i = loadedGroups - group.getWeight().getAsInt();
-			if(loadedGroups < group.getWeight().getAsInt()) {
-				PowerBoard.pl.getLogger().severe("---------------------------------------------------------------------------------------------------------------------------");
-				PowerBoard.pl.getLogger().severe("The group \""+group.getName()+"\" has no weight! Please set the weight with /lp group <group> setweight <weight>");
-				PowerBoard.pl.getLogger().severe("Read the wiki to see which weights you have to set: https://github.com/Xitee1/PowerBoard/wiki#configure-the-ranks-optional");
-				PowerBoard.pl.getLogger().severe("---------------------------------------------------------------------------------------------------------------------------");
-				return false;
-			}
+			weight = 999 - group.getWeight().getAsInt();
 		}catch (Exception e) {
 			PowerBoard.pl.getLogger().severe("---------------------------------------------------------------------------------------------------------------------------");
 			PowerBoard.pl.getLogger().severe("The group \""+group.getName()+"\" has no weight! Please set the weight with /lp group <group> setweight <weight>");
@@ -44,12 +35,6 @@ public class LuckPermsRanks {
 			PowerBoard.pl.getLogger().severe("---------------------------------------------------------------------------------------------------------------------------");
 			return false;
 		}
-		String i2 = ""+i;
-		if(i < 10)
-			i2 = "0"+i;
-		
-		RankManager.TeamCount++;
-		String team = i2+"team-"+RankManager.TeamCount;
 		
 		String suffix = "", prefix = "", displayname = "", nameColor = "";
 		
@@ -109,7 +94,7 @@ public class LuckPermsRanks {
 		
 		// Register the player with all the collected data
 		try {
-			Teams.addPlayer(p, prefix, suffix, nameColor, team, chat, displayname);
+			Teams.addPlayer(p, prefix, suffix, nameColor, chat, displayname, weight);
 			return true;
 		}catch (Exception e) {
 			// If somehow something does no work, send a error message to configure the rank properly.

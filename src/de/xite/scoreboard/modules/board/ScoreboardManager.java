@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -245,9 +246,11 @@ public class ScoreboardManager {
 			ScoreboardManager.get(board);
 	}
 	public static void unregisterAllScoreboards() {
-		for(Entry<String, ScoreboardManager> sm : scoreboards.entrySet()) {
-			String name = sm.getKey();
-			unregister(ScoreboardManager.get(name));
+		for(Iterator<ScoreboardManager> iterator = scoreboards.values().iterator(); iterator.hasNext();) {
+			ScoreboardManager sm = iterator.next();
+			for(BukkitTask task : sm.scheduler)
+				task.cancel();
+			iterator.remove();
 		}
 	}
 }

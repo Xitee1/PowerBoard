@@ -16,7 +16,6 @@ import de.xite.scoreboard.utils.Teams;
 public class RankManager {
 	static PowerBoard pl = PowerBoard.pl;
 	
-	public static int TeamCount = 0;
 	public static ArrayList<Player> updateDelay = new ArrayList<>();
 	
 	public static boolean register(Player p) {
@@ -27,30 +26,18 @@ public class RankManager {
 			// Use PowerBoardAPI as perm system
 			TeamSetEvent tse = new TeamSetEvent(p);
 			Bukkit.getPluginManager().callEvent(tse);
-			if (!tse.isCancelled()) {
-				String team;
-				int i = tse.getWeight();
-				String i2 = ""+i;
-				if(i < 10)
-					i2 = "0"+i;
-				TeamCount++;
-				team = i2+"team-"+TeamCount;
-				
-				Teams.addPlayer(p, tse.getPrefix(), tse.getSuffix(), tse.getNameColorChar(), team, tse.getChatPrefix(), tse.getPlaceholderName());
+			if(!tse.isCancelled()) {
+				Teams.addPlayer(p, tse.getPrefix(), tse.getSuffix(), tse.getNameColorChar(), tse.getChatPrefix(), tse.getPlaceholderName(), tse.getWeight());
 			}
 			return true;
 			
 		}else {
 			//--- Other PermSystems ---//
-			int i = 0;
+			int weight = 0;
 			for(String line : pl.getConfig().getConfigurationSection("ranks.list").getValues(false).keySet()) {
 				if(!line.contains(".")) {
-					String i2 = ""+i;
-					if(i < 10)
-						i2 = "0"+i;
 					
 					String permission = pl.getConfig().getString("ranks.list."+line+".permission");
-					String team;
 					
 					//--- LuckPerms (without API) ---//
 					if(ExternalPlugins.luckPerms != null && pl.getConfig().getString("ranks.permissionsystem").equalsIgnoreCase("luckperms")) {
@@ -62,9 +49,8 @@ public class RankManager {
 						if(LuckPermsRanks.isPlayerInGroup(p, permission)) {
 							if(PowerBoard.debug)
 								pl.getLogger().info("The player "+p.getName()+" has now the rank (luckperms): Prefix: "+prefix+"; Suffix: "+suffix+"; Group: "+permission);
-							TeamCount++;
-							team = i2+"team-"+TeamCount;
-							Teams.addPlayer(p, prefix, suffix, nameColor, team, chatPrefix, placeholderName);
+
+							Teams.addPlayer(p, prefix, suffix, nameColor, chatPrefix, placeholderName, weight);
 							Teams t = Teams.get(p);
 							t.setPlaceholderName(t.getNameColor()+t.getPlaceholderName());
 							return true;
@@ -80,24 +66,17 @@ public class RankManager {
 							if(PowerBoard.debug)
 								pl.getLogger().info("The player "+p.getName()+" has now the rank (permission/none): Prefix: "+prefix+"; Suffix: "+suffix+"; Permission: "+permission);
 							
-							TeamCount++;
-							team = i2+"team-"+TeamCount;
-							
-							Teams.addPlayer(p, prefix, suffix, nameColor, team, chatPrefix, placeholderName);
+							Teams.addPlayer(p, prefix, suffix, nameColor, chatPrefix, placeholderName, weight);
 							Teams t = Teams.get(p);
 							t.setPlaceholderName(t.getNameColor()+t.getPlaceholderName());
 							return true;
 						}
 					}
-					i++;
+					weight++;
 				}
 			}
 			if(Teams.get(p) == null && !pl.getConfig().getString("ranks.permissionsystem").equalsIgnoreCase("api")) {
-				String i2 = ""+i;
-				if(i < 10) {
-					i2 = "0"+i;
-				}
-				Teams.addPlayer(p, "", "", "f", i2+"team-noRank", "noRank", null);
+				Teams.addPlayer(p, "", "", "f", "noRank", null, -5555); // -5555 = error code for no rank
 				pl.getLogger().warning("The player "+p.getName()+" has no Rank! Make sure that he has the correct permissions.");
 			}
 		}
