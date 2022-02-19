@@ -24,6 +24,7 @@ import net.md_5.bungee.api.ChatColor;
 public class ScoreboardCommand implements CommandExecutor, TabCompleter {
 	String designLine = PowerBoard.pr+ChatColor.GRAY+"X"+ChatColor.YELLOW+""+ChatColor.STRIKETHROUGH+"-----"+ChatColor.GOLD+"Scoreboard"+ChatColor.YELLOW+""+ChatColor.STRIKETHROUGH+"-----"+ChatColor.GRAY+"X";
 	PowerBoard pl = PowerBoard.pl;
+	boolean reloadDelay = false;
 	
 	@Override
 	public boolean onCommand(CommandSender s, Command arg1, String arg2, String[] args) {
@@ -51,6 +52,17 @@ public class ScoreboardCommand implements CommandExecutor, TabCompleter {
 
 		}else if(args.length == 1 && (args[0].equalsIgnoreCase("reload") || args[0].equalsIgnoreCase("rl"))) {
 			if(!(s instanceof Player) || (s instanceof Player && ((Player) s).hasPermission("powerboard.reload"))) {
+				if(reloadDelay) {
+					s.sendMessage(PowerBoard.pr+ChatColor.RED+"Please wait 2 seconds for the next reload.");
+					return true;
+				}
+				reloadDelay = true;
+				Bukkit.getScheduler().runTaskLater(pl, new Runnable() {
+					@Override
+					public void run() {
+						reloadDelay = false;
+					}
+				}, 40);
 				s.sendMessage(PowerBoard.pr+ChatColor.GRAY+"Reloading "+ChatColor.YELLOW+"config"+ChatColor.GRAY+"...");
 				Config.loadConfig();
 				if(PowerBoard.pl.getConfig().getBoolean("scoreboard")) {
