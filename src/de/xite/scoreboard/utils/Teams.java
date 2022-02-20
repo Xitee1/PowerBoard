@@ -38,7 +38,6 @@ public class Teams {
 		this.teamName = String.format("%03d", weight)
 				+"team-"
 				+TeamCount;
-		PowerBoard.pl.getLogger().info("Team: "+teamName);
 	}
 	public static Teams addPlayer(Player p, String prefix, String suffix, String nameColor, String chatPrefix, String placeholderName, int weight) {
 		Teams teams = new Teams(p, prefix, suffix, nameColor, chatPrefix, placeholderName, weight);
