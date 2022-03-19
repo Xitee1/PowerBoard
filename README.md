@@ -21,13 +21,17 @@ It is already really powerful. But of course there are also always a few bugs. S
 Click [here](https://github.com/Xitee1/PowerBoard/wiki/How-to-use-the-API).
 
 # Donate
+### PayPal
+
 [![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/donate?hosted_button_id=6XBBMV2PAQT5S)
 
 
-Bitcoin: bc1q6eh8mpkyu5pne7m72f4lyh6fw4k4ugpvzjfljd
+### Bitcoin
+
+Address: bc1q6eh8mpkyu5pne7m72f4lyh6fw4k4ugpvzjfljd
 
 ![image](https://user-images.githubusercontent.com/59659167/147228233-1b2ed89c-f9ab-499a-862a-30a9520cd7c6.png)
 
 Note to Bitcoin:
 1. I hope this works. I have a Bitcoin wallet and know how to use it. But I'm not exactly an expert.
-2. I can't give you the Donator rank in the Discord server because.. well.. it's anonym, so I can't verify you actually donated.
+2. You only get the Discord "Donator" rank if you donate with PP.
