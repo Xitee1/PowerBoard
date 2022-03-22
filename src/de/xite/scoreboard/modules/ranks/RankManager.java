@@ -85,6 +85,7 @@ public class RankManager {
 	}
 	public static void setTablistRanks(Player p) {
 		delay(p, 120);
+		
 		// Set all players that are online for the new player
 		for(Player all : Bukkit.getOnlinePlayers()) {
 			if(all != p) {
@@ -98,17 +99,8 @@ public class RankManager {
 					String suffix = teams.getSuffix();
 					ChatColor nameColor = teams.getNameColor();
 					
-					if(PowerBoard.aboveMC_1_13) {
-						if(prefix.length() != 0)
-							t.setPrefix(prefix.substring(0, Math.min(prefix.length(), 64)));
-						if(suffix.length() != 0)
-							t.setSuffix(suffix.substring(0, Math.min(suffix.length(), 64)));
-					}else {
-						if(prefix.length() != 0)
-							t.setPrefix(prefix.substring(0, Math.min(prefix.length(), 16)));
-						if(suffix.length() != 0)
-							t.setSuffix(suffix.substring(0, Math.min(suffix.length(), 16)));
-					}
+					setPrefixSuffix(p, t, prefix, suffix);
+					
 					if(PowerBoard.aboveMC_1_13 && nameColor != null)
 						t.setColor(nameColor);
 						
@@ -121,9 +113,10 @@ public class RankManager {
 		Teams teams = Teams.get(p);
 		// Set the new player for all players that are online
 		if(teams != null) {
+			ChatColor nameColor = teams.getNameColor();
 			String prefix = teams.getPrefix();
 			String suffix = teams.getSuffix();
-			ChatColor nameColor = teams.getNameColor();
+			
 			if(pl.getConfig().getBoolean("ranks.useUnlimitedLongRanks"))
 				p.setPlayerListName(prefix+p.getDisplayName()+suffix);
 			
@@ -132,22 +125,15 @@ public class RankManager {
 				if(t == null)
 					t = all.getScoreboard().registerNewTeam(teams.getTeamName());
 				
-				if(PowerBoard.aboveMC_1_13) {
-					if(prefix.length() != 0)
-						t.setPrefix(prefix.substring(0, Math.min(prefix.length(), 64)));
-					if(suffix.length() != 0)
-						t.setSuffix(suffix.substring(0, Math.min(suffix.length(), 64)));
-				}else {
-					if(prefix.length() != 0)
-						t.setPrefix(prefix.substring(0, Math.min(prefix.length(), 16)));
-					if(suffix.length() != 0)
-						t.setSuffix(suffix.substring(0, Math.min(suffix.length(), 16)));
-				}
+				setPrefixSuffix(p, t, prefix, suffix);
+
+				
 				if(nameColor != null && PowerBoard.aboveMC_1_13)
 					t.setColor(nameColor);
 				
 				t.addEntry(p.getName());
 			}
+
 		}else
 			pl.getLogger().severe("Did not set "+p.getName()+"'s rank for the already online players");
 		if(PowerBoard.debug)
@@ -164,35 +150,63 @@ public class RankManager {
 			if(teams != null) {
 				String prefix = teams.getPrefix();
 				String suffix = teams.getSuffix();
-				ChatColor nameColor = teams.getNameColor();
+				
 				if(pl.getConfig().getBoolean("ranks.useUnlimitedLongRanks"))
 					p.setPlayerListName(prefix+p.getDisplayName()+suffix);
 				
-				for(Player all : Bukkit.getOnlinePlayers()) {
-					Team t = all.getScoreboard().getTeam(teams.getTeamName());
-					if(t == null)
-						t = all.getScoreboard().registerNewTeam(teams.getTeamName());
+				if(teams != null) {
+					ChatColor nameColor = teams.getNameColor();
 					
-					if(PowerBoard.aboveMC_1_13) {
-						if(prefix.length() != 0)
-							t.setPrefix(prefix.substring(0, Math.min(prefix.length(), 64)));
-						if(suffix.length() != 0)
-							t.setSuffix(suffix.substring(0, Math.min(suffix.length(), 64)));
-					}else {
-						if(prefix.length() != 0)
-							t.setPrefix(prefix.substring(0, Math.min(prefix.length(), 16)));
-						if(suffix.length() != 0)
-							t.setSuffix(suffix.substring(0, Math.min(suffix.length(), 16)));
+					for(Player all : Bukkit.getOnlinePlayers()) {
+						Team t = all.getScoreboard().getTeam(teams.getTeamName());
+						if(t == null)
+							t = all.getScoreboard().registerNewTeam(teams.getTeamName());
+						
+						setPrefixSuffix(p, t, prefix, suffix);
+						
+						if(nameColor != null && PowerBoard.aboveMC_1_13)
+							t.setColor(nameColor);
+						t.addEntry(p.getName());
 					}
-					if(nameColor != null && PowerBoard.aboveMC_1_13)
-						t.setColor(nameColor);
-					t.addEntry(p.getName());
 				}
 			}
+
 		}catch (Exception e) {}
 		if(PowerBoard.debug)
 			pl.getLogger().info("Tablist ranks updated for player "+p.getName()+"!");
 		return true;
+	}
+	
+	
+	public static void setPrefixSuffix(Player p, Team t, String prefix, String suffix) {
+		if(!pl.getConfig().getBoolean("ranks.useUnlimitedLongRanks")) {
+			if(!PowerBoard.debug) {
+				try {
+					if(prefix.length() != 0)
+						t.setPrefix(prefix);
+					if(suffix.length() != 0)
+						t.setSuffix(suffix);
+					p.setPlayerListName(null);
+				}catch (IllegalArgumentException e) {
+					if(PowerBoard.aboveMC_1_13) {
+						t.setPrefix(ChatColor.RED+"Error: too long - see console | ");
+						PowerBoard.pl.getLogger().severe(p.getName()+"'s prefix/suffix is too long! The length is limited by Minecraft to 64 chars. Prefix: "+prefix+" --- Suffix: "+suffix);
+					}else {
+						PowerBoard.pl.getLogger().severe(p.getName()+"'s prefix is too long! The length is limited by Minecraft to 16 chars."
+								+ "If you update your server to 1.13+, the limit will be increased to 64 chars. Prefix: "+prefix+" --- Suffix: "+suffix);
+					}
+				}
+			}else {
+				if(prefix.length() != 0)
+					t.setPrefix(prefix);
+				if(suffix.length() != 0)
+					t.setSuffix(suffix);
+				p.setPlayerListName(null);
+			}
+		}else {
+			t.setPrefix("");
+			t.setSuffix("");
+		}
 	}
 
 	private static void delay(Player p, int i) {

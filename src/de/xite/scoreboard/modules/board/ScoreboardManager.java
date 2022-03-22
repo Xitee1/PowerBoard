@@ -78,18 +78,18 @@ public class ScoreboardManager {
 				if(cfg.getStringList(id+".scores") != null && !cfg.getStringList(id+".scores").isEmpty()) {
 					
 					// Add all animations
-	        		scores.put(id, new ArrayList<String>());
-	        		scores.get(id).addAll(cfg.getStringList(id+".scores")); 
-	        		
-	        		// Migrate from old syntax
-	        		if(cfg.getInt(id+".wait") != 0) {
-	        			cfg.set(id+".speed", cfg.getInt(id+".wait"));
-	        			cfg.set(id+".wait", null);
-	        		}
-	        		
-	        		// Start the animation
+					scores.put(id, new ArrayList<String>());
+					scores.get(id).addAll(cfg.getStringList(id+".scores")); 
+					
+					// Migrate from old syntax
+					if(cfg.getInt(id+".wait") != 0) {
+						cfg.set(id+".speed", cfg.getInt(id+".wait"));
+						cfg.set(id+".wait", null);
+					}
+					
+					// Start the animation
 					startScoreAnimation(id, cfg.getInt(id+".speed"));
-	    		}
+				}
 			}catch (Exception e) {}
 		}
 		if(scores.size() > 14) // Check if more than 14 scores
@@ -110,6 +110,13 @@ public class ScoreboardManager {
 	
 	// ---- Start the animations ---- //
 	private void startTitleAnimation(int speed) {
+		if(title.size() == 0) {
+			PowerBoard.pl.getLogger().severe("Could not load scoreboard title for scoreboard \""+name+"\"!");
+			PowerBoard.pl.getLogger().severe("Disabling plugin...");
+			PowerBoard.pl.getServer().getPluginManager().disablePlugin(PowerBoard.pl);
+			return;
+		}
+		
 		currentTitle = title.get(0);
 		
 		// check if scheduler is needed (don't schedule if higher than '9999')

@@ -20,33 +20,35 @@ public class ScoreTitleUtils {
 			return false;
 		if(usePlaceholders)
 			title = Placeholders.replace(p, title);
-		if(PowerBoard.aboveMC_1_13) { // In version 1.13 you can use up to 128 chars in the title
-			if(title.length() <= 128) {
+		
+		if(!PowerBoard.debug) {
+			try {
 				obj.setDisplayName(title);
-			}else {
-				obj.setDisplayName(ChatColor.RED+"-too long-");
-				PowerBoard.pl.getLogger().warning(" ");
-				PowerBoard.pl.getLogger().warning("-> The scoreboard title is too long! The limit is 128 chars!");
-				if(sm != null)
-					PowerBoard.pl.getLogger().warning("-> Scoreboard: "+sm.getName());
-				PowerBoard.pl.getLogger().warning("-> Title: "+title);
-				PowerBoard.pl.getLogger().warning("-> Player: "+p.getName());
-				PowerBoard.pl.getLogger().warning(" ");
+			}catch (IllegalArgumentException e) {
+				if(PowerBoard.aboveMC_1_13) { // In version 1.13 you can use up to 128 chars in the title
+					obj.setDisplayName(ChatColor.RED+"Error: too long - see console");
+					PowerBoard.pl.getLogger().warning(" ");
+					PowerBoard.pl.getLogger().warning("-> The scoreboard title is too long! The limit is 128 chars!");
+					if(sm != null)
+						PowerBoard.pl.getLogger().warning("-> Scoreboard: "+sm.getName());
+					PowerBoard.pl.getLogger().warning("-> Title: "+title);
+					PowerBoard.pl.getLogger().warning("-> Player: "+p.getName());
+					PowerBoard.pl.getLogger().warning(" ");
+				}else {
+					obj.setDisplayName(ChatColor.RED+"| too long |");
+					PowerBoard.pl.getLogger().warning(" ");
+					PowerBoard.pl.getLogger().warning("-> The scoreboard title is too long! The limit is 16 chars!");
+					if(sm != null)
+						PowerBoard.pl.getLogger().warning("-> Scoreboard: "+sm.getName());
+					PowerBoard.pl.getLogger().warning("-> Title: "+title);
+					PowerBoard.pl.getLogger().warning("-> Player: "+p.getName());
+					PowerBoard.pl.getLogger().warning(" ");
+				}
 			}
 		}else {
-			if(title.length() <= 16) {
-				obj.setDisplayName(title);
-			}else {
-				obj.setDisplayName(ChatColor.RED+"-too long-");
-				PowerBoard.pl.getLogger().warning(" ");
-				PowerBoard.pl.getLogger().warning("-> The scoreboard title is too long! The limit is 16 chars!");
-				if(sm != null)
-					PowerBoard.pl.getLogger().warning("-> Scoreboard: "+sm.getName());
-				PowerBoard.pl.getLogger().warning("-> Title: "+title);
-				PowerBoard.pl.getLogger().warning("-> Player: "+p.getName());
-				PowerBoard.pl.getLogger().warning(" ");
-			}
+			obj.setDisplayName(title);
 		}
+		
 		if(sm != null)
 			sm.addPlayer(p);
 		return true;
@@ -128,14 +130,14 @@ public class ScoreTitleUtils {
 			sm.addPlayer(p);
 		return true;
 	}
-	public static String[] getScorePrefixSuffix(String score, int limit, int maxchars) {
+	public static String[] getScorePrefixSuffix(String score, int split, int maxchars) {
 		String[] s = new String[2];
 		if(score.length() > maxchars)
 			return null;
 		
-		if(score.length() > limit) { // Check if suffix is needed
-			s[0] = score.substring(0, limit); // Set the prefix
-			s[1] = ChatColor.getLastColors(s[0])+score.substring(limit); // Get last color + everything in the string after 16 chars
+		if(score.length() > split) { // Check if suffix is needed
+			s[0] = score.substring(0, split); // Set the prefix
+			s[1] = ChatColor.getLastColors(s[0])+score.substring(split); // Get last color + everything in the string after the split
 		}else {
 			s[0] = score; // Set prefix
 			s[1] = "";

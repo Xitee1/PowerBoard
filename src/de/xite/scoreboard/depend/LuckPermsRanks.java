@@ -1,6 +1,9 @@
 package de.xite.scoreboard.depend;
 
+import java.io.File;
+
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import de.xite.scoreboard.main.ExternalPlugins;
@@ -64,22 +67,25 @@ public class LuckPermsRanks {
 			return false;
 		}
 		
+		YamlConfiguration configNoDefaultSettings = YamlConfiguration.loadConfiguration(new File(PowerBoard.pluginfolder+"/config.yml"));
+		
 		// Get chat for the rank
-		String chat = pl.getConfig().getString("ranks.luckperms-api.chat-prefix."+group.getName());
+		String chat = configNoDefaultSettings.getString("ranks.luckperms-api.chat-prefix."+group.getName());
 		
 		// Get fallback chat if rank is not listed
 		if(chat == null)
-			chat = pl.getConfig().getString("ranks.luckperms-api.chat-layout");
+			chat = configNoDefaultSettings.getString("ranks.luckperms-api.chat-layout");
 		
-		// Check for old configuration - support will be removed on v3.6
+		// Deprecated - Check for old configuration - support will be removed on v3.7
 		if(chat == null) 
-			chat = pl.getConfig().getString("ranks.luckperms.chat-layout");
+			chat = configNoDefaultSettings.getString("ranks.luckperms.chat-layout");
 		
 		// Send error if there is no chat prefix
 		if(chat == null) {
 			pl.getLogger().severe("The rank "+group.getName()+" has no valid chat configuration! Please check the setting 'chat-layout' in the 'luckperms-api' section in your config.yml.");
 			chat = "(invalid config) %name% > ";
 		}
+		pl.getLogger().info("Chat: "+chat);
 		chat = chat.replace("%prefix%", prefix).replace("%name%", p.getName()).replace("%displayname%", displayname); // Replace chat placeholders
 		
 		// Get the name color and check for errors
@@ -89,7 +95,7 @@ public class LuckPermsRanks {
 				pl.getLogger().warning("Could not get the last color from "+p.getName()+"'s prefix. Make sure to put a colorcode at the end of your prefix, otherwise the player name will always be white.");
 			
 			// Send debug about the rank
-			pl.getLogger().info("The player "+p.getName()+" has the rank (luckperms-api): Name: "+group.getName()+"; Prefix: "+prefix+"; Suffix: "+suffix+"; NamColor: "+nameColor+"; Displayname: "+displayname+"; Group: "+group.getName());
+			pl.getLogger().info("The player "+p.getName()+" has the rank (luckperms-api): Group: "+group.getName()+"; Prefix: "+prefix+"; Suffix: "+suffix+"; NamColor: "+nameColor+"; Displayname: "+displayname+"; Chatprefix: "+chat);
 		}
 		
 		// Register the player with all the collected data

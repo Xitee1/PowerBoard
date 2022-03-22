@@ -295,7 +295,7 @@ public class Placeholders {
             }
             return matcher.appendTail(buffer).toString();
     	}catch (Exception e) {
-    		pl.getLogger().severe("You have an invalid HEX-Color-Code! Please check the syntax! String: "+message);
+    		pl.getLogger().severe("You have an invalid HEX-Color-Code! Please check the syntax! Text: "+message);
     		return "InvalidHexColor";
 		}
     }

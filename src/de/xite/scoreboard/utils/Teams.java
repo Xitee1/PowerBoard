@@ -73,6 +73,7 @@ public class Teams {
 			PowerBoard.pl.getLogger().severe("An error occured while reading the prefix of the player "+p.getName()+"! Maybe a wrong setting in your config.yml?");
 			return null;
 		}
+		
 		return Placeholders.replace(this.p, this.prefix);
 	}
 	public String getSuffix() {
@@ -84,6 +85,7 @@ public class Teams {
 			PowerBoard.pl.getLogger().severe("An error occured while reading the suffix of the player "+p.getName()+"! Maybe a wrong setting in your config.yml?");
 			return null;
 		}
+		
 		return Placeholders.replace(this.p, this.suffix);
 	}
 	public ChatColor getNameColor() {
