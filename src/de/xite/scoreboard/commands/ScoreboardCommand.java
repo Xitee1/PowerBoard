@@ -10,21 +10,14 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
-import de.xite.scoreboard.main.Config;
 import de.xite.scoreboard.main.PowerBoard;
-import de.xite.scoreboard.modules.board.ScoreboardManager;
 import de.xite.scoreboard.modules.board.ScoreboardPlayer;
-import de.xite.scoreboard.modules.ranks.RankManager;
-import de.xite.scoreboard.modules.tablist.TablistManager;
-import de.xite.scoreboard.modules.tablist.TablistPlayer;
-import de.xite.scoreboard.utils.Teams;
 import de.xite.scoreboard.utils.Updater;
 import net.md_5.bungee.api.ChatColor;
 
 public class ScoreboardCommand implements CommandExecutor, TabCompleter {
 	String designLine = PowerBoard.pr+ChatColor.GRAY+"X"+ChatColor.YELLOW+""+ChatColor.STRIKETHROUGH+"-----"+ChatColor.GOLD+"Scoreboard"+ChatColor.YELLOW+""+ChatColor.STRIKETHROUGH+"-----"+ChatColor.GRAY+"X";
 	PowerBoard pl = PowerBoard.pl;
-	boolean reloadDelay = false;
 	
 	@Override
 	public boolean onCommand(CommandSender s, Command arg1, String arg2, String[] args) {
@@ -40,10 +33,12 @@ public class ScoreboardCommand implements CommandExecutor, TabCompleter {
 				if(ScoreboardPlayer.players.containsKey(p)) {
 					ScoreboardPlayer.removeScoreboard(p);
 					s.sendMessage(PowerBoard.pr+ChatColor.GRAY+"Disabled scoreboard.");
+					return true;
 				}else {
 					if(pl.getConfig().getBoolean("scoreboard")) {
 						ScoreboardPlayer.setScoreboard(p);
 						s.sendMessage(PowerBoard.pr+ChatColor.GRAY+"Enabled scoreboard.");
+						return true;
 					}else
 						s.sendMessage(PowerBoard.pr+ChatColor.RED+"Sorry, but the scoreboard is disabled on this server.");
 				}
@@ -52,48 +47,8 @@ public class ScoreboardCommand implements CommandExecutor, TabCompleter {
 
 		}else if(args.length == 1 && (args[0].equalsIgnoreCase("reload") || args[0].equalsIgnoreCase("rl"))) {
 			if(!(s instanceof Player) || (s instanceof Player && ((Player) s).hasPermission("powerboard.reload"))) {
-				if(reloadDelay) {
-					s.sendMessage(PowerBoard.pr+ChatColor.RED+"Please wait 2 seconds for the next reload.");
-					return true;
-				}
-				reloadDelay = true;
-				Bukkit.getScheduler().runTaskLater(pl, new Runnable() {
-					@Override
-					public void run() {
-						reloadDelay = false;
-					}
-				}, 40);
-				s.sendMessage(PowerBoard.pr+ChatColor.GRAY+"Reloading "+ChatColor.YELLOW+"config"+ChatColor.GRAY+"...");
-				Config.loadConfig();
-				if(PowerBoard.pl.getConfig().getBoolean("scoreboard")) {
-					s.sendMessage(PowerBoard.pr+ChatColor.GRAY+"Reloading "+ChatColor.YELLOW+"scoreboards"+ChatColor.GRAY+"...");
-					ScoreboardManager.unregisterAllScoreboards();
-					ScoreboardManager.registerAllScoreboards();
-					ScoreboardPlayer.players.clear();
-					Bukkit.getScheduler().runTaskLater(pl, new Runnable() {
-						@Override
-						public void run() {
-							for(Player all : Bukkit.getOnlinePlayers())
-								ScoreboardPlayer.setScoreboard(all);		
-						}
-					}, 5);
-				}
-				if(pl.getConfig().getBoolean("tablist.ranks")) {
-					for(Player all : Bukkit.getOnlinePlayers()) {
-						Teams.removePlayer(all);
-						RankManager.register(all);
-						RankManager.setTablistRanks(all);
-					}
-				}
-
-				if(PowerBoard.pl.getConfig().getBoolean("tablist.text")) {
-					s.sendMessage(PowerBoard.pr+ChatColor.GRAY+"Reloading "+ChatColor.YELLOW+"tablist"+ChatColor.GRAY+"...");
-					TablistManager.unregisterAllTablists();
-					TablistManager.registerAllTablists();
-					for(Player all : Bukkit.getOnlinePlayers())
-						TablistPlayer.addPlayer(all, null);
-				}
-				s.sendMessage(PowerBoard.pr+ChatColor.GREEN+"Plugin reloaded!");
+				PowerBoard.reloadConfigs(s);
+				return true;
 			}else
 				s.sendMessage(PowerBoard.pr+ChatColor.RED+"Sorry, but you need the permission "+ChatColor.GRAY+"powerboard.reload"+ChatColor.RED+" to do that.");
 		}else if(args.length >= 1 && args[0].equalsIgnoreCase("update")) {
@@ -103,6 +58,7 @@ public class ScoreboardCommand implements CommandExecutor, TabCompleter {
 					if(Updater.downloadFile()) {
 						s.sendMessage(PowerBoard.pr+ChatColor.GREEN+"Download finished! Stopping server..");
 						Bukkit.spigot().restart();
+						return true;
 					}else {
 						s.sendMessage(PowerBoard.pr+ChatColor.RED+"Download failed! Please try it later again. More infos are available in the console.");
 					}
@@ -117,9 +73,11 @@ public class ScoreboardCommand implements CommandExecutor, TabCompleter {
 				if(PowerBoard.debug) {
 					PowerBoard.debug = false;
 					s.sendMessage(PowerBoard.pr+ChatColor.RED+"Disabled debug.");
+					return true;
 				}else {
 					PowerBoard.debug = true;
 					s.sendMessage(PowerBoard.pr+ChatColor.GREEN+"Enabled debug.");
+					return true;
 				}
 			}else
 				s.sendMessage(PowerBoard.pr+ChatColor.RED+"Sorry, but you need the permission "+ChatColor.GRAY+"powerboard.debug"+ChatColor.RED+" to do that.");

@@ -84,7 +84,7 @@ public class RankManager {
 		return false;
 	}
 	public static void setTablistRanks(Player p) {
-		delay(p, 120);
+		delay(p, 20*15);
 		
 		// Set all players that are online for the new player
 		for(Player all : Bukkit.getOnlinePlayers()) {
@@ -141,10 +141,15 @@ public class RankManager {
 	}
 	
 	public static boolean updateTablistRanks(Player p) {
+		// Only let it update every 15 seconds
 		if(updateDelay.contains(p))
 			return false;
-		delay(p, 40);
+		delay(p, 20*15);
 		
+		// Update the team info
+		RankManager.register(p);
+		
+		// Apply the new team infos to the prefix & suffix
 		try {
 			Teams teams = Teams.get(p);
 			if(teams != null) {
@@ -171,12 +176,33 @@ public class RankManager {
 				}
 			}
 
-		}catch (Exception e) {}
-		if(PowerBoard.debug)
-			pl.getLogger().info("Tablist ranks updated for player "+p.getName()+"!");
+		}catch (Exception e) {
+			pl.getLogger().warning("There was an error whilst updating "+p.getName()+"'s rank!");
+		}
+			
 		return true;
 	}
 	
+	public static void startTablistRanksUpdateScheduler() {
+		int interval = pl.getConfig().getInt("ranks.update-interval");
+		if(interval == -1) // Do not auto-update ranks if set to -1
+			return;
+		
+		interval = interval * 20 * 60; // Convert minutes to ticks
+		
+		Bukkit.getScheduler().runTaskTimerAsynchronously(pl, new Runnable() {
+			@Override
+			public void run() {
+				for(Player all : Bukkit.getOnlinePlayers()) {
+					updateTablistRanks(all);
+				}
+			}
+		}, interval, interval);
+	}
+	
+	//-------//
+	// Utils //
+	//-------//
 	
 	public static void setPrefixSuffix(Player p, Team t, String prefix, String suffix) {
 		if(!pl.getConfig().getBoolean("ranks.useUnlimitedLongRanks")) {

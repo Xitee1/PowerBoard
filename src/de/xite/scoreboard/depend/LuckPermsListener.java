@@ -17,7 +17,7 @@ public class LuckPermsListener {
 
       	// subscribe to an event using a lambda
         eventBus.subscribe(UserDataRecalculateEvent.class, e -> {
-        	Bukkit.getScheduler().runTaskLater(pl, new Runnable() {// Run a half second later that it doesn't update if a player disconnects
+        	Bukkit.getScheduler().runTaskLater(pl, new Runnable() { // Run half a second later, so it won't update if a player disconnects
 				@Override
 				public void run() {
 					Player p = Bukkit.getPlayer(e.getUser().getUniqueId());
@@ -25,12 +25,9 @@ public class LuckPermsListener {
 			  			Teams teams = Teams.get(p);
 						if(teams != null) {
 				        	if(pl.getConfig().getBoolean("tablist.ranks")) {
-				        		if(!RankManager.updateDelay.contains(p)) {
-					        		RankManager.register(p);
-					        		RankManager.updateTablistRanks(p);
-				        			pl.getLogger().info("(LuckPermsAPI) Updated player "+p.getName());
-				        		}
-				        	}
+				        		if(RankManager.updateTablistRanks(p))
+				        			pl.getLogger().info("(LuckPermsAPI) Updated "+p.getName()+"'s rank");
+			        		}
 				        }
 					}
 				}

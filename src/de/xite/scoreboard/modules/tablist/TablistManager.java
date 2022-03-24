@@ -20,7 +20,6 @@ public class TablistManager {
 	// All registered scoreboards
 	public static HashMap<String, TablistManager> tablists = new HashMap<>();
 	
-	
 	// The name of the tablist
 	String name;
 	
@@ -134,7 +133,7 @@ public class TablistManager {
 			if(speed < 1)
 				speed = 1;
 			scheduler.add(
-				Bukkit.getScheduler().runTaskTimer(pl, new Runnable() {
+				Bukkit.getScheduler().runTaskTimerAsynchronously(pl, new Runnable() {
 					int step = 0;
 					@Override
 					public void run() {
@@ -194,12 +193,14 @@ public class TablistManager {
 	public void unregister() {
 		for(BukkitTask task : scheduler)
 			task.cancel();
+		tablists.remove(name);
 	}
 	public static void unregisterAllTablists() {
-		for(Entry<String, TablistManager> sm : tablists.entrySet()) {
-			String name = sm.getKey();
-			TablistManager.get(name).unregister();
+		for(TablistManager sm : tablists.values()) {
+			for(BukkitTask task : sm.scheduler)
+				task.cancel();
 		}
+		tablists.clear();
 	}
 	public static void registerAllTablists() {
 		/*
