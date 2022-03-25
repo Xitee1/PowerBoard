@@ -40,10 +40,9 @@ public class PowerBoard extends JavaPlugin {
 		pl.getLogger().info("--------------- Loading PowerBoard ---------------");
 		pl.getLogger().info(" ");
 		
-		version = getBukkitVersion();
-		
 		// In 1.13+ a lot of things have changed. For example 128 Chars in the scoreboard instead of 32
-		if(PowerBoard.getBukkitVersion().compareTo(new Version("1.13")) >= 0)
+		version = getBukkitVersion();
+		if(version.compareTo(new Version("1.13")) >= 0)
 			aboveMC_1_13 = true;
 		
 		// Migrate from old versions:
@@ -51,6 +50,8 @@ public class PowerBoard extends JavaPlugin {
 		
 		// Load the config - disable plugin if failed
 		if(!Config.loadConfig()) {
+			pl.getLogger().severe("There were errors when loading the configuration! You should see more informations above. Disabling plugin...");
+			sendPluginLoadFailed();
 			Bukkit.getPluginManager().disablePlugin(pl);
 			return;
 		}
@@ -72,6 +73,7 @@ public class PowerBoard extends JavaPlugin {
 				}
 			}
 		});
+		
 
 		
 		// ---- Register commands and events ---- //
@@ -195,13 +197,22 @@ public class PowerBoard extends JavaPlugin {
 	public static Version getBukkitVersion() {
 		if(version != null)
 			return version;
-		String s = Bukkit.getBukkitVersion();
-		String version = s.substring(0, s.lastIndexOf("-R")).replace("_", ".");
-		pl.getLogger().info("Detected Server Version (original): "+s);
-		pl.getLogger().info("Detected Server Version (extracted): "+version);
-		// compareTo: 1 = a is newer than b
-		// compareTo: 0 = equals
-		// compareTo: -1 = a is older than b
-		return new Version(version);
+		try {
+			String s = Bukkit.getBukkitVersion();
+			String version = s.substring(0, s.lastIndexOf("-R")).replace("_", ".");
+			pl.getLogger().info("Detected Server Version (original): "+s);
+			pl.getLogger().info("Detected Server Version (extracted): "+version);
+			return new Version(version);
+		}catch (Exception e) {
+			e.printStackTrace();
+			pl.getLogger().severe("Could not extract MC version! Defaulting to 1.13.");
+			return new Version("1.13");
+		}
+	}
+	
+	public static void sendPluginLoadFailed() {
+		pl.getLogger().severe(" ");
+		pl.getLogger().severe("---- Errors occurred while loading PowerBoard ----");
+		pl.getLogger().severe("--------------------------------------------------");
 	}
 }

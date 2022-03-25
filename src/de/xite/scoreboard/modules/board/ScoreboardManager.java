@@ -54,7 +54,6 @@ public class ScoreboardManager {
 		}
 		YamlConfiguration cfg = Config.loadConfiguration(f);
 		if(cfg == null) {
-			PowerBoard.pl.getLogger().severe("Could not load scoreboard '"+name+"'! This is probably caused by a typing error in your scoreboard config. Check for spaces in the wrong location or other typos. Look closely and use some editor like Notepad++.");
 			unregister(this);
 			return;
 		}

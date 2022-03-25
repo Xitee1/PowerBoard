@@ -9,6 +9,7 @@ import java.io.FileNotFoundException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import de.xite.scoreboard.utils.Placeholders;
+import de.xite.scoreboard.utils.SelfCheck;
 import de.xite.scoreboard.utils.UpgradeVersion;
 
 import org.apache.commons.lang.Validate;
@@ -17,17 +18,27 @@ import org.bukkit.configuration.InvalidConfigurationException;
 public class Config {
 	static PowerBoard pl = PowerBoard.pl;
 	public static boolean loadConfig() {
+		pl.getLogger().info(" ");
+		pl.getLogger().info("Loading configs..");
+		
 		File folder = new File(PowerBoard.pluginfolder);
 		if(folder == null || !folder.isDirectory())
 			folder.mkdirs();
 		
 		// (create) and load config.yml
 		pl.getConfig().options().copyDefaults(true);
+		pl.getConfig().options().parseComments(false);
 		pl.saveDefaultConfig();
 		pl.reloadConfig();
 		
 		// Check if the debug is enabled in the config.yml
 		PowerBoard.debug = pl.getConfig().getBoolean("debug");
+		
+		// Run the SelfCheck for config.yml
+		if(!SelfCheck.checkConfig()) {
+			pl.getLogger().severe("Severe errors have been found in your config.yml! Please check your configuration!");
+			return false;
+		}
 		
 		// Register hex color syntax
 		String s = pl.getConfig().getString("placeholder.hexColorSyntax");
@@ -65,6 +76,9 @@ public class Config {
 		
 		// create default tablist.yml
 		Config.createDefaultTablist();
+		
+		pl.getLogger().info("Configs loaded!");
+		pl.getLogger().info(" ");
 		return true;
 	}
 	
@@ -72,6 +86,7 @@ public class Config {
 	//----------------------//
 	// Create default files //
 	//----------------------//
+	@SuppressWarnings("deprecation")
 	public static void createDefaultScoreboard() {
 		// default scoreboard
 		File file = new File(PowerBoard.pluginfolder+"/scoreboards/scoreboard.yml");
@@ -79,13 +94,21 @@ public class Config {
 			try {
 				file.createNewFile();
 				YamlConfiguration cfg = YamlConfiguration.loadConfiguration(file);
-				cfg.options().header("Here you can customize the scoreboard.\n"
+				String header = "Here you can customize the scoreboard.\n"
 						+ "You can add as many animation steps as you like.\n\n"
 						+ "For every score (line) you can set a different speed.\n"
 						+ "You can set up to 14 scores. For that, just add a new number like \"'7':\"\n\n"
 						+ "If you have static scores (no animations or updates needed): Set the 'speed' value to '9999' or higher. Then the scheduler won't start to save performance.\n"
 						+ "Note: Specify the speed in ticks, not seconds. 20 ticks = one second\n\n"
-						+ "To use multiple scoreboards, read this wiki: https://github.com/Xitee1/PowerBoard/wiki/Create-and-use-multiple-scoreboards\n");
+						+ "To use multiple scoreboards, read this wiki: https://github.com/Xitee1/PowerBoard/wiki/Create-and-use-multiple-scoreboards\n";
+						
+				//if(new Version("1.17").compareTo(PowerBoard.version) == 1) { // For MC Versions 1.18+ we use "setHeader", because "header" is deprecated.
+					cfg.options().header(header);
+				//}else {
+					//cfg.options().setHeader(header);
+				//}
+				
+				
 				//Titel
 				ArrayList<String> title = new ArrayList<String>();
 				title.add("&4PowerBoard");
@@ -300,7 +323,6 @@ public class Config {
 		}
 	}
 	
-	
 	public static YamlConfiguration loadConfiguration(File file) {
 	    Validate.notNull(file, "File cannot be null");
 	 
@@ -309,12 +331,13 @@ public class Config {
 	    try {
 	        config.load(file);
 	    } catch (FileNotFoundException ex) {
-	    	pl.getLogger().severe("Failed to load configuration '"+file+"'! File does not exists.");
+	    	pl.getLogger().severe("Failed to load configuration '"+file.getAbsolutePath()+"'! File does not exists.");
 	        return null;
 	    } catch (IOException ex) {
 	        return null;
 	    } catch (InvalidConfigurationException ex) {
-	    	pl.getLogger().severe("Cannot read configuration '"+file+"'!");
+	    	pl.getLogger().severe("Cannot read configuration '"+file.getAbsolutePath()+"'!");
+	    	pl.getLogger().severe("This is probably caused by a typing error in your scoreboard config. Check for spaces in the wrong location or other typos. Look closely and use some editor like Notepad++.");
 	        return null;
 	    }
 	 

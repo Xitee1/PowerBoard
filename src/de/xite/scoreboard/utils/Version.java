@@ -15,7 +15,12 @@ public class Version implements Comparable<Version> {
             throw new IllegalArgumentException("Invalid version format");
         this.version = version;
     }
-
+    
+	/**
+	 * int = 1: a is newer than b;
+	 * int = 0: equals;
+	 * int = -1: a is older than b
+	 */
     @Override
     public int compareTo(Version that) {
         if(that == null)
