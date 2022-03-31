@@ -24,7 +24,7 @@ public class SelfCheck {
 				pl.getLogger().severe("Skipped SelfCheck -> config.yml does not exist!");
 				return false;
 			}
-			if(new Version("1.18").compareTo(PowerBoard.version) == 0) {
+			if(PowerBoard.version.compareTo(new Version("1.18")) == -1) {
 				pl.getLogger().warning("Skipped SelfCheck. Only works on 1.18+.");
 				return true;
 			}
@@ -51,6 +51,9 @@ public class SelfCheck {
 			 * We need this so we can add a value if something is missing.
 			 * 
 			 */
+			
+			// Preserving the comments when making changes
+			pl.getConfig().options().parseComments(true);
 			
 			FileConfiguration cfg = pl.getConfig();
 			

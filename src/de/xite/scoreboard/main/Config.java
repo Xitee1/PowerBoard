@@ -27,7 +27,6 @@ public class Config {
 		
 		// (create) and load config.yml
 		pl.getConfig().options().copyDefaults(true);
-		pl.getConfig().options().parseComments(false);
 		pl.saveDefaultConfig();
 		pl.reloadConfig();
 		
