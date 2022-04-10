@@ -2,6 +2,7 @@ package de.xite.scoreboard.modules.board;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -58,6 +59,28 @@ public class ScoreboardManager {
 			return;
 		}
 		
+		// --- Migrate from "titel" to "title" ---
+		if(cfg.contains("titel.titles")) {
+			PowerBoard.pl.getLogger().info("Migrating from \"titel\" (german) to \"title\"...");
+			cfg.set("title.titles", cfg.getStringList("titel.titles"));
+			cfg.set("title.speed", cfg.getInt("titel.speed"));
+			
+			cfg.set("titel.titles", null);
+			cfg.set("titel.speed", null);
+			
+			cfg.set("titel.migrated", "The \"titel\" (german) entry has been migrated to \"title\". The title config is now at the bottom of this file. But you can safely copy it up here again. This line/text can be safely deleted.");
+			
+			try {
+				cfg.save(f);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			PowerBoard.pl.getLogger().info("Finished migrating!");
+		}
+		// ---								  ---
+		
+		
 		conditions = cfg.getStringList("conditions");
 		importScores(cfg); // Import all scores
 		importTitle(cfg); // Import the title
@@ -80,12 +103,6 @@ public class ScoreboardManager {
 					scores.put(id, new ArrayList<String>());
 					scores.get(id).addAll(cfg.getStringList(id+".scores")); 
 					
-					// Migrate from old syntax
-					if(cfg.getInt(id+".wait") != 0) {
-						cfg.set(id+".speed", cfg.getInt(id+".wait"));
-						cfg.set(id+".wait", null);
-					}
-					
 					// Start the animation
 					startScoreAnimation(id, cfg.getInt(id+".speed"));
 				}
@@ -95,15 +112,9 @@ public class ScoreboardManager {
 			PowerBoard.pl.getLogger().warning("You have more than 14 scors in you scoreboard! Some scores cannot be displayed! This is a limitation of Minecraft.");
 		
 	}
-	private void importTitle(YamlConfiguration cfg) {
-		// Migrate from old syntax
-		if(cfg.getInt("titel.wait") != 0) {
-			cfg.set("titel.speed", cfg.getInt("titel.wait"));
-			cfg.set("titel.wait", null);
-		}
-		
-		title.addAll(cfg.getStringList("titel.titles"));
-		startTitleAnimation(cfg.getInt("titel.speed"));
+	private void importTitle(YamlConfiguration cfg) {		
+		title.addAll(cfg.getStringList("title.titles"));
+		startTitleAnimation(cfg.getInt("title.speed"));
 	}
 	
 	

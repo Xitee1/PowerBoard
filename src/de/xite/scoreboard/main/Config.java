@@ -150,8 +150,8 @@ public class Config {
 				title.add("&f&mPowerBoard");
 				title.add("&f&o&nPowerBoard");
 				title.add(" ");
-				cfg.addDefault("titel.speed", 6);
-				cfg.addDefault("titel.titles", title);
+				cfg.addDefault("title.speed", 6);
+				cfg.addDefault("title.titles", title);
 				
 				//Scores
 				ArrayList<String> score_1 = new ArrayList<>();
