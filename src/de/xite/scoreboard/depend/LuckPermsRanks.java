@@ -85,7 +85,6 @@ public class LuckPermsRanks {
 			pl.getLogger().severe("The rank "+group.getName()+" has no valid chat configuration! Please check the setting 'chat-layout' in the 'luckperms-api' section in your config.yml.");
 			chat = "(invalid config) %name% > ";
 		}
-		pl.getLogger().info("Chat: "+chat);
 		chat = chat.replace("%prefix%", prefix).replace("%name%", p.getName()).replace("%displayname%", displayname); // Replace chat placeholders
 		
 		// Get the name color and check for errors
