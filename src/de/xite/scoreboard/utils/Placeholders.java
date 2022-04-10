@@ -105,6 +105,11 @@ public class Placeholders {
   		
   		// Player name
   		if(s.contains("%player_name%")) {
+  			s = s.replace("%player_name%", p.getName());
+  		}
+  		
+  		// Player name
+  		if(s.contains("%player_displayname%")) {
   			s = s.replace("%player_name%", p.getDisplayName());
   		}
   			
