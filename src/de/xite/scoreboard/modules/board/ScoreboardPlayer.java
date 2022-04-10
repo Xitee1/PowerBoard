@@ -32,12 +32,16 @@ public class ScoreboardPlayer {
 				obj = board.registerNewObjective("aaa", "bbb");
 		}
 		obj.setDisplaySlot(DisplaySlot.SIDEBAR);
-		ScoreboardManager sm = getMatchingScoreboard(p);
-		if(sm == null)
-			return;
-		sm.addPlayer(p);
-		ScoreTitleUtils.setTitle(p, board, sm.getCurrentTitle(), true, sm);
-		ScoreTitleUtils.setScores(p, board, sm.getCurrentScores(), true, sm);
+		
+		// If the setScoreboard was called through the API, we don't want the config scoreboard to come up
+		if(pl.getConfig().getBoolean("scoreboard")) {
+			ScoreboardManager sm = getMatchingScoreboard(p);
+			if(sm == null)
+				return;
+			sm.addPlayer(p);
+			ScoreTitleUtils.setTitle(p, board, sm.getCurrentTitle(), true, sm);
+			ScoreTitleUtils.setScores(p, board, sm.getCurrentScores(), true, sm);
+		}
 		
 		// ---- Set the scoreboard ---- //
 		p.setScoreboard(board);
