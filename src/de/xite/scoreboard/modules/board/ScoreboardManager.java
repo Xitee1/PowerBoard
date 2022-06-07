@@ -106,7 +106,9 @@ public class ScoreboardManager {
 					// Start the animation
 					startScoreAnimation(id, cfg.getInt(id+".speed"));
 				}
-			}catch (Exception e) {}
+			}catch (IllegalStateException e) {
+			}catch (NumberFormatException e) {
+			}
 		}
 		if(scores.size() > 14) // Check if more than 14 scores
 			PowerBoard.pl.getLogger().warning("You have more than 14 scors in you scoreboard! Some scores cannot be displayed! This is a limitation of Minecraft.");
@@ -215,8 +217,6 @@ public class ScoreboardManager {
 	public void addPlayer(Player p) {
 		if(!players.contains(p))
 			players.add(p);
-		if(ScoreboardPlayer.players.containsKey(p))
-			ScoreboardPlayer.players.remove(p);
 		ScoreboardPlayer.players.put(p, name);
 	}
 	public void removePlayer(Player p) {
@@ -249,7 +249,7 @@ public class ScoreboardManager {
 		FilenameFilter filter = new FilenameFilter() {
 			@Override
 			public boolean accept(File f, String name) {
-				return name.endsWith(".yml");
+				return name.endsWith(".yml") && !name.equals("scoreboard-blacklist.yml");
 			}
 		};
 		File[] files = f.listFiles(filter);
@@ -259,8 +259,11 @@ public class ScoreboardManager {
 			boards.add(s.substring(0, s.lastIndexOf(".yml")));
 		}
 		new ScoreboardPlayer(); // prepare the scoreboard
-		for(String board : boards)
+		for(String board : boards) {
+			PowerBoard.pl.getLogger().info("Registering scoreboard "+board+".");
 			ScoreboardManager.get(board);
+		}
+			
 	}
 	public static void unregisterAllScoreboards() {
 		for(Iterator<ScoreboardManager> iterator = scoreboards.values().iterator(); iterator.hasNext();) {

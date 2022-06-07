@@ -10,6 +10,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
+import de.xite.scoreboard.main.Config;
 import de.xite.scoreboard.main.PowerBoard;
 import de.xite.scoreboard.modules.board.ScoreboardPlayer;
 import de.xite.scoreboard.utils.Updater;
@@ -31,7 +32,7 @@ public class ScoreboardCommand implements CommandExecutor, TabCompleter {
 			Player p = (Player) s;
 			if(p.hasPermission("powerboard.toggle.scoreboard")) {
 				if(ScoreboardPlayer.players.containsKey(p)) {
-					ScoreboardPlayer.removeScoreboard(p);
+					ScoreboardPlayer.removeScoreboard(p, true);
 					s.sendMessage(PowerBoard.pr+ChatColor.GRAY+"Disabled scoreboard.");
 					return true;
 				}else {
@@ -47,7 +48,7 @@ public class ScoreboardCommand implements CommandExecutor, TabCompleter {
 
 		}else if(args.length == 1 && (args[0].equalsIgnoreCase("reload") || args[0].equalsIgnoreCase("rl"))) {
 			if(!(s instanceof Player) || (s instanceof Player && ((Player) s).hasPermission("powerboard.reload"))) {
-				PowerBoard.reloadConfigs(s);
+				Config.reloadConfigs(s);
 				return true;
 			}else
 				s.sendMessage(PowerBoard.pr+ChatColor.RED+"Sorry, but you need the permission "+ChatColor.GRAY+"powerboard.reload"+ChatColor.RED+" to do that.");

@@ -10,6 +10,7 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
+import de.xite.scoreboard.main.Config;
 import de.xite.scoreboard.main.PowerBoard;
 
 public class ScoreboardPlayer {
@@ -23,11 +24,27 @@ public class ScoreboardPlayer {
 		Scoreboard board = p.getScoreboard();
 		
 		// ---- Scoreboard ---- //
-		removeScoreboard(p);
+		removeScoreboard(p, false);
+		if(Config.scoreboardBlacklistedWorlds.contains(p.getWorld().getName())) {
+			
+			// We need to give the player some scoreboard even if it is obiously not displayed currently because 
+			// if the player leaves the blacklisted world the scoreboard would not appear again.
+			if(!players.containsKey(p) && pl.getConfig().getBoolean("scoreboard")) {
+				ScoreboardManager sm = getMatchingScoreboard(p);
+				if(sm != null)
+					sm.addPlayer(p);
+			}
+			
+			if(PowerBoard.debug)
+				pl.getLogger().info("Did not set "+p.getName()+"'s scoreboard because he is in a blacklisted world.");
+			return;
+		}
+		
+		
 		Objective obj = board.getObjective(DisplaySlot.SIDEBAR);
 		if(obj == null) {
 			if(PowerBoard.aboveMC_1_13) {
-				obj = board.registerNewObjective("aaa", "bbb", "SBPlugin");
+				obj = board.registerNewObjective("aaa", "bbb", "PowerBoard");
 			}else
 				obj = board.registerNewObjective("aaa", "bbb");
 		}
@@ -38,6 +55,9 @@ public class ScoreboardPlayer {
 			ScoreboardManager sm = getMatchingScoreboard(p);
 			if(sm == null)
 				return;
+			
+			if(players.containsKey(p))
+				ScoreboardManager.get(players.get(p)).removePlayer(p);
 			sm.addPlayer(p);
 			ScoreTitleUtils.setTitle(p, board, sm.getCurrentTitle(), true, sm);
 			ScoreTitleUtils.setScores(p, board, sm.getCurrentScores(), true, sm);
@@ -60,10 +80,7 @@ public class ScoreboardPlayer {
 		if(PowerBoard.debug)
 			pl.getLogger().info("Changing "+p.getName()+"'s scoreboard to "+newScoreboard.getName());
 		// Check if update is required
-		if(!players.get(p).equals(newScoreboard.getName())) {
-			removeScoreboard(p);
-			setScoreboard(p);
-		}
+		setScoreboard(p);
 	}
 	public static ScoreboardManager getMatchingScoreboard(Player p) {
 		/* Config syntax: 
@@ -116,11 +133,12 @@ public class ScoreboardPlayer {
 		}
 		return ScoreboardManager.get(pl.getConfig().getString("scoreboard-default"));
 	}
-	public static void removeScoreboard(Player p) {
-		if(!players.containsKey(p))
-			return;
-		ScoreboardManager.get(players.get(p)).removePlayer(p);
-		players.remove(p);
+	public static void removeScoreboard(Player p, boolean removeFromSBManager) {
+		if(removeFromSBManager) {
+			if(!players.containsKey(p))
+				return;
+			ScoreboardManager.get(players.get(p)).removePlayer(p);
+		}
 		
 		for(Team t : p.getScoreboard().getTeams()) {
 			if(t.getName().startsWith("score-"))
@@ -131,6 +149,6 @@ public class ScoreboardPlayer {
 		if(obj != null)
 			obj.unregister();
 		if(PowerBoard.debug)
-			pl.getLogger().info("Removed "+p.getName()+"'s scoreboard");
+			pl.getLogger().info("Removed "+p.getName()+"'s (old) scoreboard");
 	}
 }

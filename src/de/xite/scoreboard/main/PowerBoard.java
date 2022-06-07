@@ -132,7 +132,7 @@ public class PowerBoard extends JavaPlugin {
 		
 		// Unregister scoreboards and teams
 		for(Player all : Bukkit.getOnlinePlayers()) {
-			ScoreboardPlayer.removeScoreboard(all);
+			ScoreboardPlayer.removeScoreboard(all, true);
 			Teams.removePlayer(all);
 		}
 		ScoreboardManager.unregisterAllScoreboards();
@@ -141,57 +141,7 @@ public class PowerBoard extends JavaPlugin {
 		if(pl.getConfig().getBoolean("tablist.text"))
 			TablistManager.unregisterAllTablists();
 	}
-	
-	private static boolean reloadDelay = false;
-	public static void reloadConfigs(CommandSender s) {
-		Bukkit.getScheduler().runTaskAsynchronously(pl, new Runnable() {
-			@Override
-			public void run() {
-				if(reloadDelay) {
-					s.sendMessage(PowerBoard.pr+ChatColor.RED+"Please wait 2 seconds before your reload again.");
-					return;
-				}
-				reloadDelay = true;
-				Bukkit.getScheduler().runTaskLater(pl, new Runnable() {
-					@Override
-					public void run() {
-						reloadDelay = false;
-					}
-				}, 40);
-				s.sendMessage(PowerBoard.pr+ChatColor.GRAY+"Reloading "+ChatColor.YELLOW+"config"+ChatColor.GRAY+"...");
-				Config.loadConfig();
-				if(PowerBoard.pl.getConfig().getBoolean("scoreboard")) {
-					s.sendMessage(PowerBoard.pr+ChatColor.GRAY+"Reloading "+ChatColor.YELLOW+"scoreboards"+ChatColor.GRAY+"...");
-					ScoreboardManager.unregisterAllScoreboards();
-					ScoreboardManager.registerAllScoreboards();
-					ScoreboardPlayer.players.clear();
-					Bukkit.getScheduler().runTaskLater(pl, new Runnable() {
-						@Override
-						public void run() {
-							for(Player all : Bukkit.getOnlinePlayers())
-								ScoreboardPlayer.setScoreboard(all);		
-						}
-					}, 5);
-				}
-				if(pl.getConfig().getBoolean("tablist.ranks")) {
-					for(Player all : Bukkit.getOnlinePlayers()) {
-						Teams.removePlayer(all);
-						RankManager.register(all);
-						RankManager.setTablistRanks(all);
-					}
-				}
 
-				if(PowerBoard.pl.getConfig().getBoolean("tablist.text")) {
-					s.sendMessage(PowerBoard.pr+ChatColor.GRAY+"Reloading "+ChatColor.YELLOW+"tablist"+ChatColor.GRAY+"...");
-					TablistManager.unregisterAllTablists();
-					TablistManager.registerAllTablists();
-					for(Player all : Bukkit.getOnlinePlayers())
-						TablistPlayer.addPlayer(all, null);
-				}
-				s.sendMessage(PowerBoard.pr+ChatColor.GREEN+"Plugin reloaded!");
-			}
-		});
-	}
 	
     // ---- Utils ---- //
 	public static Version getBukkitVersion() {

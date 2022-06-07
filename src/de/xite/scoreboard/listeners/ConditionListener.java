@@ -28,10 +28,7 @@ public class ConditionListener implements Listener {
 		Bukkit.getScheduler().runTaskLater(PowerBoard.pl, new Runnable() {
 			@Override
 			public void run() {
-				if(ScoreboardManager.scoreboards.size() > 1) { // Only if there are more than 1 scoreboards
-					ScoreboardPlayer.updateScoreboard(e.getPlayer());
-				}
-				
+				ScoreboardPlayer.updateScoreboard(e.getPlayer());
 			}
 		}, 5);
 	}

@@ -7,16 +7,29 @@ import java.util.List;
 import java.io.FileNotFoundException;
 
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 
+import de.xite.scoreboard.modules.board.ScoreboardManager;
+import de.xite.scoreboard.modules.board.ScoreboardPlayer;
+import de.xite.scoreboard.modules.ranks.RankManager;
+import de.xite.scoreboard.modules.tablist.TablistManager;
+import de.xite.scoreboard.modules.tablist.TablistPlayer;
 import de.xite.scoreboard.utils.Placeholders;
 import de.xite.scoreboard.utils.SelfCheck;
+import de.xite.scoreboard.utils.Teams;
 import de.xite.scoreboard.utils.UpgradeVersion;
+import net.md_5.bungee.api.ChatColor;
 
 import org.apache.commons.lang.Validate;
+import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
 
 public class Config {
 	static PowerBoard pl = PowerBoard.pl;
+
+	public static ArrayList<String> scoreboardBlacklistedWorlds = new ArrayList<>();
+	
 	public static boolean loadConfig() {
 		pl.getLogger().info(" ");
 		pl.getLogger().info("Loading configs..");
@@ -69,6 +82,7 @@ public class Config {
 		
 		// create default scoreboard.yml
 		createDefaultScoreboard();
+		createScoreboardBlacklist();
 		
 		// migrate from tablist_footer.yml and tablist_header.yml - migration will be removed on v3.6
 		UpgradeVersion.upgradeDoubleTabConfig();
@@ -85,8 +99,7 @@ public class Config {
 	//----------------------//
 	// Create default files //
 	//----------------------//
-	@SuppressWarnings("deprecation")
-	public static void createDefaultScoreboard() {
+	private static void createDefaultScoreboard() {
 		// default scoreboard
 		File file = new File(PowerBoard.pluginfolder+"/scoreboards/scoreboard.yml");
 		if(!file.exists()) {
@@ -245,8 +258,35 @@ public class Config {
 		}
 	}
 	
+	private static void createScoreboardBlacklist() {
+		File file = new File(PowerBoard.pluginfolder+"/scoreboards/scoreboard-blacklist.yml");
+		if(!file.exists()) {
+			try {
+				file.createNewFile();
+				YamlConfiguration cfg = YamlConfiguration.loadConfiguration(file);
+				cfg.options().header("Here you can define worlds in which the scoreboard will be disabled.\n");
+				
+				ArrayList<String> list = new ArrayList<>();
+				list.add("disabledWorld1");
+				list.add("disabledWorld2");
+				cfg.set("worlds", list);
+				
+				//Save
+				cfg.options().copyDefaults(true);
+				cfg.save(file);
+			} catch (IOException e) {
+				e.printStackTrace();
+				pl.getLogger().severe("Could not create the tablist.yml file. Has the plugin/server write permissions?");
+				return;
+			}
+		}
+		YamlConfiguration cfg = Config.loadConfiguration(file);
+		scoreboardBlacklistedWorlds.clear(); // In case this is only a config reload the old worlds would remain in the list
+		scoreboardBlacklistedWorlds.addAll(cfg.getStringList("worlds"));
+	}
+	
 	// Create tablist.yml file
-	public static void createDefaultTablist() {
+	private static void createDefaultTablist() {
 		File file = new File(PowerBoard.pluginfolder+"/tablist.yml");
 		if(!file.exists()) {
 			try {
@@ -341,5 +381,56 @@ public class Config {
 	    }
 	 
 	    return config;
+	}
+	
+	private static boolean reloadDelay = false;
+	public static void reloadConfigs(CommandSender s) {
+		Bukkit.getScheduler().runTaskAsynchronously(pl, new Runnable() {
+			@Override
+			public void run() {
+				if(reloadDelay) {
+					s.sendMessage(PowerBoard.pr+ChatColor.RED+"Please wait 2 seconds before your reload again.");
+					return;
+				}
+				reloadDelay = true;
+				Bukkit.getScheduler().runTaskLater(pl, new Runnable() {
+					@Override
+					public void run() {
+						reloadDelay = false;
+					}
+				}, 40);
+				s.sendMessage(PowerBoard.pr+ChatColor.GRAY+"Reloading "+ChatColor.YELLOW+"config"+ChatColor.GRAY+"...");
+				Config.loadConfig();
+				if(PowerBoard.pl.getConfig().getBoolean("scoreboard")) {
+					s.sendMessage(PowerBoard.pr+ChatColor.GRAY+"Reloading "+ChatColor.YELLOW+"scoreboards"+ChatColor.GRAY+"...");
+					ScoreboardManager.unregisterAllScoreboards();
+					ScoreboardManager.registerAllScoreboards();
+					ScoreboardPlayer.players.clear();
+					Bukkit.getScheduler().runTaskLater(pl, new Runnable() {
+						@Override
+						public void run() {
+							for(Player all : Bukkit.getOnlinePlayers())
+								ScoreboardPlayer.setScoreboard(all);		
+						}
+					}, 5);
+				}
+				if(pl.getConfig().getBoolean("tablist.ranks")) {
+					for(Player all : Bukkit.getOnlinePlayers()) {
+						Teams.removePlayer(all);
+						RankManager.register(all);
+						RankManager.setTablistRanks(all);
+					}
+				}
+
+				if(PowerBoard.pl.getConfig().getBoolean("tablist.text")) {
+					s.sendMessage(PowerBoard.pr+ChatColor.GRAY+"Reloading "+ChatColor.YELLOW+"tablist"+ChatColor.GRAY+"...");
+					TablistManager.unregisterAllTablists();
+					TablistManager.registerAllTablists();
+					for(Player all : Bukkit.getOnlinePlayers())
+						TablistPlayer.addPlayer(all, null);
+				}
+				s.sendMessage(PowerBoard.pr+ChatColor.GREEN+"Plugin reloaded!");
+			}
+		});
 	}
 }

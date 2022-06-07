@@ -24,7 +24,7 @@ public class PowerBoardAPI {
 		ScoreboardPlayer.setScoreboard(p);
 	}
 	public static void removeScoreboard(Player p) {
-		ScoreboardPlayer.removeScoreboard(p);
+		ScoreboardPlayer.removeScoreboard(p, false);
 	}
 	
 	public static void setScoreboardTitle(Player p, String title, boolean usePlaceholders) {
