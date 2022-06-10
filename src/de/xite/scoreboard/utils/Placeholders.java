@@ -41,7 +41,17 @@ public class Placeholders {
 		
 		// Placeholder API if PAPI prefered
 		if(ExternalPlugins.hasPapi && !pl.getConfig().getBoolean("prefer-plugin-placeholders"))
-  			s = PlaceholderAPI.setPlaceholders(p, s);
+			try {
+				s = PlaceholderAPI.setPlaceholders(p, s);
+			}catch (Exception e) {
+				if(PowerBoard.debug) {
+					pl.getLogger().severe("Could not replace PAPI Placeholders in String "+s+". This is NOT a bug of PowerBoard!"
+							+ "Instead it is caused by an external plugin that provides placeholders to PAPI."
+							+ "It just says PowerBoard there, because PB requests these placeholders from PAPI and therefore is the root cause.");
+					e.printStackTrace();
+				}
+			}
+  			
 		
 		// ---- Deprecated ---- //
   		if(s.contains("%tps%")) {
