@@ -108,4 +108,24 @@ public class UpgradeVersion {
 			}
 		}
 	}
+	public static void updateTitelTitle(YamlConfiguration cfg, File f) {
+		if(cfg.contains("titel.titles")) {
+			PowerBoard.pl.getLogger().info("Migrating from \"titel\" (german) to \"title\"...");
+			cfg.set("title.titles", cfg.getStringList("titel.titles"));
+			cfg.set("title.speed", cfg.getInt("titel.speed"));
+			
+			cfg.set("titel.titles", null);
+			cfg.set("titel.speed", null);
+			
+			cfg.set("titel.migrated", "The \"titel\" (german) entry has been migrated to \"title\". The title config is now at the bottom of this file. But you can safely copy it up here again. This line/text can be safely deleted.");
+			
+			try {
+				cfg.save(f);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			PowerBoard.pl.getLogger().info("Finished migrating!");
+		}
+	}
 }
