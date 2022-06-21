@@ -21,7 +21,7 @@ public class PowerBoardAPI {
 	// ---- Scoreboard ---- //
 	// ---------------------//
 	public static void setScoreboard(Player p) {
-		ScoreboardPlayer.setScoreboard(p);
+		ScoreboardPlayer.setScoreboard(p, true);
 	}
 	public static void removeScoreboard(Player p) {
 		ScoreboardPlayer.removeScoreboard(p, false);

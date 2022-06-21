@@ -93,39 +93,43 @@ public class ScoreTitleUtils {
 			score = Placeholders.replace(p, score);
 		
 		// ---- Set all scores ---- //
-		if(PowerBoard.aboveMC_1_13) { // In version 1.13 you can use up to 64 chars in prefix/suffix
-			// Set the score for 1.13+
-			String[] s = getScorePrefixSuffix(score, 64, 128);
-			if(s == null) {
-				team.setPrefix(ChatColor.RED+"-too long-");
-				PowerBoard.pl.getLogger().warning(" ");
-				PowerBoard.pl.getLogger().warning("-> The scoreboard-score is too long! The limit is 128 chars!");
-				if(sm != null)
-					PowerBoard.pl.getLogger().warning("-> Scoreboard: "+sm.getName());
-				PowerBoard.pl.getLogger().warning("-> Score: "+score);
-				PowerBoard.pl.getLogger().warning("-> Player: "+p.getName());
-				PowerBoard.pl.getLogger().warning(" ");
+		// If the scoreboard switches too fast (especially blacklisted) sometimes there will this error in the console: IllegalStateException: Unregistered scoreboard component
+		// We can just ignore it because it doesn't seems like it has no effect other than that this error is beeing displayed.
+		try {
+			if(PowerBoard.aboveMC_1_13) { // In version 1.13 you can use up to 64 chars in prefix/suffix
+				// Set the score for 1.13+
+				String[] s = getScorePrefixSuffix(score, 64, 128);
+				if(s == null) {
+					team.setPrefix(ChatColor.RED+"-too long-");
+					PowerBoard.pl.getLogger().warning(" ");
+					PowerBoard.pl.getLogger().warning("-> The scoreboard-score is too long! The limit is 128 chars!");
+					if(sm != null)
+						PowerBoard.pl.getLogger().warning("-> Scoreboard: "+sm.getName());
+					PowerBoard.pl.getLogger().warning("-> Score: "+score);
+					PowerBoard.pl.getLogger().warning("-> Player: "+p.getName());
+					PowerBoard.pl.getLogger().warning(" ");
+				}else {
+					team.setPrefix(s[0]);
+					team.setSuffix(s[1]);
+				}
 			}else {
-				team.setPrefix(s[0]);
-				team.setSuffix(s[1]);
+				// Set the score for 1.12-
+				String[] s = getScorePrefixSuffix(score, 16, 30);
+				if(s == null) {
+					team.setPrefix(ChatColor.RED+"-too long-");
+					PowerBoard.pl.getLogger().warning(" ");
+					PowerBoard.pl.getLogger().warning("-> The scoreboard-score is too long! The limit is 30 chars!");
+					if(sm != null)
+						PowerBoard.pl.getLogger().warning("-> Scoreboard: "+sm.getName());
+					PowerBoard.pl.getLogger().warning("-> Score: \""+score+"\", chars: "+score.length());
+					PowerBoard.pl.getLogger().warning("-> Player: "+p.getName());
+					PowerBoard.pl.getLogger().warning(" ");
+				}else {
+					team.setPrefix(s[0]);
+					team.setSuffix(s[1]);
+				}
 			}
-		}else {
-			// Set the score for 1.12-
-			String[] s = getScorePrefixSuffix(score, 16, 30);
-			if(s == null) {
-				team.setPrefix(ChatColor.RED+"-too long-");
-				PowerBoard.pl.getLogger().warning(" ");
-				PowerBoard.pl.getLogger().warning("-> The scoreboard-score is too long! The limit is 30 chars!");
-				if(sm != null)
-					PowerBoard.pl.getLogger().warning("-> Scoreboard: "+sm.getName());
-				PowerBoard.pl.getLogger().warning("-> Score: \""+score+"\", chars: "+score.length());
-				PowerBoard.pl.getLogger().warning("-> Player: "+p.getName());
-				PowerBoard.pl.getLogger().warning(" ");
-			}else {
-				team.setPrefix(s[0]);
-				team.setSuffix(s[1]);
-			}
-		}
+		}catch (IllegalStateException e) { }
 		if(sm != null)
 			sm.addPlayer(p);
 		return true;

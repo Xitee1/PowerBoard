@@ -28,7 +28,7 @@ import org.bukkit.configuration.InvalidConfigurationException;
 public class Config {
 	static PowerBoard pl = PowerBoard.pl;
 
-	public static ArrayList<String> scoreboardBlacklistedWorlds = new ArrayList<>();
+	public static ArrayList<String> scoreboardBlacklistConditions = new ArrayList<>();
 	
 	public static boolean loadConfig() {
 		pl.getLogger().info(" ");
@@ -264,25 +264,25 @@ public class Config {
 			try {
 				file.createNewFile();
 				YamlConfiguration cfg = YamlConfiguration.loadConfiguration(file);
-				cfg.options().header("Here you can define worlds in which the scoreboard will be disabled.\n");
+				cfg.options().header("If the conditions match, no scoreboard will be displayed.\n"
+						+ "Here is explained what conditions there are and how to use them: https://github.com/Xitee1/PowerBoard/wiki/Create-and-use-multiple-scoreboards\n");
 				
 				ArrayList<String> list = new ArrayList<>();
-				list.add("disabledWorld1");
-				list.add("disabledWorld2");
-				cfg.set("worlds", list);
+				list.add("world:disabled_sb_world");
+				cfg.set("conditions", list);
 				
 				//Save
 				cfg.options().copyDefaults(true);
 				cfg.save(file);
 			} catch (IOException e) {
 				e.printStackTrace();
-				pl.getLogger().severe("Could not create the tablist.yml file. Has the plugin/server write permissions?");
+				pl.getLogger().severe("Could not create the scoreboard-blacklist.yml file. Has the plugin/server write permissions?");
 				return;
 			}
 		}
 		YamlConfiguration cfg = Config.loadConfiguration(file);
-		scoreboardBlacklistedWorlds.clear(); // In case this is only a config reload the old worlds would remain in the list
-		scoreboardBlacklistedWorlds.addAll(cfg.getStringList("worlds"));
+		scoreboardBlacklistConditions.clear(); // In case this is only a config reload the old conditions would remain in the list
+		scoreboardBlacklistConditions.addAll(cfg.getStringList("conditions"));
 	}
 	
 	// Create tablist.yml file
@@ -410,7 +410,7 @@ public class Config {
 						@Override
 						public void run() {
 							for(Player all : Bukkit.getOnlinePlayers())
-								ScoreboardPlayer.setScoreboard(all);		
+								ScoreboardPlayer.setScoreboard(all, false);		
 						}
 					}, 5);
 				}

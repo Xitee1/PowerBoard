@@ -2,7 +2,6 @@ package de.xite.scoreboard.modules.board;
 
 import java.io.File;
 import java.io.FilenameFilter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -16,6 +15,7 @@ import org.bukkit.scheduler.BukkitTask;
 
 import de.xite.scoreboard.main.Config;
 import de.xite.scoreboard.main.PowerBoard;
+import de.xite.scoreboard.utils.UpgradeVersion;
 
 public class ScoreboardManager {
 	// All registered scoreboards
@@ -47,6 +47,11 @@ public class ScoreboardManager {
 	private ScoreboardManager(String name) {
 		this.name = name;
 		
+		if(name == "blacklisted") {
+			PowerBoard.pl.getLogger().severe("Sorry, but the scoreboard name 'blacklisted' is reserved for the system. Please use another name.");
+			return;
+		}
+		
 		// Get the config
 		File f = new File(PowerBoard.pluginfolder+"/scoreboards/"+name+".yml");
 		if(!f.exists()) {
@@ -60,24 +65,7 @@ public class ScoreboardManager {
 		}
 		
 		// --- Migrate from "titel" to "title" ---
-		if(cfg.contains("titel.titles")) {
-			PowerBoard.pl.getLogger().info("Migrating from \"titel\" (german) to \"title\"...");
-			cfg.set("title.titles", cfg.getStringList("titel.titles"));
-			cfg.set("title.speed", cfg.getInt("titel.speed"));
-			
-			cfg.set("titel.titles", null);
-			cfg.set("titel.speed", null);
-			
-			cfg.set("titel.migrated", "The \"titel\" (german) entry has been migrated to \"title\". The title config is now at the bottom of this file. But you can safely copy it up here again. This line/text can be safely deleted.");
-			
-			try {
-				cfg.save(f);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			
-			PowerBoard.pl.getLogger().info("Finished migrating!");
-		}
+		UpgradeVersion.updateTitelTitle(cfg, f);
 		// ---								  ---
 		
 		
@@ -197,15 +185,10 @@ public class ScoreboardManager {
 						String score = scores.get(id).get(count); // get the current score (text)
 						int i = scores.size()-id-1;
 						currentScores.replace(id, score);
-						for(Player p : players) {
-							
-							//Bukkit.getServer().getScheduler().runTask(PowerBoard.pl, new Runnable(){
-								//@Override
-								//public void run() {
-									ScoreTitleUtils.setScore(p, p.getScoreboard(), score, i, true, get(name)); // set the score
-								//}
-							//});
-						}
+						
+						for(Player p : players)
+							ScoreTitleUtils.setScore(p, p.getScoreboard(), score, i, true, get(name)); // set the score
+						
 						if(count >= scores.get(id).size()-1) {
 							count = 0;
 						}else

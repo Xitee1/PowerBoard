@@ -37,7 +37,7 @@ public class ScoreboardCommand implements CommandExecutor, TabCompleter {
 					return true;
 				}else {
 					if(pl.getConfig().getBoolean("scoreboard")) {
-						ScoreboardPlayer.setScoreboard(p);
+						ScoreboardPlayer.setScoreboard(p, false);
 						s.sendMessage(PowerBoard.pr+ChatColor.GRAY+"Enabled scoreboard.");
 						return true;
 					}else

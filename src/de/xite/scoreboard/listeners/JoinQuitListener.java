@@ -49,7 +49,7 @@ public class JoinQuitListener implements Listener {
 						RankManager.register(p);
 				
 				if(pl.getConfig().getBoolean("scoreboard"))
-					ScoreboardPlayer.setScoreboard(p);
+					ScoreboardPlayer.setScoreboard(p, false);
 				
 				if(pl.getConfig().getBoolean("tablist.ranks"))
 					RankManager.setTablistRanks(p);

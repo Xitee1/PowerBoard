@@ -2,6 +2,7 @@ package de.xite.scoreboard.modules.board;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map.Entry;
 
 import org.bukkit.entity.Player;
@@ -20,23 +21,16 @@ public class ScoreboardPlayer {
 	public static HashMap<Player, String> players = new HashMap<>(); // Player; Scoreboard config file name
 	
 	@SuppressWarnings("deprecation")
-	public static void setScoreboard(Player p) {
+	public static void setScoreboard(Player p, boolean API) {
 		Scoreboard board = p.getScoreboard();
 		
 		// ---- Scoreboard ---- //
 		removeScoreboard(p, false);
-		if(Config.scoreboardBlacklistedWorlds.contains(p.getWorld().getName())) {
-			
-			// We need to give the player some scoreboard even if it is obiously not displayed currently because 
-			// if the player leaves the blacklisted world the scoreboard would not appear again.
-			if(!players.containsKey(p) && pl.getConfig().getBoolean("scoreboard")) {
-				ScoreboardManager sm = getMatchingScoreboard(p);
-				if(sm != null)
-					sm.addPlayer(p);
-			}
+		if(checkConditions(p, Config.scoreboardBlacklistConditions)) {
+			players.put(p, "blacklisted");
 			
 			if(PowerBoard.debug)
-				pl.getLogger().info("Did not set "+p.getName()+"'s scoreboard because he is in a blacklisted world.");
+				pl.getLogger().info("Did not set "+p.getName()+"'s scoreboard because blacklist-conditions match.");
 			return;
 		}
 		
@@ -50,14 +44,17 @@ public class ScoreboardPlayer {
 		}
 		obj.setDisplaySlot(DisplaySlot.SIDEBAR);
 		
-		// If the setScoreboard was called through the API, we don't want the config scoreboard to come up
-		if(pl.getConfig().getBoolean("scoreboard")) {
+		if(!API) {
 			ScoreboardManager sm = getMatchingScoreboard(p);
 			if(sm == null)
 				return;
 			
-			if(players.containsKey(p))
-				ScoreboardManager.get(players.get(p)).removePlayer(p);
+			if(players.containsKey(p)) {
+				if(players.get(p).equals("blacklisted")) {
+					players.remove(p);
+				}else
+					ScoreboardManager.get(players.get(p)).removePlayer(p);
+			}
 			sm.addPlayer(p);
 			ScoreTitleUtils.setTitle(p, board, sm.getCurrentTitle(), true, sm);
 			ScoreTitleUtils.setScores(p, board, sm.getCurrentScores(), true, sm);
@@ -80,7 +77,7 @@ public class ScoreboardPlayer {
 		if(PowerBoard.debug)
 			pl.getLogger().info("Changing "+p.getName()+"'s scoreboard to "+newScoreboard.getName());
 		// Check if update is required
-		setScoreboard(p);
+		setScoreboard(p, false);
 	}
 	public static ScoreboardManager getMatchingScoreboard(Player p) {
 		/* Config syntax: 
@@ -100,38 +97,43 @@ public class ScoreboardPlayer {
 				pl.getLogger().severe("Could not get scoreboard '"+sm.getName()+"'! Probably a config error.");
 				return null;
 			}
-			for(String condition : sm.conditions) { // For all "OR" conditions (lines)
-				ArrayList<String> andConditions = new ArrayList<>();
-				if(condition.contains(" AND ")) {
-					for(String s : condition.split(" AND "))
-						andConditions.add(s);
-				}else
-					andConditions.add(condition);
-				
-				boolean match = true;
-				for(String s : andConditions) {
-					if(s.startsWith("world:")) {
-						String value = s.split("world:")[1];
-						if(!(p.getLocation().getWorld().getName().equalsIgnoreCase(value)))
-							match = false;
-					}
-					if(s.startsWith("permission:")) {
-						String value = s.split("permission:")[1];
-						if(!(p.hasPermission(value)))
-							match = false;
-					}
-					if(s.startsWith("gamemode:")) {
-						String value = s.split("gamemode:")[1];
-						if(!(p.getGameMode().name().equalsIgnoreCase(value)))
-							match = false;
-					}
-				}
-				
-				if(match == true)
-					return sm;
-			}
+			if(checkConditions(p, sm.conditions))
+				return sm;
 		}
 		return ScoreboardManager.get(pl.getConfig().getString("scoreboard-default"));
+	}
+	public static boolean checkConditions(Player p, List<String> conditions) {
+		for(String condition : conditions) { // For all "OR" conditions (lines)
+			ArrayList<String> andConditions = new ArrayList<>();
+			if(condition.contains(" AND ")) {
+				for(String s : condition.split(" AND "))
+					andConditions.add(s);
+			}else
+				andConditions.add(condition);
+			
+			boolean match = true;
+			for(String s : andConditions) {
+				if(s.startsWith("world:")) {
+					String value = s.split("world:")[1];
+					if(!(p.getLocation().getWorld().getName().equalsIgnoreCase(value)))
+						match = false;
+				}
+				if(s.startsWith("permission:")) {
+					String value = s.split("permission:")[1];
+					if(!(p.hasPermission(value)))
+						match = false;
+				}
+				if(s.startsWith("gamemode:")) {
+					String value = s.split("gamemode:")[1];
+					if(!(p.getGameMode().name().equalsIgnoreCase(value)))
+						match = false;
+				}
+			}
+			
+			if(match == true)
+				return true;
+		}
+		return false;
 	}
 	public static void removeScoreboard(Player p, boolean removeFromSBManager) {
 		if(removeFromSBManager) {
