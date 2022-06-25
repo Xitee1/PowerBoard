@@ -30,7 +30,12 @@ public class LuckPermsRanks {
 		// Get the team name
 		int weight = 0;
 		try {
-			weight = 999 - group.getWeight().getAsInt();
+			int i = group.getWeight().getAsInt();
+			if(i > 999) {
+				PowerBoard.pl.getLogger().severe("Sorry, but PB does not support LP weights higher than 999! Please use smaller values.");
+				return false;
+			}
+			weight = 999 - i;
 		}catch (Exception e) {
 			PowerBoard.pl.getLogger().severe("---------------------------------------------------------------------------------------------------------------------------");
 			PowerBoard.pl.getLogger().severe("The group \""+group.getName()+"\" has no weight! Please set the weight with /lp group <group> setweight <weight>");
