@@ -49,8 +49,14 @@ public class ConditionListener implements Listener {
 			for(String s : andConditions) {
 				if(s.startsWith("world:")) {
 					String value = s.split("world:")[1];
-					if(!(p.getLocation().getWorld().getName().equalsIgnoreCase(value)))
-						match = false;
+					String world = p.getLocation().getWorld().getName();
+					if(value.endsWith("*")) {
+						// Ignore everything after the * to allow to check for all maps that begin with the value and ignore the rest of it
+						if(!(world.startsWith(value.substring(0, value.length()-2))));
+							match = false;
+					}else
+						if(!(world.equalsIgnoreCase(value)))
+							match = false;
 				}
 				if(s.startsWith("permission:")) {
 					String value = s.split("permission:")[1];
