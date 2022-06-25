@@ -111,7 +111,7 @@ public class PowerBoard extends JavaPlugin {
 						RankManager.setTablistRanks(all);
 					
 					if(pl.getConfig().getBoolean("scoreboard"))
-						ScoreboardPlayer.setScoreboard(all, false);
+						ScoreboardPlayer.setScoreboard(all, false, null);
 					
 					if(pl.getConfig().getBoolean("tablist.text"))
 						TablistPlayer.addPlayer(all, null);

@@ -96,7 +96,7 @@ public class ScoreboardManager {
 					
 					// Check if the numbers are in the correct ordner and begin with 0
 					if(id != i) {
-						pl.getLogger().warning("Your scores of scoreboard "+name+" do not begin with 0 or have an incorrect order. Please check that the numbers begin with 0 (not 1) and are sequentially. This could cause problems with your scoreboard!");
+						pl.getLogger().warning("Your scores of scoreboard '"+name+"' do not begin with 0 or have an incorrect order. Please check that the numbers begin with 0 (not 1) and are sequentially. This could cause problems with your scoreboard!");
 						id = i;
 					}
 					i++;
@@ -256,12 +256,10 @@ public class ScoreboardManager {
 			String s = files[i].getName();
 			boards.add(s.substring(0, s.lastIndexOf(".yml")));
 		}
-		new ScoreboardPlayer(); // prepare the scoreboard
 		for(String board : boards) {
-			pl.getLogger().info("Registering scoreboard "+board+".");
 			ScoreboardManager.get(board);
+			pl.getLogger().info("Registered scoreboard "+board+".");
 		}
-			
 	}
 	public static void unregisterAllScoreboards() {
 		for(Iterator<ScoreboardManager> iterator = scoreboards.values().iterator(); iterator.hasNext();) {

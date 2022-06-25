@@ -19,11 +19,11 @@ public class ScoreboardAPI {
 	/**
 	 * API has changed.
 	 *
-	 * @deprecated use {@link PowerBoardAPI.setScoreboard(p)} instead.  
+	 * @deprecated use {@link PowerBoardAPI.setScoreboard(p, custom)} instead.  
 	 */
 	@Deprecated
 	public static void enableScoreboard(Player p, String s) {
-		PowerBoardAPI.setScoreboard(p);
+		PowerBoardAPI.setScoreboard(p, true, null);
 	}
 	/**
 	 * API has changed.
@@ -41,7 +41,7 @@ public class ScoreboardAPI {
 	 */
 	@Deprecated
 	public static void enableScoreboard(Player p) {
-		PowerBoardAPI.setScoreboard(p);
+		PowerBoardAPI.setScoreboard(p, true, null);
 	}
 	/**
 	 * API has changed.
@@ -63,7 +63,7 @@ public class ScoreboardAPI {
 	 */
 	@Deprecated
 	public static void setScoreboard(Player p) {
-		PowerBoardAPI.setScoreboard(p);
+		PowerBoardAPI.setScoreboard(p, true, null);
 	}
 	/**
 	 * API has changed.

@@ -1,5 +1,7 @@
 package de.xite.scoreboard.listeners;
 
+import java.util.ArrayList;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -8,6 +10,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import de.xite.scoreboard.api.PowerBoardAPI;
 import de.xite.scoreboard.main.PowerBoard;
 import de.xite.scoreboard.modules.board.ScoreboardPlayer;
 import de.xite.scoreboard.modules.ranks.RankManager;
@@ -49,15 +52,28 @@ public class JoinQuitListener implements Listener {
 						RankManager.register(p);
 				
 				if(pl.getConfig().getBoolean("scoreboard"))
-					ScoreboardPlayer.setScoreboard(p, false);
+					ScoreboardPlayer.setScoreboard(p, false, null);
 				
 				if(pl.getConfig().getBoolean("tablist.ranks"))
 					RankManager.setTablistRanks(p);
 				
 				if(pl.getConfig().getBoolean("tablist.text"))
 					TablistPlayer.addPlayer(p, null);
+				
+				PowerBoardAPI.setScoreboard(p, false, null);
+				PowerBoardAPI.setScoreboardTitle(p, "hey", false);
+				ArrayList<String> list = new ArrayList<>();
+				list.add("1");
+				list.add("2");
+				PowerBoardAPI.setScoreboardScores(p, list, false);
 			}
 		}, 3);
+		Bukkit.getScheduler().runTaskLater(pl, new Runnable() {
+			@Override
+			public void run() {
+				PowerBoardAPI.removeScoreboard(p);
+			}
+		}, 200);
 	}
 	@EventHandler
 	public void onQuit(PlayerQuitEvent e) {

@@ -110,7 +110,7 @@ public class Config {
 						+ "You can add as many animation steps as you like.\n\n"
 						+ "For every score (line) you can set a different speed.\n"
 						+ "You can set up to 14 scores. For that, just add a new number like \"'7':\"\n\n"
-						+ "If you have static scores (no animations or updates needed): Set the 'speed' value to '9999' or higher. Then the scheduler won't start to save performance.\n"
+						+ "If you have static scores (no animations or updates needed): Set the 'speed' value to '-1' or '9999' or higher. Then the scheduler won't start to save performance.\n"
 						+ "Note: Specify the speed in ticks, not seconds. 20 ticks = one second\n\n"
 						+ "To use multiple scoreboards, read this wiki: https://github.com/Xitee1/PowerBoard/wiki/Create-and-use-multiple-scoreboards\n";
 						
@@ -265,7 +265,7 @@ public class Config {
 				file.createNewFile();
 				YamlConfiguration cfg = YamlConfiguration.loadConfiguration(file);
 				cfg.options().header("If the conditions match, no scoreboard will be displayed.\n"
-						+ "Here is explained what conditions there are and how to use them: https://github.com/Xitee1/PowerBoard/wiki/Create-and-use-multiple-scoreboards\n");
+						+ "Here is explained what conditions there are and how to use them: https://github.com/Xitee1/PowerBoard/wiki/Conditions\n");
 				
 				ArrayList<String> list = new ArrayList<>();
 				list.add("world:disabled_sb_world");
@@ -399,29 +399,36 @@ public class Config {
 						reloadDelay = false;
 					}
 				}, 40);
+				// General config
 				s.sendMessage(PowerBoard.pr+ChatColor.GRAY+"Reloading "+ChatColor.YELLOW+"config"+ChatColor.GRAY+"...");
 				Config.loadConfig();
+				
+				// Scoreboards
+				s.sendMessage(PowerBoard.pr+ChatColor.GRAY+"Reloading "+ChatColor.YELLOW+"scoreboards"+ChatColor.GRAY+"...");
+				ArrayList<Player> players = new ArrayList<Player>();
+				players.addAll(ScoreboardPlayer.players.keySet());
+				for(Player p : players)
+					ScoreboardPlayer.removeScoreboard(p, true);
+				ScoreboardManager.unregisterAllScoreboards();
 				if(PowerBoard.pl.getConfig().getBoolean("scoreboard")) {
-					s.sendMessage(PowerBoard.pr+ChatColor.GRAY+"Reloading "+ChatColor.YELLOW+"scoreboards"+ChatColor.GRAY+"...");
-					ArrayList<Player> players = new ArrayList<Player>();
-					players.addAll(ScoreboardPlayer.players.keySet());
-					for(Player p : players)
-						ScoreboardPlayer.removeScoreboard(p, true);
-					ScoreboardManager.unregisterAllScoreboards();
 					ScoreboardManager.registerAllScoreboards();
-					Bukkit.getScheduler().runTaskLater(pl, new Runnable() {
+					Bukkit.getScheduler().runTaskLaterAsynchronously(pl, new Runnable() {
 						@Override
 						public void run() {
 							for(Player all : Bukkit.getOnlinePlayers())
-								ScoreboardPlayer.setScoreboard(all, false);		
+								ScoreboardPlayer.setScoreboard(all, false, null);		
 						}
 					}, 5);
 				}
-				if(pl.getConfig().getBoolean("tablist.ranks")) {
+				
+				// Ranks
+				boolean tabRanks = pl.getConfig().getBoolean("tablist.ranks");
+				if(tabRanks || PowerBoard.pl.getConfig().getBoolean("chat.ranks")) {
 					for(Player all : Bukkit.getOnlinePlayers()) {
 						Teams.removePlayer(all);
 						RankManager.register(all);
-						RankManager.setTablistRanks(all);
+						if(tabRanks)
+							RankManager.setTablistRanks(all);
 					}
 				}
 

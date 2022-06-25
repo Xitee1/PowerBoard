@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 
 import de.xite.scoreboard.main.PowerBoard;
 import de.xite.scoreboard.modules.board.ScoreTitleUtils;
+import de.xite.scoreboard.modules.board.ScoreboardManager;
 import de.xite.scoreboard.modules.board.ScoreboardPlayer;
 import de.xite.scoreboard.modules.ranks.RankManager;
 import de.xite.scoreboard.utils.Placeholders;
@@ -20,24 +21,31 @@ public class PowerBoardAPI {
 	// ---------------------//
 	// ---- Scoreboard ---- //
 	// ---------------------//
-	public static void setScoreboard(Player p) {
-		ScoreboardPlayer.setScoreboard(p, true);
+	public static void setScoreboard(Player p, boolean custom, String scoreboardName) {
+		if(custom == true || scoreboardName == null) {
+			ScoreboardPlayer.setScoreboard(p, custom, null);
+		}else {
+			ScoreboardPlayer.setScoreboard(p, custom, ScoreboardManager.get(scoreboardName));
+		}
 	}
 	public static void removeScoreboard(Player p) {
-		ScoreboardPlayer.removeScoreboard(p, false);
+		ScoreboardPlayer.removeScoreboard(p, true);
+	}
+	public static boolean hasConfigScoreboard(Player p) {
+		return ScoreboardPlayer.players.containsKey(p);
 	}
 	
 	public static void setScoreboardTitle(Player p, String title, boolean usePlaceholders) {
 		if(!ScoreTitleUtils.setTitle(p, p.getScoreboard(), title, usePlaceholders, null))
-				PowerBoard.pl.getLogger().severe("Failed to set the Scoreboard-Title! The scoreboard is not registered yet - please set the scoreboard first with 'setScoreboard(p);' !");
+				PowerBoard.pl.getLogger().severe("Failed to set the Scoreboard-Title! "+p.getName()+"'s scoreboard is not registered yet - please set the scoreboard first!");
 	}
 	public static void setScoreboardScore(Player p, String score, int index, boolean usePlaceholders) {
 		if(!ScoreTitleUtils.setScore(p, p.getScoreboard(), score, index, usePlaceholders, null))
-			PowerBoard.pl.getLogger().severe("Failed to set the Scoreboard-Score! The scoreboard is not registered yet - please set the scoreboard first with 'setScoreboard(p);' !");
+			PowerBoard.pl.getLogger().severe("Failed to set the Scoreboard-Score! "+p.getName()+"'s scoreboard is not registered yet - please set the scoreboard first!");
 	}
 	public static void setScoreboardScores(Player p, ArrayList<String> scores, boolean usePlaceholders) {
 		if(!ScoreTitleUtils.setScores(p, p.getScoreboard(), scores, usePlaceholders, null))
-			PowerBoard.pl.getLogger().severe("Failed to set the Scoreboard-Scores! The scoreboard is not registered yet - please set the scoreboard first with 'setScoreboard(p);' !");
+			PowerBoard.pl.getLogger().severe("Failed to set the Scoreboard-Scores! "+p.getName()+"'s scoreboard is not registered yet - please set the scoreboard first with!");
 	}
 	
 	// ----------------//

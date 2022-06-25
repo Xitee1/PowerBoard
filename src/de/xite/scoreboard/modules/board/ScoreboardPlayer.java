@@ -20,11 +20,10 @@ public class ScoreboardPlayer {
 	public static HashMap<Player, String> players = new HashMap<>(); // Player; Scoreboard config file name
 	
 	@SuppressWarnings("deprecation")
-	public static void setScoreboard(Player p, boolean API) {
+	public static void setScoreboard(Player p, boolean API, ScoreboardManager sm) {
 		Scoreboard board = p.getScoreboard();
 		
 		// ---- Scoreboard ---- //
-		ScoreboardManager sm = null;
 		if(ConditionListener.checkConditions(p, Config.scoreboardBlacklistConditions)) {
 			removeScoreboard(p, false);
 			if(!API)
@@ -34,7 +33,8 @@ public class ScoreboardPlayer {
 			return;
 		}
 		if(!API) {
-			sm = getMatchingScoreboard(p);
+			if(sm == null)
+				sm = getMatchingScoreboard(p);
 			if(sm == null)
 				return;
 			if(players.containsKey(p))
@@ -60,11 +60,6 @@ public class ScoreboardPlayer {
 		obj.setDisplaySlot(DisplaySlot.SIDEBAR);
 		
 		if(!API) {
-			if(sm == null)
-				sm = getMatchingScoreboard(p);
-			if(sm == null)
-				return;
-			
 			if(players.containsKey(p)) {
 				if(players.get(p).equals("blacklisted")) {
 					players.remove(p);
@@ -80,13 +75,19 @@ public class ScoreboardPlayer {
 		p.setScoreboard(board);
 		
 		// Debug
-		if(PowerBoard.debug)
-			PowerBoard.pl.getLogger().info("Scoreboard set for player "+p.getName());
+		if(PowerBoard.debug) {
+			if(sm == null) {
+				PowerBoard.pl.getLogger().info("Custom scoreboard set for player "+p.getName());
+			}else {
+				PowerBoard.pl.getLogger().info("Scoreboard "+sm.getName()+" set for player "+p.getName());
+			}
+		}
+			
 	}
 	public static void updateScoreboard(Player p) {
 		if(!players.containsKey(p))
 			return;
-		setScoreboard(p, false);
+		setScoreboard(p, false, null);
 	}
 	public static ScoreboardManager getMatchingScoreboard(Player p) {
 		/* Config syntax: 
