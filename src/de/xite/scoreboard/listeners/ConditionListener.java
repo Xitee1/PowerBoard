@@ -13,21 +13,23 @@ public class ConditionListener implements Listener {
 	
 	@EventHandler
 	public void GameModeSwitchEvent(PlayerGameModeChangeEvent e) {
-		Bukkit.getScheduler().runTaskLater(PowerBoard.pl, new Runnable() {
-			@Override
-			public void run() {
-				ScoreboardPlayer.updateScoreboard(e.getPlayer());
-			}
-		}, 5);
+		if(PowerBoard.pl.getConfig().getBoolean("scoreboard"))
+			Bukkit.getScheduler().runTaskLater(PowerBoard.pl, new Runnable() {
+				@Override
+				public void run() {
+					ScoreboardPlayer.updateScoreboard(e.getPlayer());
+				}
+			}, 5);
 	}
 	
 	@EventHandler
 	public void WorldSwitchEvent(PlayerChangedWorldEvent e) {
-		Bukkit.getScheduler().runTaskLater(PowerBoard.pl, new Runnable() {
-			@Override
-			public void run() {
-				ScoreboardPlayer.updateScoreboard(e.getPlayer());
-			}
-		}, 5);
+		if(PowerBoard.pl.getConfig().getBoolean("scoreboard"))
+			Bukkit.getScheduler().runTaskLater(PowerBoard.pl, new Runnable() {
+				@Override
+				public void run() {
+					ScoreboardPlayer.updateScoreboard(e.getPlayer());
+				}
+			}, 5);
 	}
 }
