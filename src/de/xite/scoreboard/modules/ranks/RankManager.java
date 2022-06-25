@@ -16,7 +16,7 @@ import de.xite.scoreboard.utils.Teams;
 public class RankManager {
 	static PowerBoard pl = PowerBoard.pl;
 	
-	public static ArrayList<Player> updateDelay = new ArrayList<>();
+	private static ArrayList<Player> updateDelay = new ArrayList<>();
 	
 	public static boolean register(Player p) {
 		if(pl.getConfig().getBoolean("ranks.luckperms-api.enable")) {
@@ -187,9 +187,8 @@ public class RankManager {
 		Bukkit.getScheduler().runTaskTimerAsynchronously(pl, new Runnable() {
 			@Override
 			public void run() {
-				for(Player all : Bukkit.getOnlinePlayers()) {
+				for(Player all : Bukkit.getOnlinePlayers())
 					updateTablistRanks(all);
-				}
 			}
 		}, interval, interval);
 	}

@@ -12,6 +12,8 @@ import org.bukkit.event.player.PlayerGameModeChangeEvent;
 
 import de.xite.scoreboard.main.PowerBoard;
 import de.xite.scoreboard.modules.board.ScoreboardPlayer;
+import de.xite.scoreboard.modules.ranks.RankManager;
+import de.xite.scoreboard.utils.Teams;
 
 public class ConditionListener implements Listener {
 	
@@ -30,7 +32,13 @@ public class ConditionListener implements Listener {
 		Bukkit.getScheduler().runTaskAsynchronously(PowerBoard.pl, new Runnable() {
 			@Override
 			public void run() {
-				ScoreboardPlayer.updateScoreboard(e.getPlayer());
+				Player p = e.getPlayer();
+				ScoreboardPlayer.updateScoreboard(p);
+				if(PowerBoard.pl.getConfig().getBoolean("tablist.ranks")) {
+					Teams team = Teams.get(p);
+					if(team.getPrefix().contains("%player_world%") || team.getSuffix().contains("%player_world%"))
+						RankManager.updateTablistRanks(p);
+				}
 			}
 		});
 	}
