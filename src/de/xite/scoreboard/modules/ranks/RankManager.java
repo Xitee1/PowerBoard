@@ -36,23 +36,23 @@ public class RankManager {
 			int weight = 0;
 			for(String line : pl.getConfig().getConfigurationSection("ranks.list").getValues(false).keySet()) {
 				if(!line.contains(".")) {
-					
 					String permission = pl.getConfig().getString("ranks.list."+line+".permission");
 					
 					//--- LuckPerms (without API) ---//
 					if(ExternalPlugins.luckPerms != null && pl.getConfig().getString("ranks.permissionsystem").equalsIgnoreCase("luckperms")) {
-						String prefix = pl.getConfig().getString("ranks.list."+line+".prefix");
-						String suffix = pl.getConfig().getString("ranks.list."+line+".suffix");
-						String chatPrefix = pl.getConfig().getString("ranks.list."+line+".chatPrefix");
-						String placeholderName = pl.getConfig().getString("ranks.list."+line+".placeholder-name");
-						String nameColor = ChatColor.getLastColors(ChatColor.translateAlternateColorCodes('&', prefix));
 						if(LuckPermsRanks.isPlayerInGroup(p, permission)) {
-							if(PowerBoard.debug)
-								pl.getLogger().info("The player "+p.getName()+" has now the rank (luckperms): Prefix: "+prefix+"; Suffix: "+suffix+"; Group: "+permission);
-
+							String prefix = pl.getConfig().getString("ranks.list."+line+".prefix");
+							String suffix = pl.getConfig().getString("ranks.list."+line+".suffix");
+							String chatPrefix = pl.getConfig().getString("ranks.list."+line+".chatPrefix");
+							String placeholderName = pl.getConfig().getString("ranks.list."+line+".placeholder-name");
+							String nameColor = ChatColor.getLastColors(ChatColor.translateAlternateColorCodes('&', prefix));
+							
 							Teams.addPlayer(p, prefix, suffix, nameColor, chatPrefix, placeholderName, weight);
 							Teams t = Teams.get(p);
 							t.setPlaceholderName(t.getNameColor()+t.getPlaceholderName());
+							
+							if(PowerBoard.debug)
+								pl.getLogger().info("The player "+p.getName()+" has now the rank (luckperms): Prefix: "+prefix+"; Suffix: "+suffix+"; Group: "+permission);
 							return true;
 						}
 					}else {
@@ -63,12 +63,13 @@ public class RankManager {
 							String chatPrefix = pl.getConfig().getString("ranks.list."+line+".chatPrefix");
 							String placeholderName = pl.getConfig().getString("ranks.list."+line+".placeholder-name");
 							String nameColor = ChatColor.getLastColors(ChatColor.translateAlternateColorCodes('&', prefix));
-							if(PowerBoard.debug)
-								pl.getLogger().info("The player "+p.getName()+" has now the rank (permission/none): Prefix: "+prefix+"; Suffix: "+suffix+"; Permission: "+permission);
-							
+
 							Teams.addPlayer(p, prefix, suffix, nameColor, chatPrefix, placeholderName, weight);
 							Teams t = Teams.get(p);
 							t.setPlaceholderName(t.getNameColor()+t.getPlaceholderName());
+							
+							if(PowerBoard.debug)
+								pl.getLogger().info("The player "+p.getName()+" has now the rank (permission/none): Prefix: "+prefix+"; Suffix: "+suffix+"; Permission: "+permission);
 							return true;
 						}
 					}
@@ -117,16 +118,12 @@ public class RankManager {
 			String prefix = teams.getPrefix();
 			String suffix = teams.getSuffix();
 			
-			if(pl.getConfig().getBoolean("ranks.useUnlimitedLongRanks"))
-				p.setPlayerListName(prefix+p.getDisplayName()+suffix);
-			
 			for(Player all : Bukkit.getOnlinePlayers()) {
 				Team t = all.getScoreboard().getTeam(teams.getTeamName());
 				if(t == null)
 					t = all.getScoreboard().registerNewTeam(teams.getTeamName());
 				
 				setPrefixSuffix(p, t, prefix, suffix);
-
 				
 				if(nameColor != null && PowerBoard.aboveMC_1_13)
 					t.setColor(nameColor);
@@ -155,9 +152,6 @@ public class RankManager {
 			if(teams != null) {
 				String prefix = teams.getPrefix();
 				String suffix = teams.getSuffix();
-				
-				if(pl.getConfig().getBoolean("ranks.useUnlimitedLongRanks"))
-					p.setPlayerListName(prefix+p.getDisplayName()+suffix);
 				
 				if(teams != null) {
 					ChatColor nameColor = teams.getNameColor();
@@ -203,35 +197,26 @@ public class RankManager {
 	//-------//
 	// Utils //
 	//-------//
-	
 	public static void setPrefixSuffix(Player p, Team t, String prefix, String suffix) {
-		if(!pl.getConfig().getBoolean("ranks.useUnlimitedLongRanks")) {
-			if(!PowerBoard.debug) {
-				try {
-					if(prefix.length() != 0)
-						t.setPrefix(prefix);
-					if(suffix.length() != 0)
-						t.setSuffix(suffix);
-					p.setPlayerListName(null);
-				}catch (IllegalArgumentException e) {
-					if(PowerBoard.aboveMC_1_13) {
-						t.setPrefix(ChatColor.RED+"Error: too long - see console | ");
-						PowerBoard.pl.getLogger().severe(p.getName()+"'s prefix/suffix is too long! The length is limited by Minecraft to 64 chars. Prefix: "+prefix+" --- Suffix: "+suffix);
-					}else {
-						PowerBoard.pl.getLogger().severe(p.getName()+"'s prefix is too long! The length is limited by Minecraft to 16 chars."
-								+ "If you update your server to 1.13+, the limit will be increased to 64 chars. Prefix: "+prefix+" --- Suffix: "+suffix);
-					}
-				}
-			}else {
-				if(prefix.length() != 0)
-					t.setPrefix(prefix);
-				if(suffix.length() != 0)
-					t.setSuffix(suffix);
-				p.setPlayerListName(null);
-			}
-		}else {
+		try {
+			if(prefix.length() != 0)
+				t.setPrefix(prefix);
+			if(suffix.length() != 0)
+				t.setSuffix(suffix);
+			p.setPlayerListName(null);
+		}catch (IllegalArgumentException e) {
+			// IllegalArgumentException == prefix or suffix too long
+			// With setPlayerListName you can bypass this limit, however the prefix and suffix will no longer be displayed above the player head
+			
 			t.setPrefix("");
 			t.setSuffix("");
+			p.setPlayerListName(prefix+p.getDisplayName()+suffix);
+			
+			if(PowerBoard.debug) {
+				pl.getLogger().info("Using prefix/suffix too long bypass for player "+p.getName()+".");
+				pl.getLogger().info("With this, there will be no prefix or suffix displayed above the player head, only in the tablist.");
+				pl.getLogger().info("To prevent this, use less than 64 chars or less than 16 chars in MC 1.12 or below.");
+			}
 		}
 	}
 
