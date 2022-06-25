@@ -389,7 +389,7 @@ public class Config {
 			@Override
 			public void run() {
 				if(reloadDelay) {
-					s.sendMessage(PowerBoard.pr+ChatColor.RED+"Please wait 2 seconds before your reload again.");
+					s.sendMessage(PowerBoard.pr+ChatColor.RED+"Please wait 2 seconds before you reload again.");
 					return;
 				}
 				reloadDelay = true;
@@ -403,9 +403,12 @@ public class Config {
 				Config.loadConfig();
 				if(PowerBoard.pl.getConfig().getBoolean("scoreboard")) {
 					s.sendMessage(PowerBoard.pr+ChatColor.GRAY+"Reloading "+ChatColor.YELLOW+"scoreboards"+ChatColor.GRAY+"...");
+					ArrayList<Player> players = new ArrayList<Player>();
+					players.addAll(ScoreboardPlayer.players.keySet());
+					for(Player p : players)
+						ScoreboardPlayer.removeScoreboard(p, true);
 					ScoreboardManager.unregisterAllScoreboards();
 					ScoreboardManager.registerAllScoreboards();
-					ScoreboardPlayer.players.clear();
 					Bukkit.getScheduler().runTaskLater(pl, new Runnable() {
 						@Override
 						public void run() {

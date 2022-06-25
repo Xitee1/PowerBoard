@@ -83,7 +83,7 @@ placeholder:
   money-decimals: 2 # The maximum decimals for the placeholder %player_money%.
   hexColorSyntax: '#000000' # Set the syntax to trigger hex colors. For example 'color:000000' or just '#000000' - whatever you want. WARNING NOT WORKING CHARS: { } ( )
   world-names: # Replace world names for the %player_world% placeholder
-    world: 'Overword'
+    world: 'Overworld'
     world_nether: 'Nether'
     world_the_end: 'The End'
 
