@@ -60,20 +60,8 @@ public class JoinQuitListener implements Listener {
 				if(pl.getConfig().getBoolean("tablist.text"))
 					TablistPlayer.addPlayer(p, null);
 				
-				PowerBoardAPI.setScoreboard(p, false, null);
-				PowerBoardAPI.setScoreboardTitle(p, "hey", false);
-				ArrayList<String> list = new ArrayList<>();
-				list.add("1");
-				list.add("2");
-				PowerBoardAPI.setScoreboardScores(p, list, false);
 			}
 		}, 3);
-		Bukkit.getScheduler().runTaskLater(pl, new Runnable() {
-			@Override
-			public void run() {
-				PowerBoardAPI.removeScoreboard(p);
-			}
-		}, 200);
 	}
 	@EventHandler
 	public void onQuit(PlayerQuitEvent e) {
