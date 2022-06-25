@@ -25,15 +25,31 @@ public class ScoreboardPlayer {
 		Scoreboard board = p.getScoreboard();
 		
 		// ---- Scoreboard ---- //
-		removeScoreboard(p, false);
+		ScoreboardManager sm = null;
 		if(checkConditions(p, Config.scoreboardBlacklistConditions)) {
-			players.put(p, "blacklisted");
+			removeScoreboard(p, false);
 			
+			players.put(p, "blacklisted");
 			if(PowerBoard.debug)
-				pl.getLogger().info("Did not set "+p.getName()+"'s scoreboard because blacklist-conditions match.");
+				pl.getLogger().info("Removed "+p.getName()+"'s scoreboard because blacklist-conditions match.");
 			return;
 		}
-		
+		if(!API) {
+			sm = getMatchingScoreboard(p);
+			if(sm == null)
+				return;
+			if(players.containsKey(p))
+				if(players.get(p) == sm.getName()) {
+					if(PowerBoard.debug)
+						pl.getLogger().info("Did not set/update "+p.getName()+"'s scoreboard because he already have the same scoreboard (Current: "+players.get(p)+"; New: "+sm.getName()+").");
+					return;
+				}else {
+					pl.getLogger().info("Changing "+p.getName()+"'s scoreboard to "+sm.getName());
+					removeScoreboard(p, true);
+				}
+		}else {
+			removeScoreboard(p, false);
+		}
 		
 		Objective obj = board.getObjective(DisplaySlot.SIDEBAR);
 		if(obj == null) {
@@ -45,15 +61,18 @@ public class ScoreboardPlayer {
 		obj.setDisplaySlot(DisplaySlot.SIDEBAR);
 		
 		if(!API) {
-			ScoreboardManager sm = getMatchingScoreboard(p);
+			if(sm == null)
+				sm = getMatchingScoreboard(p);
 			if(sm == null)
 				return;
 			
 			if(players.containsKey(p)) {
 				if(players.get(p).equals("blacklisted")) {
 					players.remove(p);
-				}else
+				}else {
+					
 					ScoreboardManager.get(players.get(p)).removePlayer(p);
+				}
 			}
 			sm.addPlayer(p);
 			ScoreTitleUtils.setTitle(p, board, sm.getCurrentTitle(), true, sm);
@@ -70,13 +89,6 @@ public class ScoreboardPlayer {
 	public static void updateScoreboard(Player p) {
 		if(!players.containsKey(p))
 			return;
-
-		ScoreboardManager newScoreboard = getMatchingScoreboard(p);
-		if(newScoreboard == null)
-			return;
-		if(PowerBoard.debug)
-			pl.getLogger().info("Changing "+p.getName()+"'s scoreboard to "+newScoreboard.getName());
-		// Check if update is required
 		setScoreboard(p, false);
 	}
 	public static ScoreboardManager getMatchingScoreboard(Player p) {
@@ -137,9 +149,8 @@ public class ScoreboardPlayer {
 	}
 	public static void removeScoreboard(Player p, boolean removeFromSBManager) {
 		if(removeFromSBManager) {
-			if(!players.containsKey(p))
-				return;
-			ScoreboardManager.get(players.get(p)).removePlayer(p);
+			if(players.containsKey(p) && !players.get(p).equals("blacklisted"))
+				ScoreboardManager.get(players.get(p)).removePlayer(p);
 		}
 		
 		for(Team t : p.getScoreboard().getTeams()) {

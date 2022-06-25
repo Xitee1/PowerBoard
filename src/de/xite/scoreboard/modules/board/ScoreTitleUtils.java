@@ -46,7 +46,9 @@ public class ScoreTitleUtils {
 				}
 			}
 		}else {
-			obj.setDisplayName(title);
+			try {
+				obj.setDisplayName(title);
+			}catch (IllegalStateException e) { }
 		}
 		
 		if(sm != null)
@@ -81,21 +83,21 @@ public class ScoreTitleUtils {
 			if(ScoreID == 14)
 				colorcode = "§e";
 		}
-		Team team = board.getTeam("score-"+ScoreID);
-		if(team == null) {
-			team = board.registerNewTeam("score-"+ScoreID);
-			team.addEntry(colorcode);
-			obj.getScore(colorcode).setScore(ScoreID);
-		}
-		if(score.length() == 0) // If lenght == 0 set to " " for free space in scoreboard
-			score = " ";
-		if(!score.equals(" ") && usePlaceholders)
-			score = Placeholders.replace(p, score);
-		
-		// ---- Set all scores ---- //
 		// If the scoreboard switches too fast (especially blacklisted) sometimes there will this error in the console: IllegalStateException: Unregistered scoreboard component
 		// We can just ignore it because it doesn't seems like it has no effect other than that this error is beeing displayed.
 		try {
+			Team team = board.getTeam("score-"+ScoreID);
+			if(team == null) {
+				team = board.registerNewTeam("score-"+ScoreID);
+				team.addEntry(colorcode);
+				obj.getScore(colorcode).setScore(ScoreID);
+			}
+			if(score.length() == 0) // If lenght == 0 set to " " for free space in scoreboard
+				score = " ";
+			if(!score.equals(" ") && usePlaceholders)
+				score = Placeholders.replace(p, score);
+			
+			// ---- Set all scores ---- //
 			if(PowerBoard.aboveMC_1_13) { // In version 1.13 you can use up to 64 chars in prefix/suffix
 				// Set the score for 1.13+
 				String[] s = getScorePrefixSuffix(score, 64, 128);
