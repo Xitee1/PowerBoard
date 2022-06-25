@@ -18,6 +18,8 @@ import de.xite.scoreboard.main.PowerBoard;
 import de.xite.scoreboard.utils.UpgradeVersion;
 
 public class ScoreboardManager {
+	static PowerBoard pl = PowerBoard.pl;
+	
 	// All registered scoreboards
 	public static HashMap<String, ScoreboardManager> scoreboards = new HashMap<>();
 	
@@ -48,14 +50,14 @@ public class ScoreboardManager {
 		this.name = name;
 		
 		if(name == "blacklisted") {
-			PowerBoard.pl.getLogger().severe("Sorry, but the scoreboard name 'blacklisted' is reserved for the system. Please use another name.");
+			pl.getLogger().severe("Sorry, but the scoreboard name 'blacklisted' is reserved for the system. Please use another name.");
 			return;
 		}
 		
 		// Get the config
 		File f = new File(PowerBoard.pluginfolder+"/scoreboards/"+name+".yml");
 		if(!f.exists()) {
-			PowerBoard.pl.getLogger().severe("Could not load Scoreboard named "+name+", because the config file does not exists!");
+			pl.getLogger().severe("Could not load Scoreboard named "+name+", because the config file does not exists!");
 			return;
 		}
 		YamlConfiguration cfg = Config.loadConfiguration(f);
@@ -82,24 +84,37 @@ public class ScoreboardManager {
 	
 	// Import
 	private void importScores(YamlConfiguration cfg) {
+		int i = 0;
+		
 		for(String s : cfg.getConfigurationSection("").getValues(false).keySet()) {
 			try {
 				int id = Integer.parseInt(s);
+				
 				if(cfg.getStringList(id+".scores") != null && !cfg.getStringList(id+".scores").isEmpty()) {
+					List<String> list = cfg.getStringList(id+".scores");
+					int speed = cfg.getInt(id+".speed");
+					
+					// Check if the numbers are in the correct ordner and begin with 0
+					if(id != i) {
+						pl.getLogger().warning("Your scores of scoreboard "+name+" do not begin with 0 or have an incorrect order. Please check that the numbers begin with 0 (not 1) and are sequentially. This could cause problems with your scoreboard!");
+						id = i;
+					}
+					i++;
 					
 					// Add all animations
 					scores.put(id, new ArrayList<String>());
-					scores.get(id).addAll(cfg.getStringList(id+".scores")); 
+					scores.get(id).addAll(list);
 					
 					// Start the animation
-					startScoreAnimation(id, cfg.getInt(id+".speed"));
+					startScoreAnimation(id, speed);
 				}
+				
 			}catch (IllegalStateException e) {
 			}catch (NumberFormatException e) {
 			}
 		}
 		if(scores.size() > 14) // Check if more than 14 scores
-			PowerBoard.pl.getLogger().warning("You have more than 14 scors in you scoreboard! Some scores cannot be displayed! This is a limitation of Minecraft.");
+			pl.getLogger().warning("You have more than 14 scors in you scoreboard! Some scores cannot be displayed! This is a limitation of Minecraft.");
 		
 	}
 	private void importTitle(YamlConfiguration cfg) {		
@@ -111,31 +126,31 @@ public class ScoreboardManager {
 	// ---- Start the animations ---- //
 	private void startTitleAnimation(int speed) {
 		if(title.size() == 0) {
-			PowerBoard.pl.getLogger().severe("Could not load scoreboard title for scoreboard \""+name+"\"!");
-			PowerBoard.pl.getLogger().severe("Disabling plugin...");
-			PowerBoard.pl.getServer().getPluginManager().disablePlugin(PowerBoard.pl);
+			pl.getLogger().severe("Could not load scoreboard title for scoreboard \""+name+"\"!");
+			pl.getLogger().severe("Disabling plugin...");
+			pl.getServer().getPluginManager().disablePlugin(pl);
 			return;
 		}
 		
 		currentTitle = title.get(0);
 		
-		// check if scheduler is needed (don't schedule if higher than '9999')
+		// check if scheduler is needed (don't schedule if higher than '9999' or negative)
 		if(speed >= 9999 || speed < 0) {
 			if(PowerBoard.debug)
-				PowerBoard.pl.getLogger().info("Scoreboard-Title (Name: "+name+"): no animation needed (speed higher than 9999 or negative)");
+				pl.getLogger().info("Scoreboard-Title (Name: "+name+"): no animation needed (speed higher than 9999 or negative)");
 			return;
 		}else
 			if(PowerBoard.debug)
-				PowerBoard.pl.getLogger().info("Scoreboard-Title (Name: "+name+"): animation started");
+				pl.getLogger().info("Scoreboard-Title (Name: "+name+"): animation started");
 		
 		// Check for config errors
 		if(title.size() == 0) {
-			PowerBoard.pl.getLogger().severe("You have an error in your scoreboard config! Even a simple space can create this error. Look closely. ("+name+".yml - title)");
+			pl.getLogger().severe("You have an error in your scoreboard config! Even a simple space can create this error. Look closely. ("+name+".yml - title)");
 			return;
 		}
 		// Start animation scheduler
 		scheduler.add(
-			Bukkit.getScheduler().runTaskTimerAsynchronously(PowerBoard.pl, new Runnable() {
+			Bukkit.getScheduler().runTaskTimerAsynchronously(pl, new Runnable() {
 				int count = 0;
 				@Override
 				public void run() {
@@ -158,26 +173,26 @@ public class ScoreboardManager {
 		// check if scheduler is needed (don't schedule if higher than '9999')
 		if(speed >= 9999 || speed < 0) {
 			if(PowerBoard.debug)
-				PowerBoard.pl.getLogger().info("Scoreboard-Score (ID: "+id+", Name: "+name+"): no animation needed");
+				pl.getLogger().info("Scoreboard-Score (ID: "+id+", Name: "+name+"): no animation needed");
 			return;
 		}else
 			if(PowerBoard.debug)
-				PowerBoard.pl.getLogger().info("Scoreboard-Score (ID: "+id+", Name: "+name+"): animation started");
+				pl.getLogger().info("Scoreboard-Score (ID: "+id+", Name: "+name+"): animation started");
 		
 		// Check for config errors
 		if(scores.size() == 0) {
-			PowerBoard.pl.getLogger().severe("You have an error in your scoreboard config! Please check it for any typing errors. Even a simple space can create this error. Look closely. ("+name+".yml - scores)");
+			pl.getLogger().severe("You have an error in your scoreboard config! Please check it for any typing errors. Even a simple space can create this error. Look closely. ("+name+".yml - scores)");
 			return;
 		}
 		for(Entry<Integer, ArrayList<String>> e : scores.entrySet()) {
 			if(e.getValue().size() == 0) {
-				PowerBoard.pl.getLogger().severe("You have an error in your scoreboard config! Please check it for any typing errors. Even a simple space can create this error. Look closely. ("+name+".yml - scores)");
+				pl.getLogger().severe("You have an error in your scoreboard config! Please check it for any typing errors. Even a simple space can create this error. Look closely. ("+name+".yml - scores)");
 				return;
 			}
 		}
 		// Start animation scheduler
 		scheduler.add(
-			Bukkit.getScheduler().runTaskTimerAsynchronously(PowerBoard.pl, new Runnable() {
+			Bukkit.getScheduler().runTaskTimerAsynchronously(pl, new Runnable() {
 				int count = 0;
 				@Override
 				public void run() {
@@ -243,7 +258,7 @@ public class ScoreboardManager {
 		}
 		new ScoreboardPlayer(); // prepare the scoreboard
 		for(String board : boards) {
-			PowerBoard.pl.getLogger().info("Registering scoreboard "+board+".");
+			pl.getLogger().info("Registering scoreboard "+board+".");
 			ScoreboardManager.get(board);
 		}
 			
