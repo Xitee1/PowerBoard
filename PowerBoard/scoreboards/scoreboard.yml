@@ -1,15 +1,15 @@
-# Here you can customize the screboard.
+# Here you can customize the scoreboard.
 # You can add as many animation steps as you like.
-# 
+#
 # For every score (line) you can set a different speed.
-# You can set up to 14 scores. For that just add a new number, like "'7':"
-# 
-# If you have static scores (no animations or updates needed): Set the 'speed' value to '9999' or higher. Then the scheduler won't start to save performance.
+# You can set up to 14 scores. For that, just add a new number like "'7':"
+#
+# If you have static scores (no animations or updates needed): Set the 'speed' value to '-1' or '9999' or higher. Then the scheduler won't start to save performance.
 # Note: Specify the speed in ticks, not seconds. 20 ticks = one second
-# 
-# If you want to use multiple scoreboards, you have to set conditions for all scoreboards, except for the default one.
+#
+# To use multiple scoreboards, read this wiki: https://github.com/Xitee1/PowerBoard/wiki/Create-and-use-multiple-scoreboards
 
-titel:
+title:
   speed: 6
   titles:
   - '&4PowerBoard'
@@ -121,7 +121,7 @@ titel:
   - '&a%player_food%'
   - '&a%player_saturation%'
   - '&a%player_health%'
-  - '&a%tps%'
+  - '&a%server_tps%'
   - '&a%mem_used%/%mem_total%'
 conditions:
 - '&Add conditions here'

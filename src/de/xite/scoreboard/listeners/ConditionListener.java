@@ -34,9 +34,9 @@ public class ConditionListener implements Listener {
 			public void run() {
 				Player p = e.getPlayer();
 				ScoreboardPlayer.updateScoreboard(p);
-				if(PowerBoard.pl.getConfig().getBoolean("tablist.ranks")) {
+				if(PowerBoard.pl.getConfig().getBoolean("tablist.ranks") || PowerBoard.pl.getConfig().getBoolean("chat.ranks")) {
 					Teams team = Teams.get(p);
-					if(team.getPrefix().contains("%player_world%") || team.getSuffix().contains("%player_world%"))
+					if(team.getRawPrefix().contains("%player_world%") || team.getRawSuffix().contains("%player_world%"))
 						RankManager.updateTablistRanks(p);
 				}
 			}

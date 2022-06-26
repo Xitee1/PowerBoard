@@ -1,0 +1,5 @@
+# If the conditions match, no scoreboard will be displayed.
+# Here is explained what conditions there are and how to use them: https://github.com/Xitee1/PowerBoard/wiki/Conditions
+
+conditions:
+- world:disabled_sb_world

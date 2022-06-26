@@ -138,10 +138,21 @@ public class RankManager {
 	}
 	
 	public static boolean updateTablistRanks(Player p) {
-		// Only let it update every 15 seconds
-		if(updateDelay.contains(p))
+		// Only let it update every 3 seconds
+		if(updateDelay.contains(p)) {
+			if(PowerBoard.debug)
+				pl.getLogger().info("Did not update "+p.getName()+"'s rank because of the delay. Trying again automatically in 7 seconds..");
+			Bukkit.getScheduler().runTaskLater(pl, new Runnable() {
+				@Override
+				public void run() {
+					updateTablistRanks(p);
+				}
+			}, 20*5);
 			return false;
-		delay(p, 20*15);
+		}
+		delay(p, 20*3);
+		
+		pl.getLogger().info("Updating "+p.getName()+"'s rank..");
 		
 		// Update the team info
 		RankManager.register(p);
@@ -173,7 +184,7 @@ public class RankManager {
 		}catch (Exception e) {
 			pl.getLogger().warning("There was an error whilst updating "+p.getName()+"'s rank!");
 		}
-			
+		pl.getLogger().info("Updated rank.");
 		return true;
 	}
 	

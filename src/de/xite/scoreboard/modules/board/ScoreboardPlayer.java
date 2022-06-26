@@ -43,7 +43,8 @@ public class ScoreboardPlayer {
 						pl.getLogger().info("Did not set/update "+p.getName()+"'s scoreboard because he already have the same scoreboard (Current: "+players.get(p)+"; New: "+sm.getName()+").");
 					return;
 				}else {
-					pl.getLogger().info("Changing "+p.getName()+"'s scoreboard to "+sm.getName());
+					if(PowerBoard.debug)
+						pl.getLogger().info("Changing "+p.getName()+"'s scoreboard to "+sm.getName());
 					removeScoreboard(p, true);
 				}
 		}else {

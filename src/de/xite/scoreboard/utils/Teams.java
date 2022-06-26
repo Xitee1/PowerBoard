@@ -64,7 +64,8 @@ public class Teams {
 		return placeholderName;
 	}
 
-	public String getPrefix() {
+	
+	public String getRawPrefix() {
 		if(this.p == null) {
 			PowerBoard.pl.getLogger().severe("An error occured while reading data for the player "+p.getName()+"!");
 			return null;
@@ -73,10 +74,9 @@ public class Teams {
 			PowerBoard.pl.getLogger().severe("An error occured while reading the prefix of the player "+p.getName()+"! Maybe a wrong setting in your config.yml?");
 			return null;
 		}
-		
-		return Placeholders.replace(this.p, this.prefix);
+		return this.prefix;
 	}
-	public String getSuffix() {
+	public String getRawSuffix() {
 		if(this.p == null) {
 			PowerBoard.pl.getLogger().severe("An error occured while reading data for the player "+p.getName()+"!");
 			return null;
@@ -85,8 +85,14 @@ public class Teams {
 			PowerBoard.pl.getLogger().severe("An error occured while reading the suffix of the player "+p.getName()+"! Maybe a wrong setting in your config.yml?");
 			return null;
 		}
-		
-		return Placeholders.replace(this.p, this.suffix);
+		return this.suffix;
+	}
+	
+	public String getPrefix() {
+		return Placeholders.replace(this.p, getRawPrefix());
+	}
+	public String getSuffix() {
+		return Placeholders.replace(this.p, getRawSuffix());
 	}
 	public ChatColor getNameColor() {
 		if(this.p == null) {

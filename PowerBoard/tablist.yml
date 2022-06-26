@@ -1,7 +1,7 @@
 # Here you can customize the tablist.
 # You can add as many animation steps as you like.
 # For every line you can set a different speed.
-# 
+#
 # To add a new line, just add a new number like "'3':"
 # If you have static lines (no animations or updates needed): Set the 'speed' value to '9999' or higher. Then the scheduler won't start to save performance.
 # Note: Specify the speed in ticks, not seconds. 20 ticks = one second
@@ -51,4 +51,4 @@ footer:
     - '&a%player_food%'
     - '&a%player_saturation%'
     - '&a%player_health%'
-    - '&a%tps%'
+    - '&a%server_tps%'
