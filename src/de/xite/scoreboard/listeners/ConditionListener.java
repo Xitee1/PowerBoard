@@ -36,8 +36,9 @@ public class ConditionListener implements Listener {
 				ScoreboardPlayer.updateScoreboard(p);
 				if(PowerBoard.pl.getConfig().getBoolean("tablist.ranks") || PowerBoard.pl.getConfig().getBoolean("chat.ranks")) {
 					Teams team = Teams.get(p);
-					if(team.getRawPrefix().contains("%player_world%") || team.getRawSuffix().contains("%player_world%"))
-						RankManager.updateTablistRanks(p);
+					if(team != null)
+						if(team.getRawPrefix().contains("%player_world%") || team.getRawSuffix().contains("%player_world%"))
+							RankManager.updateTablistRanks(p);
 				}
 			}
 		});
