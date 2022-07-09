@@ -16,7 +16,7 @@ public class VaultAPI {
 	public static boolean setupEconomy() {
 		RegisteredServiceProvider<Economy> rsp = pl.getServer().getServicesManager().getRegistration(Economy.class);
 		if(rsp == null) {
-			pl.getLogger().warning("Error hooking into Vault-Economy! <- Ignore if you don't have a economy plugin.");
+			pl.getLogger().warning("Error hooking into Vault-Economy! <- Ignore if you don't have a economy plugin installed on your server, otherwise check, if your money system supports Vault.");
 			return false;
 		}
 		econ = rsp.getProvider();
