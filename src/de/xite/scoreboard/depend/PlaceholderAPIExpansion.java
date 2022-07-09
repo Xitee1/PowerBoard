@@ -43,7 +43,7 @@ public class PlaceholderAPIExpansion extends PlaceholderExpansion {
             return t.getChatPrefix();
         
         if(placeholder.equalsIgnoreCase("display_name"))
-            return t.getPlaceholderName();
+            return t.getRankDisplayName();
         
         return null; // Placeholder is unknown by the Expansion
     }

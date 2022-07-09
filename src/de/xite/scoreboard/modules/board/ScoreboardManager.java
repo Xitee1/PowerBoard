@@ -57,7 +57,7 @@ public class ScoreboardManager {
 		// Get the config
 		File f = new File(PowerBoard.pluginfolder+"/scoreboards/"+name+".yml");
 		if(!f.exists()) {
-			pl.getLogger().severe("Could not load Scoreboard named "+name+", because the config file does not exists!");
+			pl.getLogger().severe("Could not load scoreboard named "+name+", because the config file does not exists!");
 			return;
 		}
 		YamlConfiguration cfg = Config.loadConfiguration(f);
@@ -158,7 +158,7 @@ public class ScoreboardManager {
 						String s = title.get(count); // get the current score (text)
 						currentTitle = s;
 						for(Player p : players)
-							ScoreTitleUtils.setTitle(p, p.getScoreboard(), s, true, get(name)); // set the score
+							ScoreTitleUtils.setTitle(p, s, true, get(name)); // set the score
 						if(count >= title.size()-1) {
 							count = 0;
 						}else
@@ -173,7 +173,7 @@ public class ScoreboardManager {
 		// check if scheduler is needed (don't schedule if higher than '9999')
 		if(speed >= 9999 || speed < 0) {
 			if(PowerBoard.debug)
-				pl.getLogger().info("Scoreboard-Score (ID: "+id+", Name: "+name+"): no animation needed");
+				pl.getLogger().info("Scoreboard-Score (ID: "+id+", Name: "+name+"): no animation needed (speed higher than 9999 or negative)");
 			return;
 		}else
 			if(PowerBoard.debug)
@@ -202,7 +202,7 @@ public class ScoreboardManager {
 						currentScores.replace(id, score);
 						
 						for(Player p : players)
-							ScoreTitleUtils.setScore(p, p.getScoreboard(), score, i, true, get(name)); // set the score
+							ScoreTitleUtils.setScore(p, score, i, true, get(name)); // set the score
 						
 						if(count >= scores.get(id).size()-1) {
 							count = 0;

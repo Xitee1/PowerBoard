@@ -60,6 +60,9 @@ public class ScoreboardPlayer {
 		}
 		obj.setDisplaySlot(DisplaySlot.SIDEBAR);
 		
+		p.setScoreboard(board); // Set the scoreboard
+		
+		// Set the scores if the API isn't used
 		if(!API) {
 			if(players.containsKey(p)) {
 				if(players.get(p).equals("blacklisted")) {
@@ -68,12 +71,10 @@ public class ScoreboardPlayer {
 					ScoreboardManager.get(players.get(p)).removePlayer(p);
 			}
 			sm.addPlayer(p);
-			ScoreTitleUtils.setTitle(p, board, sm.getCurrentTitle(), true, sm);
-			ScoreTitleUtils.setScores(p, board, sm.getCurrentScores(), true, sm);
+			ScoreTitleUtils.setTitle(p, sm.getCurrentTitle(), true, sm);
+			ScoreTitleUtils.setScores(p, sm.getCurrentScores(), true, sm);
 		}
 		
-		// ---- Set the scoreboard ---- //
-		p.setScoreboard(board);
 		
 		// Debug
 		if(PowerBoard.debug) {

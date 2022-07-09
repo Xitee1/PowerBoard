@@ -36,15 +36,15 @@ public class PowerBoardAPI {
 	}
 	
 	public static void setScoreboardTitle(Player p, String title, boolean usePlaceholders) {
-		if(!ScoreTitleUtils.setTitle(p, p.getScoreboard(), title, usePlaceholders, null))
+		if(!ScoreTitleUtils.setTitle(p, title, usePlaceholders, null))
 				PowerBoard.pl.getLogger().severe("Failed to set the Scoreboard-Title! "+p.getName()+"'s scoreboard is not registered yet - please set the scoreboard first!");
 	}
 	public static void setScoreboardScore(Player p, String score, int index, boolean usePlaceholders) {
-		if(!ScoreTitleUtils.setScore(p, p.getScoreboard(), score, index, usePlaceholders, null))
+		if(!ScoreTitleUtils.setScore(p, score, index, usePlaceholders, null))
 			PowerBoard.pl.getLogger().severe("Failed to set the Scoreboard-Score! "+p.getName()+"'s scoreboard is not registered yet - please set the scoreboard first!");
 	}
 	public static void setScoreboardScores(Player p, ArrayList<String> scores, boolean usePlaceholders) {
-		if(!ScoreTitleUtils.setScores(p, p.getScoreboard(), scores, usePlaceholders, null))
+		if(!ScoreTitleUtils.setScores(p, scores, usePlaceholders, null))
 			PowerBoard.pl.getLogger().severe("Failed to set the Scoreboard-Scores! "+p.getName()+"'s scoreboard is not registered yet - please set the scoreboard first with!");
 	}
 	
@@ -66,11 +66,11 @@ public class PowerBoardAPI {
 		t.setSuffix(suffix);
 		return true;
 	}
-	public static boolean setNameColorChar(Player p, String colorChar) {
+	public static boolean setNameColorChar(Player p, ChatColor color) {
 		Teams t = Teams.get(p);
 		if(t == null)
 			return false;
-		t.setNameColor(colorChar);
+		t.setNameColor(color);
 		return true;
 	}
 	// Get

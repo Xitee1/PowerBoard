@@ -47,7 +47,7 @@ public class TablistManager {
 		// Get the config
 		File f = new File(PowerBoard.pluginfolder+"/"+name+".yml");
 		if(!f.exists()) {
-			PowerBoard.pl.getLogger().severe("Could not load Tablist named "+name+", because the config file does not exists!");
+			PowerBoard.pl.getLogger().severe("Could not load tablist named "+name+", because the config file does not exists!");
 			return;
 		}
 		YamlConfiguration cfg = YamlConfiguration.loadConfiguration(f);
@@ -99,53 +99,18 @@ public class TablistManager {
 		}
 		
 		// ---- Start the animation ---- //
-		startAnimation(cfg);
-	}
-
-
-	private void startAnimation(YamlConfiguration cfg) {
 		int interval = 20*60;
 		// Header
 		for(int line : headers.keySet()) {
 			int speed = cfg.getInt("header."+line+".speed");
-			if(speed < 1)
-				speed = 1;
-			scheduler.add(
-				Bukkit.getScheduler().runTaskTimerAsynchronously(pl, new Runnable() {
-					int step = 0;
-					@Override
-					public void run() {
-						String text = headers.get(line).get(step);
-						currentHeader.put(line, text);
-						if(step >= headers.get(line).size()-1) {
-							step = 0;
-						}else
-							step++;
-					}
-				}, 0, speed)
-			);
+			startHeaderAnimation(line, speed);
 			// Set interval to speed if the speed value is smaller
 			interval = Math.min(interval, speed);
 		}
 		// Footer
 		for(int line : footers.keySet()) {
 			int speed = cfg.getInt("footer."+line+".speed");
-			if(speed < 1)
-				speed = 1;
-			scheduler.add(
-				Bukkit.getScheduler().runTaskTimerAsynchronously(pl, new Runnable() {
-					int step = 0;
-					@Override
-					public void run() {
-						String text = footers.get(line).get(step);
-						currentFooter.put(line, text);
-						if(step >= footers.get(line).size()-1) {
-							step = 0;
-						}else
-							step++;
-					}
-				}, 0, speed)
-			);
+			startFooterAnimation(line, speed);
 			// Set interval to speed if the speed value is smaller
 			interval = Math.min(interval, speed);
 		}
@@ -163,6 +128,62 @@ public class TablistManager {
 		);
 		if(PowerBoard.debug)
 			pl.getLogger().info("Tablist '"+name+"' loaded.");
+	}
+
+
+	private void startHeaderAnimation(int line, int speed) {
+		String text = headers.get(line).get(0);
+		currentHeader.put(line, text);
+		
+		if(speed >= 9999 || speed < 0) {
+			if(PowerBoard.debug)
+				pl.getLogger().info("Tablist header line "+line+" (Name: "+name+"): no animation needed (speed higher than 9999 or negative)");
+			return;
+		}else
+			if(PowerBoard.debug)
+				pl.getLogger().info("Tablist header line "+line+" (Name: "+name+"): animation started");
+		
+		scheduler.add(
+			Bukkit.getScheduler().runTaskTimerAsynchronously(pl, new Runnable() {
+				int step = 0;
+				@Override
+				public void run() {
+					String text = headers.get(line).get(step);
+					currentHeader.put(line, text);
+					if(step >= headers.get(line).size()-1) {
+						step = 0;
+					}else
+						step++;
+				}
+			}, 0, speed)
+		);
+	}
+	private void startFooterAnimation(int line, int speed) {
+		String text = footers.get(line).get(0);
+		currentFooter.put(line, text);
+		
+		if(speed >= 9999 || speed < 0) {
+			if(PowerBoard.debug)
+				pl.getLogger().info("Tablist footer line "+line+" (Name: "+name+"): no animation needed (speed higher than 9999 or negative)");
+			return;
+		}else
+			if(PowerBoard.debug)
+				pl.getLogger().info("Tablist footer line "+line+" (Name: "+name+"): animation started");
+		
+		scheduler.add(
+			Bukkit.getScheduler().runTaskTimerAsynchronously(pl, new Runnable() {
+				int step = 0;
+				@Override
+				public void run() {
+					String text = footers.get(line).get(step);
+					currentFooter.put(line, text);
+					if(step >= footers.get(line).size()-1) {
+						step = 0;
+					}else
+						step++;
+				}
+			}, 0, speed)
+		);
 	}
 	
 	private void sendPlayer(Player p) {
@@ -193,14 +214,18 @@ public class TablistManager {
 	public void unregister() {
 		for(BukkitTask task : scheduler)
 			task.cancel();
+		for(Player p : players) {
+			if(TablistPlayer.players.containsKey(p))
+				TablistPlayer.players.remove(p);
+		}
+		players.clear();
 		tablists.remove(name);
 	}
 	public static void unregisterAllTablists() {
-		for(TablistManager sm : tablists.values()) {
-			for(BukkitTask task : sm.scheduler)
-				task.cancel();
-		}
-		tablists.clear();
+		List<TablistManager> list = new ArrayList<>();
+		list.addAll(tablists.values());
+		for(TablistManager sm : list)
+			sm.unregister();
 	}
 	public static void registerAllTablists() {
 		/*
@@ -222,7 +247,7 @@ public class TablistManager {
 		for(String tab : tabs)
 			TablistManager.get(tab);
 		*/
-		TablistManager.get("tablist");
+		TablistManager.get(pl.getConfig().getString("tablist.text-default"));
 	}
 	
 	public void addPlayer(Player p) {

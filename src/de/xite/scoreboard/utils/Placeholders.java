@@ -16,6 +16,7 @@ import de.xite.scoreboard.depend.VaultAPI;
 import de.xite.scoreboard.main.ExternalPlugins;
 import de.xite.scoreboard.main.PowerBoard;
 import de.xite.scoreboard.modules.ranks.RankManager;
+import de.xite.scoreboard.utils.iridiumcolorapi.IridiumColorAPI;
 import de.xite.scoreboard.versions.version_1_08;
 import de.xite.scoreboard.versions.version_1_09;
 import de.xite.scoreboard.versions.version_1_10;
@@ -184,10 +185,10 @@ public class Placeholders {
 				teams = Teams.get(p);
 			}
   			if(teams != null) {
-  				if(teams.getPlaceholderName() == null) {
+  				if(teams.getRankDisplayName() == null) {
   					s = s.replace("%player_rank%", teams.getPrefix());
   				}else {
-  					s = s.replace("%player_rank%", teams.getPlaceholderName());
+  					s = s.replace("%player_rank%", teams.getRankDisplayName());
   				}
   			}
   		}
@@ -257,6 +258,7 @@ public class Placeholders {
   		s = ChatColor.translateAlternateColorCodes('&', s);
   		// Replace colors (HEX) - only 1.16+
   		s = translateHexColor(s);
+  		//s = IridiumColorAPI.process(s);
   		// Replace PAPI if plugin prefered
   		if(ExternalPlugins.hasPapi && pl.getConfig().getBoolean("prefer-plugin-placeholders"))
   			s = PlaceholderAPI.setPlaceholders(p, s);

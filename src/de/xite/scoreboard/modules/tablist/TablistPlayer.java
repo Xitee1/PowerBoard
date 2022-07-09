@@ -1,8 +1,6 @@
 package de.xite.scoreboard.modules.tablist;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map.Entry;
 
 import org.bukkit.entity.Player;
 
@@ -28,55 +26,14 @@ public class TablistPlayer {
 	}
 	
 	public static void removePlayer(Player p, boolean sendBlankTablist) {
-		if(players.containsKey(p))
+		if(players.containsKey(p)) {
+			players.remove(p);
 			TablistManager.get(players.get(p)).removePlayer(p, sendBlankTablist);
+		}
 	}
 	
 	public static TablistManager getMatchingTablist(Player p) {
-		/* Config syntax: 
-		conditions:
-		  - world:world AND permission:some.permission
-		  - world:world AND permission:some.other.permission
-		  - world:world AND gamemode:creative
-		  - world:world_nether
-		*/
-		for(Entry<String, TablistManager> e : TablistManager.tablists.entrySet()) {
-			TablistManager tm = e.getValue();
-			if(tm == null) {
-				pl.getLogger().severe("Could not set scoreboard '"+tm+"'! File does not exists!");
-				return null;
-			}
-			for(String condition : tm.conditions) { // For all "OR" conditions (lines)
-				ArrayList<String> andConditions = new ArrayList<>();
-				if(condition.contains(" AND ")) {
-					for(String s : condition.split(" AND "))
-						andConditions.add(s);
-				}else
-					andConditions.add(condition);
-				
-				boolean match = true;
-				for(String s : andConditions) {
-					if(s.startsWith("world:")) {
-						String value = s.split("world:")[1];
-						if(!(p.getLocation().getWorld().getName().equalsIgnoreCase(value)))
-							match = false;
-					}
-					if(s.startsWith("permission:")) {
-						String value = s.split("permission:")[1];
-						if(!(p.hasPermission(value)))
-							match = false;
-					}
-					if(s.startsWith("gamemode:")) {
-						String value = s.split("gamemode:")[1];
-						if(!(p.getGameMode().name().equalsIgnoreCase(value)))
-							match = false;
-					}
-				}
-				
-				if(match == true)
-					return tm;
-			}
-		}
-		return TablistManager.get(pl.getConfig().getString("tablist.text-default"));
+		// ConditionListener.checkConditions will be used here once multiple tablists are implemented
+		return null;
 	}
 }

@@ -14,19 +14,25 @@ public class Teams {
 	Player p;
 	String prefix;
 	String suffix;
-	String nameColor;
+	ChatColor nameColor;
 	String teamName;
 	String chatPrefix;
-	String placeholderName;
+	String rankDisplayName;
+	int weight;
 	
-	public Teams(Player p, String prefix, String suffix, String nameColor, String chatPrefix, String placeholderName, int weight) {
+	public Teams(Player p, String prefix, String suffix, ChatColor nameColor, String chatPrefix, String rankDisplayName, int weight) {
 		this.p = p;
 		this.prefix = prefix;
 		this.suffix = suffix;
 		this.nameColor = nameColor;
 		this.chatPrefix = chatPrefix;
-		this.placeholderName = placeholderName;
+		this.rankDisplayName = rankDisplayName;
+		this.weight = weight;
 		
+		if(p == null) {
+			PowerBoard.pl.getLogger().severe("Could not register team "+rankDisplayName+". Player is null!");
+			return;
+		}
 		
 		if(weight < 0 || weight > 999) {
 			PowerBoard.pl.getLogger().warning("---------------------------------------------------------------------------------------------------------------------------");
@@ -39,10 +45,20 @@ public class Teams {
 				+"team-"
 				+TeamCount;
 	}
-	public static Teams addPlayer(Player p, String prefix, String suffix, String nameColor, String chatPrefix, String placeholderName, int weight) {
+	public static Teams addPlayer(Player p, String prefix, String suffix, ChatColor nameColor, String chatPrefix, String placeholderName, int weight) {
 		Teams teams = new Teams(p, prefix, suffix, nameColor, chatPrefix, placeholderName, weight);
 		TeamsList.put(p, teams);
 		return teams;
+	}
+	public static Teams addPlayer(Player p, String prefix, String suffix, String nameColor, String chatPrefix, String placeholderName, int weight) {
+		nameColor = nameColor.replace("&", "").replace("§", "");
+		ChatColor nameColorChat = ChatColor.WHITE;
+		try {
+			nameColorChat = ChatColor.getByChar(nameColor);
+		}catch (Exception e) {
+			PowerBoard.pl.getLogger().warning("Could not read "+p.getName()+"'s name color. Please check your config.");
+		}
+		return addPlayer(p, prefix, suffix, nameColorChat, chatPrefix, placeholderName, weight);
 	}
 	public static void removePlayer(Player p) {
 		if(TeamsList.containsKey(p)) {
@@ -57,19 +73,16 @@ public class Teams {
 			return TeamsList.get(p);
 		return null;
 	}
+	
+	
+	
 	public String getChatPrefix() {
 		return chatPrefix;
 	}
-	public String getPlaceholderName() {
-		return placeholderName;
+	public String getRankDisplayName() {
+		return rankDisplayName;
 	}
-
-	
 	public String getRawPrefix() {
-		if(this.p == null) {
-			PowerBoard.pl.getLogger().severe("An error occured while reading data for the player "+p.getName()+"!");
-			return null;
-		}
 		if(this.prefix == null) {
 			PowerBoard.pl.getLogger().severe("An error occured while reading the prefix of the player "+p.getName()+"! Maybe a wrong setting in your config.yml?");
 			return null;
@@ -77,17 +90,12 @@ public class Teams {
 		return this.prefix;
 	}
 	public String getRawSuffix() {
-		if(this.p == null) {
-			PowerBoard.pl.getLogger().severe("An error occured while reading data for the player "+p.getName()+"!");
-			return null;
-		}
 		if(this.suffix == null) {
 			PowerBoard.pl.getLogger().severe("An error occured while reading the suffix of the player "+p.getName()+"! Maybe a wrong setting in your config.yml?");
 			return null;
 		}
 		return this.suffix;
 	}
-	
 	public String getPrefix() {
 		return Placeholders.replace(this.p, getRawPrefix());
 	}
@@ -95,28 +103,13 @@ public class Teams {
 		return Placeholders.replace(this.p, getRawSuffix());
 	}
 	public ChatColor getNameColor() {
-		if(this.p == null) {
-			PowerBoard.pl.getLogger().severe("An error occured while reading data for the player "+p.getName()+"!");
-			return ChatColor.WHITE;
-		}
 		if(this.nameColor == null) {
-			PowerBoard.pl.getLogger().severe("An error occured while reading the tablist-name-color of the player "+p.getName()+"! Maybe a wrong setting in your config.yml?");
+			PowerBoard.pl.getLogger().severe("An error occured while reading the name color of the player "+p.getName()+"! Maybe a wrong setting in your config.yml?");
 			return ChatColor.WHITE;
 		}
-	
-		String nameColorS = this.nameColor;
-		nameColorS = nameColorS.replace("&", "").replace("§", "");
-		try {
-			return ChatColor.getByChar(nameColorS);
-		}catch (Exception e) {
-			return ChatColor.WHITE;
-		}
+		return this.nameColor;
 	}
 	public String getChat(String message) {
-		if(this.p == null) {
-			PowerBoard.pl.getLogger().severe("An error occured while reading data for the player "+p.getName()+"!");
-			return null;
-		}
 		if(this.chatPrefix == null) {
 			PowerBoard.pl.getLogger().severe("An error occured while the player "+p.getName()+" was sending a chat message! Maybe he has no rank?");
 			return message;
@@ -134,21 +127,24 @@ public class Teams {
 		return Placeholders.replace(p, this.chatPrefix)+message;
 	}
 	public String getTeamName() {
-		if(this.p == null) {
-			PowerBoard.pl.getLogger().severe("An error occured while reading data for the player "+p.getName()+"!");
-			return null;
-		}
 		if(this.teamName == null) {
 			PowerBoard.pl.getLogger().severe("An error occured while reading the team-name of the player "+p.getName()+"! Maybe a wrong setting in your config.yml?");
 			return null;
 		}
 		return this.teamName;
 	}
+	public int getWeight() {
+		if(this.teamName == null) {
+			PowerBoard.pl.getLogger().severe("An error occured while reading the team-name of the player "+p.getName()+"! Maybe a wrong setting in your config.yml?");
+			return 0;
+		}
+		return this.weight;
+	}
 	
 	
 	
-	public void setPlaceholderName(String name) {
-		this.placeholderName = name;
+	public void setRankDisplayName(String name) {
+		this.rankDisplayName = name;
 	}
 	public void setPrefix(String prefix) {
 		this.prefix = prefix;
@@ -156,7 +152,7 @@ public class Teams {
 	public void setSuffix(String suffix) {
 		this.suffix = suffix;
 	}
-	public void setNameColor(String color) {
+	public void setNameColor(ChatColor color) {
 		this.nameColor = color;
 	}
 }

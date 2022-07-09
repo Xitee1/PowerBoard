@@ -1,9 +1,12 @@
 package de.xite.scoreboard.api;
 
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+
+import de.xite.scoreboard.utils.Teams;
 
 public class TeamSetEvent extends Event implements Cancellable{
 	
@@ -11,19 +14,18 @@ public class TeamSetEvent extends Event implements Cancellable{
 	private boolean isCancelled;
 	private String prefix;
 	private String suffix;
-	private String nameColorChar;
+	private ChatColor nameColor;
 	private String chatPrefix;
-	private String placeholderName;
+	private String rankDisplayName;
 	private int weight;
 	
 	public TeamSetEvent(Player p) {
 		this.p = p;
 		this.prefix = "";
 		this.suffix = "";
-		this.nameColorChar = "f";
+		this.nameColor = ChatColor.WHITE;
 		this.chatPrefix = "";
-		this.placeholderName = "";
-		this.placeholderName = "";
+		this.rankDisplayName = "";
 		this.weight = 0;
 	}
 	
@@ -51,21 +53,39 @@ public class TeamSetEvent extends Event implements Cancellable{
 		return this.p;
 	}
 	public String getPrefix() {
+		Teams t = Teams.get(p);
+		if(t != null && this.prefix.length() == 0)
+			this.prefix = t.getPrefix();
 		return this.prefix;
 	}
 	public String getSuffix() {
+		Teams t = Teams.get(p);
+		if(t != null && this.suffix.length() == 0)
+			this.suffix = t.getSuffix();
 		return this.suffix;
 	}
-	public String getNameColorChar() {
-		return this.nameColorChar;
+	public ChatColor getNameColorChar() {
+		Teams t = Teams.get(p);
+		if(t != null && this.nameColor == ChatColor.WHITE)
+			this.nameColor = t.getNameColor();
+		return this.nameColor;
 	}
 	public String getChatPrefix() {
+		Teams t = Teams.get(p);
+		if(t != null && this.chatPrefix.length() == 0)
+			this.chatPrefix = t.getChatPrefix();
 		return this.chatPrefix;
 	}
-	public String getPlaceholderName() {
-		return this.placeholderName;
+	public String getRankDisplayName() {
+		Teams t = Teams.get(p);
+		if(t != null && this.rankDisplayName.length() == 0)
+			this.rankDisplayName = t.getRankDisplayName();
+		return this.rankDisplayName;
 	}
 	public Integer getWeight() {
+		Teams t = Teams.get(p);
+		if(t != null && this.weight == 0)
+			this.weight = t.getWeight();
 		return this.weight;
 	}
 	
@@ -75,14 +95,14 @@ public class TeamSetEvent extends Event implements Cancellable{
 	public void setSuffix(String suffix) {
 		this.suffix = suffix;
 	}
-	public void setNameColor(String nameColorChar) {
-		this.nameColorChar = nameColorChar;
+	public void setNameColor(ChatColor nameColor) {
+		this.nameColor = nameColor;
 	}
 	public void setChatPrefix(String chatPrefix) {
 		this.chatPrefix = chatPrefix;
 	}
-	public void setPlaceholderName(String placeholderName) {
-		this.placeholderName = placeholderName;
+	public void setRankDisplayName(String rankDisplayName) {
+		this.rankDisplayName = rankDisplayName;
 	}
 	public void setWeight(int weight) {
 		this.weight = weight;

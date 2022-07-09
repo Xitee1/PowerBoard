@@ -27,7 +27,7 @@ public class RankManager {
 			TeamSetEvent tse = new TeamSetEvent(p);
 			Bukkit.getPluginManager().callEvent(tse);
 			if(!tse.isCancelled()) {
-				Teams.addPlayer(p, tse.getPrefix(), tse.getSuffix(), tse.getNameColorChar(), tse.getChatPrefix(), tse.getPlaceholderName(), tse.getWeight());
+				Teams.addPlayer(p, tse.getPrefix(), tse.getSuffix(), tse.getNameColorChar(), tse.getChatPrefix(), tse.getRankDisplayName(), tse.getWeight());
 			}
 			return true;
 			
@@ -49,7 +49,7 @@ public class RankManager {
 							
 							Teams.addPlayer(p, prefix, suffix, nameColor, chatPrefix, placeholderName, weight);
 							Teams t = Teams.get(p);
-							t.setPlaceholderName(t.getNameColor()+t.getPlaceholderName());
+							t.setRankDisplayName(t.getNameColor()+t.getRankDisplayName());
 							
 							if(PowerBoard.debug)
 								pl.getLogger().info("The player "+p.getName()+" has now the rank (luckperms): Prefix: "+prefix+"; Suffix: "+suffix+"; Group: "+permission);
@@ -66,7 +66,7 @@ public class RankManager {
 
 							Teams.addPlayer(p, prefix, suffix, nameColor, chatPrefix, placeholderName, weight);
 							Teams t = Teams.get(p);
-							t.setPlaceholderName(t.getNameColor()+t.getPlaceholderName());
+							t.setRankDisplayName(t.getNameColor()+t.getRankDisplayName());
 							
 							if(PowerBoard.debug)
 								pl.getLogger().info("The player "+p.getName()+" has now the rank (permission/none): Prefix: "+prefix+"; Suffix: "+suffix+"; Permission: "+permission);
@@ -152,7 +152,8 @@ public class RankManager {
 		}
 		delay(p, 20*3);
 		
-		pl.getLogger().info("Updating "+p.getName()+"'s rank..");
+		if(PowerBoard.debug)
+			pl.getLogger().info("Updating "+p.getName()+"'s rank..");
 		
 		// Update the team info
 		RankManager.register(p);

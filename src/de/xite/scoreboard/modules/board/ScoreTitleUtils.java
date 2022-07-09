@@ -14,59 +14,56 @@ import de.xite.scoreboard.utils.Placeholders;
 
 public class ScoreTitleUtils {
 	// ---- Set the scoreboard title ---- //
-	public static boolean setTitle(Player p, Scoreboard board, String title, boolean usePlaceholders, ScoreboardManager sm) {
+	public static boolean setTitle(Player p, String title, boolean usePlaceholders, ScoreboardManager sm) {
+		Scoreboard board = p.getScoreboard();
 		Objective obj = board.getObjective(DisplaySlot.SIDEBAR);
 		if(obj == null)
 			return false;
 		if(usePlaceholders)
 			title = Placeholders.replace(p, title);
 		
-		if(!PowerBoard.debug) {
-			try {
-				obj.setDisplayName(title);
-			}catch (IllegalArgumentException e) {
-				if(PowerBoard.aboveMC_1_13) { // In version 1.13 you can use up to 128 chars in the title
-					obj.setDisplayName(ChatColor.RED+"Error: too long - see console");
-					PowerBoard.pl.getLogger().warning(" ");
-					PowerBoard.pl.getLogger().warning("-> The scoreboard title is too long! The limit is 128 chars!");
-					if(sm != null)
-						PowerBoard.pl.getLogger().warning("-> Scoreboard: "+sm.getName());
-					PowerBoard.pl.getLogger().warning("-> Title: "+title);
-					PowerBoard.pl.getLogger().warning("-> Player: "+p.getName());
-					PowerBoard.pl.getLogger().warning(" ");
-				}else {
-					obj.setDisplayName(ChatColor.RED+"| too long |");
-					PowerBoard.pl.getLogger().warning(" ");
-					PowerBoard.pl.getLogger().warning("-> The scoreboard title is too long! The limit is 16 chars!");
-					if(sm != null)
-						PowerBoard.pl.getLogger().warning("-> Scoreboard: "+sm.getName());
-					PowerBoard.pl.getLogger().warning("-> Title: "+title);
-					PowerBoard.pl.getLogger().warning("-> Player: "+p.getName());
-					PowerBoard.pl.getLogger().warning(" ");
-				}
+		//try {
+			obj.setDisplayName(title);
+		/*}catch (IllegalArgumentException e) {
+			if(PowerBoard.aboveMC_1_13) { // In version 1.13 you can use up to 128 chars in the title
+				obj.setDisplayName(ChatColor.RED+"Error: too long - see console");
+				PowerBoard.pl.getLogger().warning(" ");
+				PowerBoard.pl.getLogger().warning("-> The scoreboard title is too long! The limit is 128 chars!");
+				if(sm != null)
+					PowerBoard.pl.getLogger().warning("-> Scoreboard: "+sm.getName());
+				PowerBoard.pl.getLogger().warning("-> Title: "+title);
+				PowerBoard.pl.getLogger().warning("-> Player: "+p.getName());
+				PowerBoard.pl.getLogger().warning(" ");
+			}else {
+				obj.setDisplayName(ChatColor.RED+"| too long |");
+				PowerBoard.pl.getLogger().warning(" ");
+				PowerBoard.pl.getLogger().warning("-> The scoreboard title is too long! The limit is 16 chars!");
+				if(sm != null)
+					PowerBoard.pl.getLogger().warning("-> Scoreboard: "+sm.getName());
+				PowerBoard.pl.getLogger().warning("-> Title: "+title);
+				PowerBoard.pl.getLogger().warning("-> Player: "+p.getName());
+				PowerBoard.pl.getLogger().warning(" ");
 			}
-		}else {
-			try {
-				obj.setDisplayName(title);
-			}catch (IllegalStateException e) { }
-		}
+		}*/
 		
-		if(sm != null)
-			sm.addPlayer(p);
+		//if(sm != null)
+			//sm.addPlayer(p);
 		return true;
 	}
 	// ---- Set scores ---- //
-	public static boolean setScores(Player p, Scoreboard board, ArrayList<String> scores, boolean usePlaceholders, ScoreboardManager sm) {
+	public static boolean setScores(Player p, ArrayList<String> scores, boolean usePlaceholders, ScoreboardManager sm) {
+		Scoreboard board = p.getScoreboard();
 		Objective obj = board.getObjective(DisplaySlot.SIDEBAR);
 		if(obj == null)
 			return false;
 		for(int i = 0; i < scores.size(); i++) {
 			int id = scores.size()-i-1;
-			setScore(p, board, scores.get(id), i, usePlaceholders, sm);
+			setScore(p, scores.get(id), i, usePlaceholders, sm);
 		}
 		return true;
 	}
-	public static boolean setScore(Player p, Scoreboard board, String score, int ScoreID, boolean usePlaceholders, ScoreboardManager sm) {
+	public static boolean setScore(Player p, String score, int ScoreID, boolean usePlaceholders, ScoreboardManager sm) {
+		Scoreboard board = p.getScoreboard();
 		Objective obj = board.getObjective(DisplaySlot.SIDEBAR);
 		if(obj == null)
 			return false;
@@ -98,10 +95,13 @@ public class ScoreTitleUtils {
 				score = Placeholders.replace(p, score);
 			
 			// ---- Set all scores ---- //
-			if(PowerBoard.aboveMC_1_13) { // In version 1.13 you can use up to 64 chars in prefix/suffix
+			if(PowerBoard.aboveMC_1_13) { // In version 1.13 you can use up to 64 chars in prefix and suffix
 				// Set the score for 1.13+
-				String[] s = getScorePrefixSuffix(score, 64, 128);
-				if(s == null) {
+				String[] s = getScorePrefixSuffix(score, 64, 999);
+				try {
+					team.setPrefix(s[0]);
+					team.setSuffix(s[1]);
+				}catch (IllegalArgumentException e) {
 					team.setPrefix(ChatColor.RED+"-too long-");
 					PowerBoard.pl.getLogger().warning(" ");
 					PowerBoard.pl.getLogger().warning("-> The scoreboard-score is too long! The limit is 128 chars!");
@@ -110,9 +110,6 @@ public class ScoreTitleUtils {
 					PowerBoard.pl.getLogger().warning("-> Score: "+score);
 					PowerBoard.pl.getLogger().warning("-> Player: "+p.getName());
 					PowerBoard.pl.getLogger().warning(" ");
-				}else {
-					team.setPrefix(s[0]);
-					team.setSuffix(s[1]);
 				}
 			}else {
 				// Set the score for 1.12-
@@ -132,8 +129,8 @@ public class ScoreTitleUtils {
 				}
 			}
 		}catch (IllegalStateException e) { }
-		if(sm != null)
-			sm.addPlayer(p);
+		//if(sm != null)
+			//sm.addPlayer(p);
 		return true;
 	}
 	public static String[] getScorePrefixSuffix(String score, int split, int maxchars) {

@@ -175,11 +175,11 @@ public class Config {
 				ArrayList<String> score_6 = new ArrayList<>();
 				ArrayList<String> score_7 = new ArrayList<>();
 				score_1.add("-Not animated-");
-				cfg.addDefault("0.speed", 9999);
+				cfg.addDefault("0.speed", -1);
 				cfg.addDefault("0.scores", score_1);
 				
 				score_2.add(" ");
-				cfg.addDefault("1.speed", 9999);
+				cfg.addDefault("1.speed", -1);
 				cfg.addDefault("1.scores", score_2);
 				
 				score_3.add("&a-A-");
@@ -208,11 +208,11 @@ public class Config {
 				cfg.addDefault("2.scores", score_3);
 				
 				score_4.add(" ");
-				cfg.addDefault("3.speed", 99999);
+				cfg.addDefault("3.speed", -1);
 				cfg.addDefault("3.scores", score_4);
 			
 				score_5.add("&dInformations:");
-				cfg.addDefault("4.speed", 99999);
+				cfg.addDefault("4.speed", -1);
 				cfg.addDefault("4.scores", score_5);
 			
 				score_6.add("&bPlayers:");
@@ -308,7 +308,7 @@ public class Config {
 				cfg.set("header.1.lines", header1);
 				//Line2
 				header2.add(" ");
-				cfg.set("header.2.speed", 99999);
+				cfg.set("header.2.speed", -1);
 				cfg.set("header.2.lines", header2);
 				
 				//Footer
@@ -318,11 +318,11 @@ public class Config {
 				ArrayList<String> footer4 = new ArrayList<>();
 				//Line1
 				footer1.add(" ");
-				cfg.set("footer.1.speed", 99999);
+				cfg.set("footer.1.speed", -1);
 				cfg.set("footer.1.lines", footer1);
 				//Line2
 				footer2.add("&dInformations:");
-				cfg.set("footer.2.speed", 99999);
+				cfg.set("footer.2.speed", -1);
 				cfg.set("footer.2.lines", footer2);
 				//Line3
 				footer3.add("&bPlayers:");
