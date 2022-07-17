@@ -201,7 +201,9 @@ public class ScoreboardManager {
 						int i = scores.size()-id-1;
 						currentScores.replace(id, score);
 						
-						for(Player p : players)
+						List<Player> all = new ArrayList<Player>();
+						all.addAll(players);
+						for(Player p : all)
 							ScoreTitleUtils.setScore(p, score, i, true, get(name)); // set the score
 						
 						if(count >= scores.get(id).size()-1) {
