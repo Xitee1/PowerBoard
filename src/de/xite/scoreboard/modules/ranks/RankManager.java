@@ -185,7 +185,8 @@ public class RankManager {
 		}catch (Exception e) {
 			pl.getLogger().warning("There was an error whilst updating "+p.getName()+"'s rank!");
 		}
-		pl.getLogger().info("Updated rank.");
+		if(PowerBoard.debug)
+			pl.getLogger().info("Updated rank.");
 		return true;
 	}
 	
