@@ -27,8 +27,8 @@ public class TablistPlayer {
 	
 	public static void removePlayer(Player p, boolean sendBlankTablist) {
 		if(players.containsKey(p)) {
-			players.remove(p);
 			TablistManager.get(players.get(p)).removePlayer(p, sendBlankTablist);
+			players.remove(p);
 		}
 	}
 	
