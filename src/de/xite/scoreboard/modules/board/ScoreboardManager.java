@@ -260,7 +260,7 @@ public class ScoreboardManager {
 		}
 		for(String board : boards) {
 			ScoreboardManager.get(board);
-			pl.getLogger().info("Registered scoreboard "+board+".");
+			pl.getLogger().info("Registered scoreboard '"+board+"'.");
 		}
 	}
 	public static void unregisterAllScoreboards() {

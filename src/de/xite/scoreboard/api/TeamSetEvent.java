@@ -17,16 +17,11 @@ public class TeamSetEvent extends Event implements Cancellable{
 	private ChatColor nameColor;
 	private String chatPrefix;
 	private String rankDisplayName;
-	private int weight;
+	private String playerListName;
+	private int weight = 0;
 	
 	public TeamSetEvent(Player p) {
 		this.p = p;
-		this.prefix = "";
-		this.suffix = "";
-		this.nameColor = ChatColor.WHITE;
-		this.chatPrefix = "";
-		this.rankDisplayName = "";
-		this.weight = 0;
 	}
 	
 	@Override
@@ -53,40 +48,80 @@ public class TeamSetEvent extends Event implements Cancellable{
 		return this.p;
 	}
 	public String getPrefix() {
-		Teams t = Teams.get(p);
-		if(t != null && this.prefix.length() == 0)
-			this.prefix = t.getPrefix();
-		return this.prefix;
+		if(prefix == null) {
+			Teams t = Teams.get(p);
+			if(t != null) {
+				prefix = t.getPrefix();
+			}else
+				prefix = "Not defined";
+		}
+			
+		return prefix;
 	}
 	public String getSuffix() {
-		Teams t = Teams.get(p);
-		if(t != null && this.suffix.length() == 0)
-			this.suffix = t.getSuffix();
-		return this.suffix;
+		if(suffix == null) {
+			Teams t = Teams.get(p);
+			if(t != null) {
+				suffix = t.getSuffix();
+			}else
+				suffix = "Not defined";
+		}
+		
+		return suffix;
 	}
-	public ChatColor getNameColorChar() {
-		Teams t = Teams.get(p);
-		if(t != null && this.nameColor == ChatColor.WHITE)
-			this.nameColor = t.getNameColor();
-		return this.nameColor;
+	public ChatColor getNameColor() {
+		if(nameColor == null) {
+			Teams t = Teams.get(p);
+			if(t != null) {
+				nameColor = t.getNameColor();
+			}else
+				nameColor = ChatColor.WHITE;
+		}
+		
+		return nameColor;
 	}
 	public String getChatPrefix() {
-		Teams t = Teams.get(p);
-		if(t != null && this.chatPrefix.length() == 0)
-			this.chatPrefix = t.getChatPrefix();
-		return this.chatPrefix;
+		if(chatPrefix == null) {
+			Teams t = Teams.get(p);
+			if(t != null) {
+				chatPrefix = t.getChatPrefix();
+			}else
+				chatPrefix = "Not defined";
+		}
+		
+		return chatPrefix;
 	}
 	public String getRankDisplayName() {
-		Teams t = Teams.get(p);
-		if(t != null && this.rankDisplayName.length() == 0)
-			this.rankDisplayName = t.getRankDisplayName();
-		return this.rankDisplayName;
+		if(rankDisplayName == null) {
+			Teams t = Teams.get(p);
+			if(t != null) {
+				rankDisplayName = t.getRankDisplayName();
+			}else
+				rankDisplayName = "Not defined";
+		}
+		
+		return rankDisplayName;
+	}
+	public String getPlayerListName() {
+		if(playerListName == null) {
+			Teams t = Teams.get(p);
+			if(t != null)
+				playerListName = t.getPlayerListName();
+			// Not setting to "Not defined" because it can be null and is optional
+		}
+		
+		return playerListName;
 	}
 	public Integer getWeight() {
-		Teams t = Teams.get(p);
-		if(t != null && this.weight == 0)
-			this.weight = t.getWeight();
-		return this.weight;
+		if(weight == 0) {
+			Teams t = Teams.get(p);
+			if(t != null) {
+				weight = t.getWeight();
+			}else
+				weight = 0;
+		}
+		
+		return weight;
 	}
 	
 	public void setPrefix(String prefix) {
@@ -103,6 +138,9 @@ public class TeamSetEvent extends Event implements Cancellable{
 	}
 	public void setRankDisplayName(String rankDisplayName) {
 		this.rankDisplayName = rankDisplayName;
+	}
+	public void setPlayerListName(String playerListName) {
+		this.playerListName = playerListName;
 	}
 	public void setWeight(int weight) {
 		this.weight = weight;

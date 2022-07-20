@@ -18,15 +18,17 @@ public class Teams {
 	String teamName;
 	String chatPrefix;
 	String rankDisplayName;
+	String playerListName;
 	int weight;
 	
-	public Teams(Player p, String prefix, String suffix, ChatColor nameColor, String chatPrefix, String rankDisplayName, int weight) {
+	public Teams(Player p, String prefix, String suffix, ChatColor nameColor, String chatPrefix, String rankDisplayName, String playerListName, int weight) {
 		this.p = p;
 		this.prefix = prefix;
 		this.suffix = suffix;
 		this.nameColor = nameColor;
 		this.chatPrefix = chatPrefix;
 		this.rankDisplayName = rankDisplayName;
+		this.playerListName = playerListName;
 		this.weight = weight;
 		
 		if(p == null) {
@@ -45,20 +47,22 @@ public class Teams {
 				+"team-"
 				+TeamCount;
 	}
-	public static Teams addPlayer(Player p, String prefix, String suffix, ChatColor nameColor, String chatPrefix, String placeholderName, int weight) {
-		Teams teams = new Teams(p, prefix, suffix, nameColor, chatPrefix, placeholderName, weight);
+	public static Teams addPlayer(Player p, String prefix, String suffix, ChatColor nameColor, String chatPrefix, String placeholderName, String playerListName, int weight) {
+		Teams teams = new Teams(p, prefix, suffix, nameColor, chatPrefix, placeholderName, playerListName, weight);
 		TeamsList.put(p, teams);
 		return teams;
 	}
-	public static Teams addPlayer(Player p, String prefix, String suffix, String nameColor, String chatPrefix, String placeholderName, int weight) {
+	public static Teams addPlayer(Player p, String prefix, String suffix, String nameColor, String chatPrefix, String placeholderName, String playerListName, int weight) {
 		nameColor = nameColor.replace("&", "").replace("§", "");
 		ChatColor nameColorChat = ChatColor.WHITE;
 		try {
 			nameColorChat = ChatColor.getByChar(nameColor);
 		}catch (Exception e) {
-			PowerBoard.pl.getLogger().warning("Could not read "+p.getName()+"'s name color. Please check your config.");
+			PowerBoard.pl.getLogger().warning("Could not read "+p.getName()+"'s name color."
+					+ "The player's name will be white in the tablist."
+					+ "To avoid this, make sure, you have a valid colorcode at the end of your prefix.");
 		}
-		return addPlayer(p, prefix, suffix, nameColorChat, chatPrefix, placeholderName, weight);
+		return addPlayer(p, prefix, suffix, nameColorChat, chatPrefix, placeholderName, playerListName, weight);
 	}
 	public static void removePlayer(Player p) {
 		if(TeamsList.containsKey(p)) {
@@ -81,6 +85,9 @@ public class Teams {
 	}
 	public String getRankDisplayName() {
 		return rankDisplayName;
+	}
+	public String getPlayerListName() { // Custom playername
+		return playerListName;
 	}
 	public String getRawPrefix() {
 		if(this.prefix == null) {
@@ -154,5 +161,8 @@ public class Teams {
 	}
 	public void setNameColor(ChatColor color) {
 		this.nameColor = color;
+	}
+	public void setPlayerListName(String playerListName) {
+		this.playerListName = playerListName;
 	}
 }

@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 
+import de.xite.scoreboard.api.TeamSetEvent;
 import de.xite.scoreboard.main.PowerBoard;
 import de.xite.scoreboard.modules.board.ScoreboardPlayer;
 import de.xite.scoreboard.modules.ranks.RankManager;
@@ -43,8 +45,21 @@ public class ConditionListener implements Listener {
 			}
 		});
 	}
-	
-	
+	/*
+	@EventHandler
+	public void onRankEvent(TeamSetEvent e) {
+		Player p = e.getPlayer();
+		if(p.getName().equals("Xitecraft")) {
+			e.setChatPrefix("Chat Prefix : ");
+			e.setNameColor(ChatColor.BLUE);
+			e.setPrefix(ChatColor.RED+"[OWNER]");
+			e.setSuffix(ChatColor.AQUA+"[SUFFIX]");
+			e.setRankDisplayName("Owner's Displayname");
+			e.setPlayerListName("HEY");
+			e.setWeight(999);
+		}
+	}
+	*/
 	public static boolean checkConditions(Player p, List<String> conditions) {
 		for(String condition : conditions) { // For all "OR" conditions (lines)
 			ArrayList<String> andConditions = new ArrayList<>();

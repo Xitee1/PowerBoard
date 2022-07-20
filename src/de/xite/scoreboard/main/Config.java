@@ -400,11 +400,15 @@ public class Config {
 					}
 				}, 40);
 				// General config
-				s.sendMessage(PowerBoard.pr+ChatColor.GRAY+"Reloading "+ChatColor.YELLOW+"config"+ChatColor.GRAY+"...");
+				sendConfigReloadMessage(s, ChatColor.GRAY+"Reloading "+ChatColor.YELLOW+"config"+ChatColor.GRAY+"...");
 				Config.loadConfig();
 				
+				// Load all external plugin APIs
+				sendConfigReloadMessage(s, ChatColor.YELLOW+"Initializing external plugins"+ChatColor.GRAY+"...");
+				ExternalPlugins.initializePlugins(); 
+				
 				// Scoreboards
-				s.sendMessage(PowerBoard.pr+ChatColor.GRAY+"Reloading "+ChatColor.YELLOW+"scoreboards"+ChatColor.GRAY+"...");
+				sendConfigReloadMessage(s, ChatColor.GRAY+"Reloading "+ChatColor.YELLOW+"scoreboards"+ChatColor.GRAY+"...");
 				ArrayList<Player> players = new ArrayList<Player>();
 				players.addAll(ScoreboardPlayer.players.keySet());
 				for(Player p : players)
@@ -422,25 +426,29 @@ public class Config {
 				}
 				
 				// Ranks
-				boolean tabRanks = pl.getConfig().getBoolean("tablist.ranks");
-				if(tabRanks || PowerBoard.pl.getConfig().getBoolean("chat.ranks")) {
+				if(pl.getConfig().getBoolean("tablist.ranks") || PowerBoard.pl.getConfig().getBoolean("chat.ranks")) {
+					sendConfigReloadMessage(s, ChatColor.GRAY+"Reloading "+ChatColor.YELLOW+"ranks"+ChatColor.GRAY+"...");
 					for(Player all : Bukkit.getOnlinePlayers()) {
 						Teams.removePlayer(all);
 						RankManager.register(all);
-						if(tabRanks)
-							RankManager.setTablistRanks(all);
 					}
 				}
 
 				if(PowerBoard.pl.getConfig().getBoolean("tablist.text")) {
-					s.sendMessage(PowerBoard.pr+ChatColor.GRAY+"Reloading "+ChatColor.YELLOW+"tablist"+ChatColor.GRAY+"...");
+					sendConfigReloadMessage(s, ChatColor.GRAY+"Reloading "+ChatColor.YELLOW+"tablists"+ChatColor.GRAY+"...");
 					TablistManager.unregisterAllTablists();
 					TablistManager.registerAllTablists();
 					for(Player all : Bukkit.getOnlinePlayers())
 						TablistPlayer.addPlayer(all, null);
 				}
-				s.sendMessage(PowerBoard.pr+ChatColor.GREEN+"Plugin reloaded!");
+				
+				sendConfigReloadMessage(s, ChatColor.GREEN+"Plugin reloaded!");
 			}
 		});
+	}
+	private static void sendConfigReloadMessage(CommandSender s, String message) {
+		if(s instanceof Player)
+			s.sendMessage(PowerBoard.pr+"Config Reload: "+message);
+		pl.getLogger().info("Config Reload: "+message);
 	}
 }

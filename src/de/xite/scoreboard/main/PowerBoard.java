@@ -1,7 +1,6 @@
 package de.xite.scoreboard.main;
 
 import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -105,10 +104,10 @@ public class PowerBoard extends JavaPlugin {
 						Teams teams = Teams.get(all);
 						if(teams == null)
 							RankManager.register(all);
-						RankManager.startTablistRanksUpdateScheduler();
+						
 					}
 					if(pl.getConfig().getBoolean("tablist.ranks"))
-						RankManager.setTablistRanks(all);
+						RankManager.startTablistRanksUpdateScheduler();
 					
 					if(pl.getConfig().getBoolean("scoreboard"))
 						ScoreboardPlayer.setScoreboard(all, false, null);

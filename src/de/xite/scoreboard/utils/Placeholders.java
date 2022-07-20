@@ -180,10 +180,10 @@ public class Placeholders {
   		// Rank displayname
   		if(s.contains("%player_rank%")) {
   			Teams teams = Teams.get(p);
-			if(teams == null) {
+			/*if(teams == null) {
 				RankManager.register(p);
 				teams = Teams.get(p);
-			}
+			}*/
   			if(teams != null) {
   				if(teams.getRankDisplayName() == null) {
   					s = s.replace("%player_rank%", teams.getPrefix());

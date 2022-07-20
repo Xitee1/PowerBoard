@@ -104,7 +104,7 @@ public class LuckPermsRanks {
 		
 		// Register the player with all the collected data
 		try {
-			Teams.addPlayer(p, prefix, suffix, nameColor, chat, displayname, weight);
+			Teams.addPlayer(p, prefix, suffix, nameColor, chat, displayname, null, weight);
 			return true;
 		}catch (Exception e) {
 			// If somehow something does no work, send a error message to configure the rank properly.

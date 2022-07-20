@@ -40,10 +40,14 @@ public class ExternalPlugins {
 		
 		if(Bukkit.getPluginManager().isPluginEnabled("LuckPerms")) {
 			hasLuckPerms = true;
-			RegisteredServiceProvider<LuckPerms> provider = Bukkit.getServicesManager().getRegistration(LuckPerms.class);
-			if(provider != null)
-				luckPerms = provider.getProvider();
-			new LuckPermsListener(pl, luckPerms);
+			if(pl.getConfig().getBoolean("ranks.luckperms-api.enable") || pl.getConfig().getString("ranks.permissionsystem").equalsIgnoreCase("luckperms")) {
+				RegisteredServiceProvider<LuckPerms> provider = Bukkit.getServicesManager().getRegistration(LuckPerms.class);
+				if(provider != null)
+					luckPerms = provider.getProvider();
+				new LuckPermsListener(pl, luckPerms);
+			}else
+				if(luckPerms != null)
+					pl.getLogger().warning("You have changed the rank permissions system from LuckPerms to something different. LuckPerms cannot be completely disabled whith a PB reload. Please restart your server soon.");
 		}
 		// BStats analytics
 		try {

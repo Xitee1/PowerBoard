@@ -60,7 +60,7 @@ public class ScoreboardPlayer {
 		}
 		obj.setDisplaySlot(DisplaySlot.SIDEBAR);
 		
-		p.setScoreboard(board); // Set the scoreboard
+		//p.setScoreboard(board); // Set the scoreboard
 		
 		// Set the scores if the API isn't used
 		if(!API) {

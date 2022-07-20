@@ -1,7 +1,5 @@
 package de.xite.scoreboard.listeners;
 
-import java.util.ArrayList;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -10,7 +8,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import de.xite.scoreboard.api.PowerBoardAPI;
 import de.xite.scoreboard.main.PowerBoard;
 import de.xite.scoreboard.modules.board.ScoreboardPlayer;
 import de.xite.scoreboard.modules.ranks.RankManager;
@@ -43,7 +40,8 @@ public class JoinQuitListener implements Listener {
 		// Set a new scoreboard for the player to prevent bugs
 		if(pl.getConfig().getBoolean("tablist.ranks") || pl.getConfig().getBoolean("scoreboard"))
 			p.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
-		Bukkit.getScheduler().runTaskLater(pl, new Runnable() {
+		
+		Bukkit.getScheduler().runTaskLaterAsynchronously(pl, new Runnable() {
 			@Override
 			public void run() {
 				// Register Teams if chat ranks or tablist ranks are used
@@ -53,9 +51,6 @@ public class JoinQuitListener implements Listener {
 				
 				if(pl.getConfig().getBoolean("scoreboard"))
 					ScoreboardPlayer.setScoreboard(p, false, null);
-				
-				if(pl.getConfig().getBoolean("tablist.ranks"))
-					RankManager.setTablistRanks(p);
 				
 				if(pl.getConfig().getBoolean("tablist.text"))
 					TablistPlayer.addPlayer(p, null);
