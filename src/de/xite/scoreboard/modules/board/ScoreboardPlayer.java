@@ -81,7 +81,7 @@ public class ScoreboardPlayer {
 			if(sm == null) {
 				PowerBoard.pl.getLogger().info("Custom scoreboard set for player "+p.getName());
 			}else {
-				PowerBoard.pl.getLogger().info("Scoreboard "+sm.getName()+" set for player "+p.getName());
+				PowerBoard.pl.getLogger().info("Scoreboard '"+sm.getName()+"' set for player "+p.getName());
 			}
 		}
 			

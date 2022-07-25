@@ -16,7 +16,7 @@ public class VaultAPI {
 	public static boolean setupEconomy() {
 		RegisteredServiceProvider<Economy> rsp = pl.getServer().getServicesManager().getRegistration(Economy.class);
 		if(rsp == null) {
-			pl.getLogger().warning("Error hooking into Vault-Economy! <- Ignore if you don't need PB's %player_money% placeholder, otherwise check, if your money system supports Vault.");
+			pl.getLogger().warning("Error hooking into Vault-Economy! <- Ignore if you don't have a money system or don't need PowerBoards's %player_money% placeholder, otherwise check, if your money system supports Vault.");
 			return false;
 		}
 		econ = rsp.getProvider();
