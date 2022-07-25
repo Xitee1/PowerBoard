@@ -23,28 +23,35 @@ public class ExternalPlugins {
 	public static void initializePlugins() {
 		// ---- Check for compatible plugins ---- //
 		if(Bukkit.getPluginManager().isPluginEnabled("Vault")) {
-			if(debug)
-				pl.getLogger().info("Loading Vault...");
 			if(VaultAPI.setupEconomy()) {
 				hasVault = true;
 				if(debug)
-					pl.getLogger().info("Successfully loaded Vault-Economy!");
+					pl.getLogger().info("Loaded external plugin: Vault-Economy");
 			}
 			//setupChat();
 		}
 		if(Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
 			hasPapi = true;
-			new PlaceholderAPIExpansion().register();
+			if(new PlaceholderAPIExpansion().register()) {
+				if(debug)
+					pl.getLogger().info("Loaded external plugin: PlaceholderAPI");
+			}else
+				pl.getLogger().warning("Could not load PlaceholderAPI! <- You can ignore this if this was a '/pb reload', because then, PAPI is already loaded.");
 		}
-			
 		
 		if(Bukkit.getPluginManager().isPluginEnabled("LuckPerms")) {
 			hasLuckPerms = true;
 			if(pl.getConfig().getBoolean("ranks.luckperms-api.enable") || pl.getConfig().getString("ranks.permissionsystem").equalsIgnoreCase("luckperms")) {
-				RegisteredServiceProvider<LuckPerms> provider = Bukkit.getServicesManager().getRegistration(LuckPerms.class);
-				if(provider != null)
-					luckPerms = provider.getProvider();
-				new LuckPermsListener(pl, luckPerms);
+				if(luckPerms == null) {
+					RegisteredServiceProvider<LuckPerms> provider = Bukkit.getServicesManager().getRegistration(LuckPerms.class);
+					if(provider != null)
+						luckPerms = provider.getProvider();
+					new LuckPermsListener(pl, luckPerms);
+					if(debug)
+						pl.getLogger().info("Loaded external plugin: LuckPerms");
+				}else
+					if(debug)
+						pl.getLogger().info("LuckPerms already loaded.");
 			}else
 				if(luckPerms != null)
 					pl.getLogger().warning("You have changed the rank permissions system from LuckPerms to something different. LuckPerms cannot be completely disabled whith a PB reload. Please restart your server soon.");
@@ -62,7 +69,7 @@ public class ExternalPlugins {
 			metrics.addCustomChart(new BStatsMetrics.SimplePie("setting_use_tablist_ranks", () -> pl.getConfig().getBoolean("tablist.ranks") ? "Enabled" : "Disabled"));
 			metrics.addCustomChart(new BStatsMetrics.SimplePie("setting_use_chat", () -> pl.getConfig().getBoolean("chat.ranks") ? "Enabled" : "Disabled"));
 			metrics.addCustomChart(new BStatsMetrics.SimplePie("setting_permsystem", () -> pl.getConfig().getString("ranks.permissionsystem").toLowerCase()));
-			if(PowerBoard.debug)
+			if(debug)
 				pl.getLogger().info("Analytics sent to BStats");
 		} catch (Exception e) {
 			pl.getLogger().warning("Could not send analytics to BStats!");

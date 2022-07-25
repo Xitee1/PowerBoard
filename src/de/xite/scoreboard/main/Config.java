@@ -405,7 +405,7 @@ public class Config {
 				
 				// Load all external plugin APIs
 				sendConfigReloadMessage(s, ChatColor.YELLOW+"Initializing external plugins"+ChatColor.GRAY+"...");
-				ExternalPlugins.initializePlugins(); 
+				Bukkit.getScheduler().runTask(pl, () -> ExternalPlugins.initializePlugins());
 				
 				// Scoreboards
 				sendConfigReloadMessage(s, ChatColor.GRAY+"Reloading "+ChatColor.YELLOW+"scoreboards"+ChatColor.GRAY+"...");
