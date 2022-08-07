@@ -428,10 +428,10 @@ public class Config {
 				// Ranks
 				if(pl.getConfig().getBoolean("tablist.ranks") || PowerBoard.pl.getConfig().getBoolean("chat.ranks")) {
 					sendConfigReloadMessage(s, ChatColor.GRAY+"Reloading "+ChatColor.YELLOW+"ranks"+ChatColor.GRAY+"...");
-					for(Player all : Bukkit.getOnlinePlayers()) {
+					for(Player all : Bukkit.getOnlinePlayers())
 						Teams.removePlayer(all);
+					for(Player all : Bukkit.getOnlinePlayers())
 						RankManager.register(all);
-					}
 				}
 
 				if(PowerBoard.pl.getConfig().getBoolean("tablist.text")) {
