@@ -92,7 +92,6 @@ public class SelfCheck {
 					"tablist.ranks",
 					"chat.ranks",
 					"chat.allowHexColors",
-					"ranks.useUnlimitedLongRanks",
 					"ranks.luckperms-api.enable",
 					"ranks.luckperms-api.prefix-suffix-space",
 					"placeholder.prefer-plugin-placeholders",
