@@ -16,7 +16,8 @@ import de.xite.scoreboard.utils.Teams;
 public class RankManager {
 	static PowerBoard pl = PowerBoard.pl;
 	
-	private static ArrayList<Player> updateDelay = new ArrayList<>();
+	private static ArrayList<Player> tablistRankUpdateDelay = new ArrayList<>();
+	private static ArrayList<Player> tablistRankUpdateWaiting = new ArrayList<>();
 	
 	public static boolean register(Player p) {
 		if(pl.getConfig().getBoolean("ranks.luckperms-api.enable")) {
@@ -102,7 +103,7 @@ public class RankManager {
 		return false;
 	}
 	public static void setTablistRanks(Player p) {
-		delay(p, 20*15);
+		delay(p, 20*10);
 		
 		// Set all players that are online for the new player
 		for(Player all : Bukkit.getOnlinePlayers()) {
@@ -152,18 +153,14 @@ public class RankManager {
 	
 	public static boolean updateTablistRanks(Player p) {
 		// Only let it update every 3 seconds
-		if(updateDelay.contains(p)) {
+		if(tablistRankUpdateDelay.contains(p)) {
+			if(!tablistRankUpdateWaiting.contains(p))
+				tablistRankUpdateWaiting.add(p);
 			if(PowerBoard.debug)
-				pl.getLogger().info("Did not update "+p.getName()+"'s rank because of the delay. Trying again automatically in 7 seconds..");
-			Bukkit.getScheduler().runTaskLater(pl, new Runnable() {
-				@Override
-				public void run() {
-					updateTablistRanks(p);
-				}
-			}, 20*5);
+				pl.getLogger().info("Updating "+p.getName()+"'s rank has been delayed to prevent lags and performance issues. The rank will automatically update in a few seconds.");
 			return false;
 		}
-		delay(p, 20*3);
+		delay(p, 20*5);
 		
 		if(PowerBoard.debug)
 			pl.getLogger().info("Updating "+p.getName()+"'s rank..");
@@ -194,7 +191,7 @@ public class RankManager {
 			pl.getLogger().warning("There was an error whilst updating "+p.getName()+"'s rank!");
 		}
 		if(PowerBoard.debug)
-			pl.getLogger().info("Updated rank.");
+			pl.getLogger().info("Rank has been updated.");
 		return true;
 	}
 	
@@ -244,12 +241,18 @@ public class RankManager {
 	}
 
 	private static void delay(Player p, int i) {
-		updateDelay.add(p);
+		if(tablistRankUpdateDelay.contains(p))
+			tablistRankUpdateDelay.remove(p);
+		tablistRankUpdateDelay.add(p);
 		Bukkit.getScheduler().runTaskLater(pl, new Runnable() {
 			@Override
 			public void run() {
-				if(updateDelay.contains(p))
-					updateDelay.remove(p);
+				if(tablistRankUpdateDelay.contains(p))
+					tablistRankUpdateDelay.remove(p);
+				if(tablistRankUpdateWaiting.contains(p)) {
+					tablistRankUpdateWaiting.remove(p);
+					updateTablistRanks(p);
+				}
 			}
 		}, i);
 	}
