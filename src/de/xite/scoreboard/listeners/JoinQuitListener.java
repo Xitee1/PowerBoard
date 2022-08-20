@@ -26,7 +26,7 @@ public class JoinQuitListener implements Listener {
 				public void run() {
 					if(Updater.checkVersion()) {
 						if(pl.getConfig().getBoolean("update.notification")) {
-							p.sendMessage(PowerBoard.pr+ChatColor.RED+"A new update is available ("+ChatColor.AQUA+"v"+Updater.getVersion()+ChatColor.RED+")! Your version: "+ChatColor.AQUA+pl.getDescription().getVersion());
+							p.sendMessage(PowerBoard.pr+ChatColor.RED+"A new update is available ("+ChatColor.AQUA+"v"+Updater.getVersion()+ChatColor.RED+")! Current version: "+ChatColor.AQUA+"v"+pl.getDescription().getVersion());
 							if(pl.getConfig().getBoolean("update.autoupdater")) {
 								p.sendMessage(PowerBoard.pr+ChatColor.GREEN+"The plugin will be updated automatically after a server restart.");
 							}else {
