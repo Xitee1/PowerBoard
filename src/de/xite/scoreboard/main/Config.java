@@ -110,7 +110,7 @@ public class Config {
 						+ "You can add as many animation steps as you like.\n\n"
 						+ "For every score (line) you can set a different speed.\n"
 						+ "You can set up to 14 scores. For that, just add a new number like \"'7':\"\n\n"
-						+ "If you have static scores (no animations or updates needed): Set the 'speed' value to '-1' or '9999' or higher. Then the scheduler won't start to save performance.\n"
+						+ "If you have static scores (no animations or updates needed): Set the 'speed' value to '-1' (or lower) or '9999' (or higher). Then the scheduler won't start to save performance.\n"
 						+ "Note: Specify the speed in ticks, not seconds. 20 ticks = one second\n\n"
 						+ "To use multiple scoreboards, read this wiki: https://github.com/Xitee1/PowerBoard/wiki/Create-and-use-multiple-scoreboards\n";
 						
@@ -296,7 +296,7 @@ public class Config {
 						+ "You can add as many animation steps as you like.\n"
 						+ "For every line you can set a different speed.\n\n"
 						+ "To add a new line, just add a new number like \"'3':\"\n"
-						+ "If you have static lines (no animations or updates needed): Set the 'speed' value to '9999' or higher. Then the scheduler won't start to save performance.\n"
+						+ "If you have static lines (no animations or updates needed): Set the 'speed' value to '-1' (or lower) or '9999' (or higher). Then the scheduler won't start to save performance.\n"
 						+ "Note: Specify the speed in ticks, not seconds. 20 ticks = one second\n");
 				
 				//Header
