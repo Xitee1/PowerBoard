@@ -103,18 +103,14 @@ public class TablistManager {
 		// Header
 		for(int line : headers.keySet()) {
 			int speed = cfg.getInt("header."+line+".speed");
-			startHeaderAnimation(line, speed);
-			// Set interval to speed if the speed value is smaller
-			if(speed >= 0 && speed < 9999)
-				interval = Math.min(interval, speed);
+			if(startHeaderAnimation(line, speed))
+				interval = Math.min(interval, speed); // Set interval to speed if the speed value is smaller
 		}
 		// Footer
 		for(int line : footers.keySet()) {
 			int speed = cfg.getInt("footer."+line+".speed");
-			startFooterAnimation(line, speed);
-			// Set interval to speed if the speed value is smaller
-			if(speed >= 0 && speed < 9999)
-				interval = Math.min(interval, speed);
+			if(startFooterAnimation(line, speed))
+				interval = Math.min(interval, speed); // Set interval to speed if the speed value is smaller
 		}
 		
 		// The scheduler which will send the tablist to all players
@@ -133,14 +129,14 @@ public class TablistManager {
 	}
 
 
-	private void startHeaderAnimation(int line, int speed) {
+	private boolean startHeaderAnimation(int line, int speed) {
 		String text = headers.get(line).get(0);
 		currentHeader.put(line, text);
 		
-		if(speed >= 9999 || speed < 0) {
+		if(speed < 0 || speed >= 9999) {
 			if(PowerBoard.debug)
 				pl.getLogger().info("Tablist header line "+line+" (Name: "+name+"): no animation needed (speed higher than 9999 or negative)");
-			return;
+			return false;
 		}else
 			if(PowerBoard.debug)
 				pl.getLogger().info("Tablist header line "+line+" (Name: "+name+"): animation started");
@@ -159,15 +155,16 @@ public class TablistManager {
 				}
 			}, 0, speed)
 		);
+		return true;
 	}
-	private void startFooterAnimation(int line, int speed) {
+	private boolean startFooterAnimation(int line, int speed) {
 		String text = footers.get(line).get(0);
 		currentFooter.put(line, text);
 		
-		if(speed >= 9999 || speed < 0) {
+		if(speed < 0 || speed >= 9999) {
 			if(PowerBoard.debug)
 				pl.getLogger().info("Tablist footer line "+line+" (Name: "+name+"): no animation needed (speed higher than 9999 or negative)");
-			return;
+			return false;
 		}else
 			if(PowerBoard.debug)
 				pl.getLogger().info("Tablist footer line "+line+" (Name: "+name+"): animation started");
@@ -186,6 +183,7 @@ public class TablistManager {
 				}
 			}, 0, speed)
 		);
+		return true;
 	}
 	
 	private void sendPlayer(Player p) {
