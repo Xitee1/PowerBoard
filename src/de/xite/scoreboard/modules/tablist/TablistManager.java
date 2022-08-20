@@ -105,14 +105,16 @@ public class TablistManager {
 			int speed = cfg.getInt("header."+line+".speed");
 			startHeaderAnimation(line, speed);
 			// Set interval to speed if the speed value is smaller
-			interval = Math.min(interval, speed);
+			if(speed >= 0 && speed < 9999)
+				interval = Math.min(interval, speed);
 		}
 		// Footer
 		for(int line : footers.keySet()) {
 			int speed = cfg.getInt("footer."+line+".speed");
 			startFooterAnimation(line, speed);
 			// Set interval to speed if the speed value is smaller
-			interval = Math.min(interval, speed);
+			if(speed >= 0 && speed < 9999)
+				interval = Math.min(interval, speed);
 		}
 		
 		// The scheduler which will send the tablist to all players
