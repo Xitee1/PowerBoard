@@ -7,6 +7,7 @@
 ### You can find the source code at: https://github.com/Xitee1/PowerBoard                         ###
 #####################################################################################################
 
+# Info: If there's an option to enable or disable something, you have to do it with the words true and false (Enable = true; Disable = false)
 
 ###############
 ### Modules ###
