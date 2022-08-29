@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import de.xite.scoreboard.main.PowerBoard;
 import de.xite.scoreboard.utils.Version;
 import de.xite.scoreboard.versions.version_1_08;
+import de.xite.scoreboard.versions.version_1_09;
 import de.xite.scoreboard.versions.version_1_10;
 import de.xite.scoreboard.versions.version_1_11;
 import de.xite.scoreboard.versions.version_1_12;
@@ -35,7 +36,7 @@ public class Tabpackage {
 		}else if(PowerBoard.getBukkitVersion().compareTo(new Version("1.10")) >= 0) {
 			version_1_10.sendTab(p, header, footer);
 		}else if(PowerBoard.getBukkitVersion().compareTo(new Version("1.9")) >= 0) {
-			version_1_08.sendTab(p, header, footer);
+			version_1_09.sendTab(p, header, footer);
 		}else if(PowerBoard.getBukkitVersion().compareTo(new Version("1.8")) >= 0) {
 			version_1_08.sendTab(p, header, footer);
 		}else
