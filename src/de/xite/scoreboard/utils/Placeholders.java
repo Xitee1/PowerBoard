@@ -15,8 +15,6 @@ import de.xite.scoreboard.api.CustomPlaceholders;
 import de.xite.scoreboard.depend.VaultAPI;
 import de.xite.scoreboard.main.ExternalPlugins;
 import de.xite.scoreboard.main.PowerBoard;
-import de.xite.scoreboard.modules.ranks.RankManager;
-import de.xite.scoreboard.utils.iridiumcolorapi.IridiumColorAPI;
 import de.xite.scoreboard.versions.version_1_08;
 import de.xite.scoreboard.versions.version_1_09;
 import de.xite.scoreboard.versions.version_1_10;
