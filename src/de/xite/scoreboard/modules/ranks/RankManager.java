@@ -96,7 +96,7 @@ public class RankManager {
 				}
 			}
 			if(Teams.get(p) == null && !pl.getConfig().getString("ranks.permissionsystem").equalsIgnoreCase("api")) {
-				Teams.addPlayer(p, "", "", "f", "noRank", null, null, -5555); // -5555 = error code for no rank
+				Teams.addPlayer(p, "", "", "f", "noRank", null, null, 0);
 				pl.getLogger().warning("The player "+p.getName()+" has no Rank! Make sure that he has the correct permissions.");
 			}
 		}
