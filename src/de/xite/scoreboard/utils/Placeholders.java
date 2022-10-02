@@ -151,6 +151,7 @@ public class Placeholders {
   		if(s.contains("%player_health%"))
   			s = s.replace("%player_health%", ""+(int)p.getHealth());
   		
+  		
   		// Server time
   		if(s.contains("%time%")) {
   			String format = pl.getConfig().getString("placeholder.time-format");
