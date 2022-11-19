@@ -33,11 +33,6 @@ Let's see what the future brings.
 Click [here](https://github.com/Xitee1/PowerBoard/wiki/Developer-API).
 
 # Donate
-### PayPal
-
-[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/donate?hosted_button_id=6XBBMV2PAQT5S)
-
-
 ### Bitcoin
 
 Address: bc1q6eh8mpkyu5pne7m72f4lyh6fw4k4ugpvzjfljd
