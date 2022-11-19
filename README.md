@@ -21,7 +21,7 @@ It is already really powerful. But of course there are also always a few bugs. S
 ### Important news:<br>
 Hello @everyone , bad news.<br>
 I think that I won't be able to continue developing for my projects from now on.<br>
-A lot things have changed and will change for me in the next few months and in the future. I don't think that I will still have the time and fun to continue developing PowerBoard and my other plugins. This does not mean that there will be no updates at all, but it will be much less. I also probably won't be able to fix bugs (If I get the time for it, I might do a few fixes - but no guarantee). The same goes for the plugin support. I have lots of cool features planned, but I will probably not be able to implement them in the future.
+I don't think that I will still have the time and fun to continue developing PowerBoard and my other plugins. This does not mean that there will be no updates at all, but it will be much less. I also probably won't be able to fix bugs (If I get the time for it, I might do a few fixes - but no guarantee). The same goes for the plugin support. I have lots of cool features planned, but I will probably not be able to implement them in the future.
 If there is someone who knows how to code and how to implement them, feel free to do it. I will still be able to accept PRs and update the plugin.<br><br>
 I know, this is pretty sad, but currently I see no way to continue developing my plugins.
 Thank you all for this great time and for supporting my projects.❤️ 
