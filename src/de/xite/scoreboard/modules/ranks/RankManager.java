@@ -197,7 +197,7 @@ public class RankManager {
 	
 	public static void startTablistRanksUpdateScheduler() {
 		int interval = pl.getConfig().getInt("ranks.update-interval");
-		if(interval == -1) // Do not auto-update ranks if set to -1
+		if(interval <= 0) // Do not auto-update ranks if set to -1 (or anything below 0)
 			return;
 		
 		interval = interval * 20 * 60; // Convert minutes to ticks
@@ -205,8 +205,11 @@ public class RankManager {
 		Bukkit.getScheduler().runTaskTimerAsynchronously(pl, new Runnable() {
 			@Override
 			public void run() {
-				for(Player all : Bukkit.getOnlinePlayers())
+				for(Player all : Bukkit.getOnlinePlayers()) {
+					if(PowerBoard.debug)
+						pl.getLogger().info("Updating all ranks (rank.update-interval)");
 					updateTablistRanks(all);
+				}
 			}
 		}, interval, interval);
 	}
