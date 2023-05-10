@@ -19,10 +19,8 @@ It is already really powerful. But of course there are also always a few bugs. S
 
 
 ### Important news:<br>
-This plugin is no longer in active development. I will no longer implement new features and will not fix bugs.
-But everyone is welcome to continue developing the plugin and to make PRs.
-I will update if there are a few PRs so that it's worth updating.
-Sadly so far there were no PRs at all. So for now there is no update in sight.
+This plugin is no longer in active development (but still maintained). Currently I won't make new feature, nor fix bugs. But everyone is welcome to continue developing the plugin and to make PRs.
+I really hope that someone contributes, maybe I'll start do something myself again.
 
 # Developer API
 Click [here](https://github.com/Xitee1/PowerBoard/wiki/Developer-API).
