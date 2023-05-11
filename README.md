@@ -19,15 +19,8 @@ It is already really powerful. But of course there are also always a few bugs. S
 
 
 ### Important news:<br>
-Hello @everyone , bad news.<br>
-I think that I won't be able to continue developing for my projects from now on.<br>
-I don't think that I will still have the time and fun to continue developing PowerBoard and my other plugins. This does not mean that there will be no updates at all, but it will be much less. I also probably won't be able to fix bugs (If I get the time for it, I might do a few fixes - but no guarantee). The same goes for the plugin support. I have lots of cool features planned, but I will probably not be able to implement them in the future.
-If there is someone who knows how to code and how to implement them, feel free to do it. I will still be able to accept PRs and update the plugin.<br><br>
-I know, this is pretty sad, but currently I see no way to continue developing my plugins.
-Thank you all for this great time and for supporting my projects.❤️ 
-Let's see what the future brings.
-
-
+This plugin is no longer in active development (but still maintained). Currently I won't make new feature, nor fix bugs. But everyone is welcome to continue developing the plugin and to make PRs.
+I really hope that someone contributes, maybe I'll start do something myself again.
 
 # Developer API
 Click [here](https://github.com/Xitee1/PowerBoard/wiki/Developer-API).
