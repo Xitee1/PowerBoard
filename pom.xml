@@ -5,10 +5,6 @@
   <artifactId>Scoreboard</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <repositories>
-    <repository>
-      <id>my-internal-site</id>
-      <url>https://myserver/repo</url>
-    </repository>
     <!-- JitPack-Repo -->
     <repository>
      <id>jitpack.io</id>
@@ -18,29 +14,27 @@
       <id>spigot-repo</id>
       <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
     </repository>
-    <repository>
-        <id>placeholderapi</id>
-        <url>http://repo.extendedclip.com/content/repositories/placeholderapi/</url>
-    </repository>
+      <repository>
+          <id>placeholderapi</id>
+          <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
+      </repository>
   </repositories>
   <dependencies>
-    <dependency>
-    	<groupId>com.github.simplix-softworks</groupId>
-    	<artifactId>simplixstorage</artifactId>
-    	<version>3.2.3</version>
-    </dependency>
-    <dependency>
-        <groupId>net.luckperms</groupId>
-        <artifactId>api</artifactId>
-        <version>5.3</version>
-        <scope>provided</scope>
-    </dependency>
-	<dependency>
-        <groupId>org.spigotmc</groupId>
-        <artifactId>spigot-api</artifactId>
-        <version>1.18.2-R0.1-SNAPSHOT</version>
-        <scope>provided</scope>
-    </dependency>
+      <dependency>
+          <groupId>net.luckperms</groupId>
+          <artifactId>api</artifactId>
+          <version>5.4</version>
+          <scope>provided</scope>
+      </dependency>
+
+      <!-- Spigot versions -->
+      <dependency>
+          <groupId>org.spigotmc</groupId>
+          <artifactId>spigot-api</artifactId>
+          <version>1.19.3-R0.1-SNAPSHOT</version>
+          <scope>provided</scope>
+      </dependency>
+
     <dependency>
         <groupId>com.github.MilkBowl</groupId>
         <artifactId>VaultAPI</artifactId>
@@ -50,7 +44,7 @@
     <dependency>
      	<groupId>me.clip</groupId>
     	<artifactId>placeholderapi</artifactId>
-        <version>2.9.2</version>
+        <version>2.11.1</version>
         <scope>provided</scope>
     </dependency>
   </dependencies>
