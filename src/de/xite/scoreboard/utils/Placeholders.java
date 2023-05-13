@@ -102,15 +102,15 @@ public class Placeholders {
 		// ---- Placeholders from Scoreboard Plugin ---- //
 		// TPS
 		if(s.contains("%server_tps%"))
-			s = s.replace("%server_tps%", ""+TPS.getTPS());
+			s = s.replace("%server_tps%", String.valueOf(TPS.getTPS()));
 		
 		// Players on server
 		if(s.contains("%server_online_players%"))
-  			s = s.replace("%server_online_players%", ""+Bukkit.getOnlinePlayers().size());
+  			s = s.replace("%server_online_players%", String.valueOf(Bukkit.getOnlinePlayers().size()));
 		
 		// Max players on server
   		if(s.contains("%server_max_players%"))
-  			s = s.replace("%server_max_players%", ""+Bukkit.getMaxPlayers());
+  			s = s.replace("%server_max_players%", String.valueOf(Bukkit.getMaxPlayers()));
   		
   		// Player name
   		if(s.contains("%player_name%")) {
@@ -131,23 +131,23 @@ public class Placeholders {
   		}
   		// Location
   		if(s.contains("%player_loc_x%"))
-  			s = s.replace("%player_loc_x%", p.getLocation().getBlockX()+"");
+  			s = s.replace("%player_loc_x%", String.valueOf(p.getLocation().getBlockX()));
   		if(s.contains("%player_loc_y%"))
-  			s = s.replace("%player_loc_y%", p.getLocation().getBlockY()+"");
+  			s = s.replace("%player_loc_y%", String.valueOf(p.getLocation().getBlockY()));
   		if(s.contains("%player_loc_z%"))
-  			s = s.replace("%player_loc_z%", p.getLocation().getBlockZ()+"");
+  			s = s.replace("%player_loc_z%", String.valueOf(p.getLocation().getBlockZ()));
   		
   		// Player food level
   		if(s.contains("%player_food%"))
-  			s = s.replace("%player_food%", ""+(int)p.getFoodLevel());
+  			s = s.replace("%player_food%", String.valueOf((int) p.getFoodLevel()));
   		
   		// Player saturation
   		if(s.contains("%player_saturation%"))
-  			s = s.replace("%player_saturation%", ""+(int)p.getSaturation());
+  			s = s.replace("%player_saturation%", String.valueOf((int) p.getSaturation()));
   		
   		// Player health
   		if(s.contains("%player_health%"))
-  			s = s.replace("%player_health%", ""+(int)p.getHealth());
+  			s = s.replace("%player_health%", String.valueOf((int) p.getHealth()));
   		
   		
   		// Server time
@@ -194,7 +194,7 @@ public class Placeholders {
   		
   		// Money
   		if(s.contains("%player_money%")) {
-  			if(ExternalPlugins.hasVault == true) {
+  			if(ExternalPlugins.hasVault) {
   				int decimals = pl.getConfig().getInt("placeholder.money-decimals");
   				// If the decimals are set to 0, cast it to int to remove the '.0'
   				if(decimals != 0) {
@@ -210,14 +210,14 @@ public class Placeholders {
   		// Memory
   		try {
   	  		if(s.contains("%mem_total%"))
-  	  			s = s.replace("%mem_total%", getReadableSize((int) getTotalMemory())+"");
+  	  			s = s.replace("%mem_total%", getReadableSize((int) getTotalMemory()));
   	  		if(s.contains("%mem_free%"))
-  	  			s = s.replace("%mem_free%", getReadableSize((int) getFreeMemory())+"");
+  	  			s = s.replace("%mem_free%", getReadableSize((int) getFreeMemory()));
   	  		if(s.contains("%mem_used%"))
-  	  			s = s.replace("%mem_used%", getReadableSize((int) getUsedMemory())+"");
+  	  			s = s.replace("%mem_used%", getReadableSize((int) getUsedMemory()));
   	  		if(s.contains("%mem_max%"))
-  	  			s = s.replace("%mem_max%", getReadableSize((int) getMaxMemory())+"");
-  		}catch (Exception e) {pl.getLogger().severe("Failed to get memory informations! This is not a bug with the plugin - please contact your server-hoster.");}
+  	  			s = s.replace("%mem_max%", getReadableSize((int) getMaxMemory()));
+  		}catch (Exception e) {pl.getLogger().severe("Failed to get memory information's! This is not a bug with the plugin - please contact your server-hoster.");}
 
   		// Ping
   		if(s.contains("%player_ping%")) {
@@ -249,7 +249,7 @@ public class Placeholders {
   			if(ping > 999) {
   				s = s.replace("%player_ping%", ChatColor.RED+"999+");
   			}else
-  				s = s.replace("%player_ping%", ping+"");
+  				s = s.replace("%player_ping%", String.valueOf(ping));
   		}
   			
   		// -------------------------------------//
