@@ -4,8 +4,9 @@ import java.util.HashMap;
 
 import org.bukkit.entity.Player;
 
-import de.leonhard.storage.shaded.jetbrains.annotations.Nullable;
 import de.xite.scoreboard.main.PowerBoard;
+
+import javax.annotation.Nullable;
 
 public class TablistPlayer {
 	static PowerBoard pl = PowerBoard.pl;

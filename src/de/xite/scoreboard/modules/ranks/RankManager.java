@@ -18,7 +18,7 @@ public class RankManager {
 	
 	private static ArrayList<Player> tablistRankUpdateDelay = new ArrayList<>();
 	private static ArrayList<Player> tablistRankUpdateWaiting = new ArrayList<>();
-	
+
 	public static boolean register(Player p) {
 		if(pl.getConfig().getBoolean("ranks.luckperms-api.enable")) {
 			//--- Perm System: LuckPerms API ---//
@@ -103,6 +103,9 @@ public class RankManager {
 		return false;
 	}
 	public static void setTablistRanks(Player p) {
+		if(p == null)
+			return;
+
 		delay(p, 20*10);
 		
 		// Set all players that are online for the new player
@@ -152,6 +155,9 @@ public class RankManager {
 	}
 	
 	public static boolean updateTablistRanks(Player p) {
+		if(p == null)
+			return false;
+
 		// Only let it update every 3 seconds
 		if(tablistRankUpdateDelay.contains(p)) {
 			if(!tablistRankUpdateWaiting.contains(p))
@@ -168,7 +174,7 @@ public class RankManager {
 		// Update the team info
 		RankManager.register(p);
 		
-		// Apply the new team infos to the prefix & suffix
+		// Apply the new team info's to the prefix & suffix
 		try {
 			Teams teams = Teams.get(p);
 			if(teams != null) {
@@ -218,22 +224,31 @@ public class RankManager {
 	// Utils //
 	//-------//
 	public static void setPrefixSuffix(Player p, Team t, String prefix, String suffix, String playerListName) {
+		boolean showPrefixInTab = pl.getConfig().getBoolean("ranks.options.show-prefix-in-tab");
+		boolean showSuffixInTab = pl.getConfig().getBoolean("ranks.options.show-suffix-in-tab");
+
 		try {
-			if(prefix.length() != 0)
+			if(showPrefixInTab && prefix.length() != 0)
 				t.setPrefix(prefix);
-			if(suffix.length() != 0)
+			if(showSuffixInTab && suffix.length() != 0)
 				t.setSuffix(suffix);
 			p.setPlayerListName(null);
 		}catch (IllegalArgumentException e) {
-			// IllegalArgumentException == prefix or suffix too long
+			// IllegalArgumentException in this case is thrown if prefix or suffix is too long
 			// With setPlayerListName you can bypass this limit, however the prefix and suffix will no longer be displayed above the player head
-			
-			playerListName = prefix + p.getDisplayName() + suffix;
+			playerListName = "";
+			if(showPrefixInTab)
+				playerListName += prefix;
+
+			playerListName += p.getDisplayName();
+
+			if(showSuffixInTab)
+				playerListName += suffix;
 		}
 		if(playerListName != null) {
 			t.setPrefix("");
 			t.setSuffix("");
-			p.setPlayerListName(prefix + playerListName + suffix);
+			p.setPlayerListName(playerListName);
 			
 			if(PowerBoard.debug) {
 				pl.getLogger().info("Using prefix/suffix too long bypass for player "+p.getName()+".");
