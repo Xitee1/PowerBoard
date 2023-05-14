@@ -53,21 +53,29 @@ public class ScoreboardCommand implements CommandExecutor, TabCompleter {
 			}else
 				s.sendMessage(PowerBoard.pr+ChatColor.RED+"Sorry, but you need the permission "+ChatColor.GRAY+"powerboard.reload"+ChatColor.RED+" to do that.");
 		}else if(args.length >= 1 && args[0].equalsIgnoreCase("update")) {
-			if(args.length == 2 && args[1].equalsIgnoreCase("confirm")) {
+			if(args.length >= 2 && args[1].equalsIgnoreCase("confirm")) {
 				if(!(s instanceof Player) || (s instanceof Player && ((Player) s).hasPermission("powerboard.update"))) {
 					s.sendMessage(PowerBoard.pr+ChatColor.GREEN+"Downloading the newest version...");
-					if(Updater.downloadFile()) {
-						s.sendMessage(PowerBoard.pr+ChatColor.GREEN+"Download finished! Stopping server..");
-						Bukkit.spigot().restart();
+					if(Updater.downloadFile(false)) {
+						s.sendMessage(PowerBoard.pr+ChatColor.GREEN+"Download finished. Please restart your server as soon as possible!");
 						return true;
 					}else {
 						s.sendMessage(PowerBoard.pr+ChatColor.RED+"Download failed! Please try it later again. More infos are available in the console.");
+						s.sendMessage(PowerBoard.pr+ChatColor.RED+"If your server is running on Windows, that could cause this problem. Try it with '/pb update confirm force'");
+					}
+					if(args[2].equalsIgnoreCase("force")) {
+						if(Updater.downloadFile(true)) {
+							s.sendMessage(PowerBoard.pr+ChatColor.GREEN+"Download finished. Please restart your server as soon as possible!");
+						}else {
+							s.sendMessage(PowerBoard.pr+ChatColor.RED+"Sorry, force update did not work. If the download was successful you can manually stop your server and rename "
+							+ "PowerBoard.jar.update to PowerBoard.jar. If there is no update file or that file is corrupted, you have to download the plugin manually.");
+						}
 					}
 				}else
 					s.sendMessage(PowerBoard.pr+ChatColor.RED+"Sorry, but you need the permission "+ChatColor.GRAY+"powerboard.update"+ChatColor.RED+" to do that.");
 			}else
-				s.sendMessage(PowerBoard.pr+ChatColor.RED+"Warning: If you update the plugin, the server will be automatically restarted (if you have a restart script) when the download is finished. "
-						+ "Please type "+ChatColor.YELLOW+"/pb update confirm"+ChatColor.RED+" to update the plugin.");
+				s.sendMessage(PowerBoard.pr+ChatColor.RED+"Warning: After successful update, you have to restart your server as soon as possible! "
+						+ "Please type "+ChatColor.YELLOW+"/pb update confirm"+ChatColor.RED+" to confirm.");
 
 		}else if(args.length == 1 && args[0].equalsIgnoreCase("debug")) {
 			if(!(s instanceof Player) || (s instanceof Player && ((Player) s).hasPermission("powerboard.debug"))) {

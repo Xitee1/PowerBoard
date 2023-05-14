@@ -127,7 +127,7 @@ public class PowerBoard extends JavaPlugin {
 		// Download newest version if update is available
 		if(pl.getConfig().getBoolean("update.autoupdater"))
 			if(Updater.checkVersion())
-				Updater.downloadFile();
+				Updater.downloadFile(false);
 		
 		// Unregister scoreboards and teams
 		for(Player all : Bukkit.getOnlinePlayers()) {
