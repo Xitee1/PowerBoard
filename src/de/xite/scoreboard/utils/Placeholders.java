@@ -191,6 +191,20 @@ public class Placeholders {
   				}
   			}
   		}
+
+		// Player prefix
+		if(s.contains("%player_prefix%")) {
+			Teams teams = Teams.get(p);
+			if(teams != null)
+				s = s.replace("%player_prefix%", teams.getPrefix());
+		}
+
+		// Player prefix
+		if(s.contains("%player_suffix%")) {
+			Teams teams = Teams.get(p);
+			if(teams != null)
+				s = s.replace("%player_suffix%", teams.getSuffix());
+		}
   		
   		// Money
   		if(s.contains("%player_money%")) {
@@ -253,12 +267,12 @@ public class Placeholders {
   		}
   			
   		// -------------------------------------//
-  		// Replace colors (MC colorcodes)
+  		// Replace colors (MC color codes)
   		s = ChatColor.translateAlternateColorCodes('&', s);
   		// Replace colors (HEX) - only 1.16+
   		s = translateHexColor(s);
   		//s = IridiumColorAPI.process(s);
-  		// Replace PAPI if plugin prefered
+  		// Replace PAPI if plugin preferred
   		if(ExternalPlugins.hasPapi && pl.getConfig().getBoolean("prefer-plugin-placeholders"))
   			s = PlaceholderAPI.setPlaceholders(p, s);
   		

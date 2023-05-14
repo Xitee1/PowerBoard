@@ -23,8 +23,8 @@ public class Teams {
 	
 	public Teams(Player p, String prefix, String suffix, ChatColor nameColor, String chatPrefix, String rankDisplayName, String playerListName, int weight) {
 		this.p = p;
-		this.prefix = prefix;
-		this.suffix = suffix;
+		this.setPrefix(prefix);
+		this.setSuffix(suffix);
 		this.nameColor = nameColor;
 		this.chatPrefix = chatPrefix;
 		this.rankDisplayName = rankDisplayName;
@@ -154,9 +154,17 @@ public class Teams {
 		this.rankDisplayName = name;
 	}
 	public void setPrefix(String prefix) {
+		if(prefix.contains("%player_prefix%") || prefix.contains("%player_suffix%")) {
+			PowerBoard.pl.getLogger().severe("The placeholders %player_prefix% and %player_suffix% are not allowed in a prefix!");
+			prefix = "invalid";
+		}
 		this.prefix = prefix;
 	}
 	public void setSuffix(String suffix) {
+		if(suffix.contains("%player_prefix%") || suffix.contains("%player_suffix%")) {
+			PowerBoard.pl.getLogger().severe("The placeholders %player_prefix% and %player_suffix% are not allowed in a suffix!");
+			suffix = "invalid";
+		}
 		this.suffix = suffix;
 	}
 	public void setNameColor(ChatColor color) {
