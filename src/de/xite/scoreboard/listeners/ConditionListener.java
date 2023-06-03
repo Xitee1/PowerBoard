@@ -1,17 +1,16 @@
 package de.xite.scoreboard.listeners;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 
-import de.xite.scoreboard.api.TeamSetEvent;
 import de.xite.scoreboard.main.PowerBoard;
 import de.xite.scoreboard.modules.board.ScoreboardPlayer;
 import de.xite.scoreboard.modules.ranks.RankManager;
@@ -21,31 +20,24 @@ public class ConditionListener implements Listener {
 	
 	@EventHandler
 	public void GameModeSwitchEvent(PlayerGameModeChangeEvent e) {
-		Bukkit.getScheduler().runTaskAsynchronously(PowerBoard.pl, new Runnable() {
-			@Override
-			public void run() {
-				ScoreboardPlayer.updateScoreboard(e.getPlayer());
-			}
-		});
+		Bukkit.getScheduler().runTaskAsynchronously(PowerBoard.pl, () -> ScoreboardPlayer.updateScoreboard(e.getPlayer()));
 	}
 	
 	@EventHandler
 	public void WorldSwitchEvent(PlayerChangedWorldEvent e) {
-		Bukkit.getScheduler().runTaskAsynchronously(PowerBoard.pl, new Runnable() {
-			@Override
-			public void run() {
-				Player p = e.getPlayer();
-				ScoreboardPlayer.updateScoreboard(p);
-				if(PowerBoard.pl.getConfig().getBoolean("tablist.ranks") || PowerBoard.pl.getConfig().getBoolean("chat.ranks")) {
-					Teams team = Teams.get(p);
-					if(team != null)
-						if(team.getRawPrefix().contains("%player_world%") || team.getRawSuffix().contains("%player_world%"))
-							RankManager.updateTablistRanks(p);
-				}
+		Bukkit.getScheduler().runTaskAsynchronously(PowerBoard.pl, () -> {
+			Player p = e.getPlayer();
+			ScoreboardPlayer.updateScoreboard(p);
+			if(PowerBoard.pl.getConfig().getBoolean("tablist.ranks") || PowerBoard.pl.getConfig().getBoolean("chat.ranks")) {
+				Teams team = Teams.get(p);
+				if(team != null)
+					if(team.getRawPrefix().contains("%player_world%") || team.getRawSuffix().contains("%player_world%"))
+						RankManager.updateTablistRanks(p);
 			}
 		});
 	}
 	/*
+	// Debug only!
 	@EventHandler
 	public void onRankEvent(TeamSetEvent e) {
 		Player p = e.getPlayer();
@@ -59,13 +51,13 @@ public class ConditionListener implements Listener {
 			e.setWeight(999);
 		}
 	}
+	// Debug only!
 	*/
 	public static boolean checkConditions(Player p, List<String> conditions) {
 		for(String condition : conditions) { // For all "OR" conditions (lines)
 			ArrayList<String> andConditions = new ArrayList<>();
 			if(condition.contains(" AND ")) {
-				for(String s : condition.split(" AND "))
-					andConditions.add(s);
+				andConditions.addAll(Arrays.asList(condition.split(" AND ")));
 			}else
 				andConditions.add(condition);
 			
@@ -94,7 +86,7 @@ public class ConditionListener implements Listener {
 				}
 			}
 			
-			if(match == true)
+			if(match)
 				return true;
 		}
 		return false;

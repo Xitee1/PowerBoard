@@ -23,7 +23,7 @@ public class ScoreTitleUtils {
 			title = Placeholders.replace(p, title);
 		
 		//try {
-			obj.setDisplayName(title);
+		obj.setDisplayName(title);
 		/*}catch (IllegalArgumentException e) {
 			if(PowerBoard.aboveMC_1_13) { // In version 1.13 you can use up to 128 chars in the title
 				obj.setDisplayName(ChatColor.RED+"Error: too long - see console");
@@ -62,34 +62,34 @@ public class ScoreTitleUtils {
 		}
 		return true;
 	}
-	public static boolean setScore(Player p, String score, int ScoreID, boolean usePlaceholders, ScoreboardManager sm) {
+	public static boolean setScore(Player p, String score, int scoreId, boolean usePlaceholders, ScoreboardManager sm) {
 		Scoreboard board = p.getScoreboard();
 		Objective obj = board.getObjective(DisplaySlot.SIDEBAR);
 		if(obj == null)
 			return false;
-		String colorcode = "§"+ScoreID;
-		if(ScoreID > 9) {
-			if(ScoreID == 10)
+		String colorcode = "§"+scoreId;
+		if(scoreId > 9) {
+			if(scoreId == 10)
 				colorcode = "§a";
-			if(ScoreID == 11)
+			if(scoreId == 11)
 				colorcode = "§b";
-			if(ScoreID == 12)
+			if(scoreId == 12)
 				colorcode = "§c";
-			if(ScoreID == 13)
+			if(scoreId == 13)
 				colorcode = "§d";
-			if(ScoreID == 14)
+			if(scoreId == 14)
 				colorcode = "§e";
 		}
 		// If the scoreboard switches too fast (especially blacklisted) sometimes there will this error in the console: IllegalStateException: Unregistered scoreboard component
-		// We can just ignore it because it doesn't seems like it has no effect other than that this error is beeing displayed.
+		// We can just ignore it because it doesn't seem like it has no effect other than that this error is beeing displayed.
 		try {
-			Team team = board.getTeam("score-"+ScoreID);
+			Team team = board.getTeam("score-"+scoreId);
 			if(team == null) {
-				team = board.registerNewTeam("score-"+ScoreID);
+				team = board.registerNewTeam("score-"+scoreId);
 				team.addEntry(colorcode);
-				obj.getScore(colorcode).setScore(ScoreID);
+				obj.getScore(colorcode).setScore(scoreId);
 			}
-			if(score.length() == 0) // If lenght == 0 set to " " for free space in scoreboard
+			if(score.length() == 0) // If length == 0 set to " " for free space in scoreboard
 				score = " ";
 			if(!score.equals(" ") && usePlaceholders)
 				score = Placeholders.replace(p, score);

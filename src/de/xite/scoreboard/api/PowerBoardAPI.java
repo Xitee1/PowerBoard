@@ -22,10 +22,11 @@ public class PowerBoardAPI {
 	// ---- Scoreboard ---- //
 	// ---------------------//
 	public static void setScoreboard(Player p, boolean custom, String scoreboardName) {
-		if(custom == true || scoreboardName == null) {
+		if(custom || scoreboardName == null) {
 			ScoreboardPlayer.setScoreboard(p, custom, null);
 		}else {
-			ScoreboardPlayer.setScoreboard(p, custom, ScoreboardManager.get(scoreboardName));
+			// Custom is always 'false'
+			ScoreboardPlayer.setScoreboard(p, false, ScoreboardManager.get(scoreboardName));
 		}
 	}
 	public static void removeScoreboard(Player p) {

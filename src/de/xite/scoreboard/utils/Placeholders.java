@@ -2,8 +2,9 @@ package de.xite.scoreboard.utils;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,7 +32,7 @@ public class Placeholders {
 	public static String hexColorBegin = "", hexColorEnd = ""; // hex color Syntax
 	
 	// All registered custom placeholders
-	public static ArrayList<CustomPlaceholders> ph = new ArrayList<>();
+	public static Set<CustomPlaceholders> ph = new HashSet<>();
 	
 	public static String replace(Player p, String s) {
 		// Import placeholders from APIs
@@ -212,9 +213,9 @@ public class Placeholders {
   				int decimals = pl.getConfig().getInt("placeholder.money-decimals");
   				// If the decimals are set to 0, cast it to int to remove the '.0'
   				if(decimals != 0) {
-  					s = s.replace("%player_money%", ""+MathUtils.round(VaultAPI.econ.getBalance(p), decimals));
+  					s = s.replace("%player_money%", String.valueOf(MathUtils.round(VaultAPI.econ.getBalance(p), decimals)));
   				}else
-  					s = s.replace("%player_money%", ""+((int) VaultAPI.econ.getBalance(p)));
+  					s = s.replace("%player_money%", String.valueOf((int) VaultAPI.econ.getBalance(p)));
   			}else {
   				pl.getLogger().severe("Could not get the player's money because you haven't Vault installed or set up! You need Vault and a money system that supports Vault on your server!");
   				s = s.replace("%player_money%", "Error: See console");

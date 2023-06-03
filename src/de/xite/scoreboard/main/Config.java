@@ -26,6 +26,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
 
 public class Config {
+	// TODO: 03/06/2023 Remove this
 	static PowerBoard pl = PowerBoard.pl;
 
 	public static ArrayList<String> scoreboardBlacklistConditions = new ArrayList<>();
