@@ -89,12 +89,12 @@ public class ScoreboardManager {
 		for(String s : cfg.getConfigurationSection("").getValues(false).keySet()) {
 			try {
 				int id = Integer.parseInt(s);
-				
-				if(!cfg.getStringList(id+".scores").isEmpty()) {
-					List<String> list = cfg.getStringList(id+".scores");
+
+				List<String> list = cfg.getStringList(id+".scores");
+				if(list != null && !list.isEmpty()) {
 					int speed = cfg.getInt(id+".speed");
 					
-					// Check if the numbers are in the correct ordner and begin with 0
+					// Check if the numbers are in the correct order and begin with 0
 					if(id != i) {
 						pl.getLogger().warning("Your scores of scoreboard '"+name+"' do not begin with 0 or have an incorrect order. Please check that the numbers begin with 0 (not 1) and are sequentially. This could cause problems with your scoreboard!");
 						id = i;
