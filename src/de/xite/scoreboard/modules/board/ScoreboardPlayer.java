@@ -2,6 +2,7 @@ package de.xite.scoreboard.modules.board;
 
 import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.Objects;
 
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
@@ -38,7 +39,7 @@ public class ScoreboardPlayer {
 			if(sm == null)
 				return;
 			if(players.containsKey(p))
-				if(players.get(p) == sm.getName()) {
+				if(Objects.equals(players.get(p), sm.getName())) {
 					if(PowerBoard.debug)
 						pl.getLogger().info("Did not set/update "+p.getName()+"'s scoreboard because he already have the same scoreboard (Current: "+players.get(p)+"; New: "+sm.getName()+").");
 					return;

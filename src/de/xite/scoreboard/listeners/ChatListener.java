@@ -9,6 +9,7 @@ import de.xite.scoreboard.main.PowerBoard;
 import de.xite.scoreboard.utils.Teams;
 
 public class ChatListener implements Listener{
+	// TODO: 03/06/2023 Remove this
 	static PowerBoard pl = PowerBoard.pl;
 	@EventHandler
 	public void onChat(AsyncPlayerChatEvent e) {

@@ -49,7 +49,7 @@ public class ScoreboardManager {
 	private ScoreboardManager(String name) {
 		this.name = name;
 		
-		if(name == "blacklisted") {
+		if(name.equals("blacklisted")) {
 			pl.getLogger().severe("Sorry, but the scoreboard name 'blacklisted' is reserved for the system. Please use another name.");
 			return;
 		}
@@ -89,12 +89,12 @@ public class ScoreboardManager {
 		for(String s : cfg.getConfigurationSection("").getValues(false).keySet()) {
 			try {
 				int id = Integer.parseInt(s);
-				
-				if(cfg.getStringList(id+".scores") != null && !cfg.getStringList(id+".scores").isEmpty()) {
-					List<String> list = cfg.getStringList(id+".scores");
+
+				List<String> list = cfg.getStringList(id+".scores");
+				if(list != null && !list.isEmpty()) {
 					int speed = cfg.getInt(id+".speed");
 					
-					// Check if the numbers are in the correct ordner and begin with 0
+					// Check if the numbers are in the correct order and begin with 0
 					if(id != i) {
 						pl.getLogger().warning("Your scores of scoreboard '"+name+"' do not begin with 0 or have an incorrect order. Please check that the numbers begin with 0 (not 1) and are sequentially. This could cause problems with your scoreboard!");
 						id = i;
@@ -109,8 +109,7 @@ public class ScoreboardManager {
 					startScoreAnimation(id, speed);
 				}
 				
-			}catch (IllegalStateException e) {
-			}catch (NumberFormatException e) {
+			}catch (IllegalStateException | NumberFormatException ignored) {
 			}
 		}
 		if(scores.size() > 14) // Check if more than 14 scores
@@ -200,9 +199,8 @@ public class ScoreboardManager {
 						String score = scores.get(id).get(count); // get the current score (text)
 						int i = scores.size()-id-1;
 						currentScores.replace(id, score);
-						
-						List<Player> all = new ArrayList<Player>();
-						all.addAll(players);
+
+						List<Player> all = new ArrayList<>(players);
 						for(Player p : all)
 							ScoreTitleUtils.setScore(p, score, i, true, get(name)); // set the score
 						
@@ -220,16 +218,15 @@ public class ScoreboardManager {
 		ScoreboardPlayer.players.put(p, name);
 	}
 	public void removePlayer(Player p) {
-		if(players.contains(p))
-			players.remove(p);
-		if(ScoreboardPlayer.players.containsKey(p))
-			ScoreboardPlayer.players.remove(p);
+		// containsKey removed because it's not necessary.
+		players.remove(p);
+		ScoreboardPlayer.players.remove(p);
 	}
 	public String getCurrentTitle() {
 		return currentTitle;
 	}
 	public ArrayList<String> getCurrentScores() {
-		return new ArrayList<String>(currentScores.values());
+		return new ArrayList<>(currentScores.values());
 	}
 	public String getName() {
 		return this.name;

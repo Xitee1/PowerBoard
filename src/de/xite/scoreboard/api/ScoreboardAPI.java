@@ -9,7 +9,7 @@ public class ScoreboardAPI {
 	/**
 	 * API has changed.
 	 *
-	 * @deprecated use {@link PowerBoardAPI.registerCustomPlaceholders(ph)} instead.  
+	 * @deprecated use {@link PowerBoardAPI#registerCustomPlaceholders(CustomPlaceholders)} instead.
 	 */
 	public static void registerCustomPlaceholders(CustomPlaceholders ph) {
 		PowerBoardAPI.registerCustomPlaceholders(ph);
@@ -19,7 +19,7 @@ public class ScoreboardAPI {
 	/**
 	 * API has changed.
 	 *
-	 * @deprecated use {@link PowerBoardAPI.setScoreboard(p, custom)} instead.  
+	 * @deprecated use {@link PowerBoardAPI#setScoreboard(Player, boolean, String)} instead.
 	 */
 	@Deprecated
 	public static void enableScoreboard(Player p, String s) {
@@ -28,7 +28,7 @@ public class ScoreboardAPI {
 	/**
 	 * API has changed.
 	 *
-	 * @deprecated use {@link PowerBoardAPI.setScoreboard(p)} instead.  
+	 * @deprecated use {@link PowerBoardAPI#setScoreboard(Player, boolean, String)} instead.
 	 */
 	@Deprecated
 	public static void disableScoreboard(Player p, String s) {
@@ -37,7 +37,7 @@ public class ScoreboardAPI {
 	/**
 	 * API has changed.
 	 *
-	 * @deprecated use {@link PowerBoardAPI.setScoreboard(p)} instead.  
+	 * @deprecated use {@link PowerBoardAPI#setScoreboard(Player, boolean, String)} instead.
 	 */
 	@Deprecated
 	public static void enableScoreboard(Player p) {
@@ -46,7 +46,7 @@ public class ScoreboardAPI {
 	/**
 	 * API has changed.
 	 *
-	 * @deprecated use {@link PowerBoardAPI.setScoreboard(p)} instead.  
+	 * @deprecated use {@link PowerBoardAPI#setScoreboard(Player, boolean, String)} instead.
 	 */
 	@Deprecated
 	public static void disableScoreboard(Player p) {
@@ -59,7 +59,7 @@ public class ScoreboardAPI {
 	/**
 	 * API has changed.
 	 *
-	 * @deprecated Use {@link PowerBoardAPI.setScoreboard(p)} instead.  
+	 * @deprecated Use {@link PowerBoardAPI#setScoreboard(Player, boolean, String)} instead.
 	 */
 	@Deprecated
 	public static void setScoreboard(Player p) {
@@ -68,7 +68,7 @@ public class ScoreboardAPI {
 	/**
 	 * API has changed.
 	 *
-	 * @deprecated Use {@link PowerBoardAPI.setScoreboard(p)} instead.  
+	 * @deprecated Use {@link PowerBoardAPI#removeScoreboard(Player)} instead.
 	 */
 	public static void removeScoreboard(Player p) {
 		PowerBoardAPI.removeScoreboard(p);
@@ -76,7 +76,7 @@ public class ScoreboardAPI {
 	/**
 	 * API has changed.
 	 *
-	 * @deprecated Use {@link PowerBoardAPI.setScoreboard(p, title, usePlaceholders)} instead.  
+	 * @deprecated Use {@link PowerBoardAPI#setScoreboardTitle(Player, String, boolean)} instead.
 	 */
 	public static void setScoreboardTitle(Player p, String title, boolean usePlaceholders) {
 		PowerBoardAPI.setScoreboardTitle(p, title, usePlaceholders);
@@ -84,7 +84,7 @@ public class ScoreboardAPI {
 	/**
 	 * API has changed.
 	 *
-	 * @deprecated Use {@link PowerBoardAPI.setScoreboardScore(p, score, index, usePlaceholders)} instead.  
+	 * @deprecated Use {@link PowerBoardAPI#setScoreboardScore(Player, String, int, boolean)} instead.
 	 */
 	public static void setScoreboardScore(Player p, String score, int index, boolean usePlaceholders) {
 		PowerBoardAPI.setScoreboardScore(p, score, index, usePlaceholders);
@@ -92,7 +92,7 @@ public class ScoreboardAPI {
 	/**
 	 * API has changed.
 	 *
-	 * @deprecated Use {@link PowerBoardAPI.setScoreboardScores(p, scores, usePlaceholders)} instead.  
+	 * @deprecated Use {@link PowerBoardAPI#setScoreboardScores(Player, ArrayList, boolean)} instead.
 	 */
 	public static void setScoreboardScores(Player p, ArrayList<String> scores, boolean usePlaceholders) {
 		PowerBoardAPI.setScoreboardScores(p, scores, usePlaceholders);

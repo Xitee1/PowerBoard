@@ -16,6 +16,7 @@ import de.xite.scoreboard.utils.Teams;
 import de.xite.scoreboard.utils.Updater;
 
 public class JoinQuitListener implements Listener {
+	// TODO: 03/06/2023 Remove this
 	PowerBoard pl = PowerBoard.pl;
 	@EventHandler
 	public void onJoin(PlayerJoinEvent e) {
@@ -38,24 +39,22 @@ public class JoinQuitListener implements Listener {
 			});
 		}
 		// Set a new scoreboard for the player to prevent bugs
-		if(pl.getConfig().getBoolean("tablist.ranks") || pl.getConfig().getBoolean("scoreboard"))
+		if(pl.getConfig().getBoolean("tablist.ranks") || pl.getConfig().getBoolean("scoreboard")) {
 			p.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
+		}
 		
-		Bukkit.getScheduler().runTaskLaterAsynchronously(pl, new Runnable() {
-			@Override
-			public void run() {
-				// Register Teams if chat ranks or tablist ranks are used
-				if(pl.getConfig().getBoolean("chat.ranks") || pl.getConfig().getBoolean("tablist.ranks"))
-					if(Teams.get(p) == null)
-						RankManager.register(p);
-				
-				if(pl.getConfig().getBoolean("scoreboard"))
-					ScoreboardPlayer.setScoreboard(p, false, null);
-				
-				if(pl.getConfig().getBoolean("tablist.text"))
-					TablistPlayer.addPlayer(p, null);
-				
-			}
+		Bukkit.getScheduler().runTaskLaterAsynchronously(pl, () -> {
+			// Register Teams if chat ranks or tablist ranks are used
+			if(pl.getConfig().getBoolean("chat.ranks") || pl.getConfig().getBoolean("tablist.ranks"))
+				if(Teams.get(p) == null)
+					RankManager.register(p);
+
+			if(pl.getConfig().getBoolean("scoreboard"))
+				ScoreboardPlayer.setScoreboard(p, false, null);
+
+			if(pl.getConfig().getBoolean("tablist.text"))
+				TablistPlayer.addPlayer(p, null);
+
 		}, 3);
 	}
 	@EventHandler

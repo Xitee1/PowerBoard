@@ -3,7 +3,6 @@
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -18,6 +17,9 @@ import net.md_5.bungee.api.ChatColor;
 
 public class ScoreboardCommand implements CommandExecutor, TabCompleter {
 	String designLine = PowerBoard.pr+ChatColor.GRAY+"X"+ChatColor.YELLOW+""+ChatColor.STRIKETHROUGH+"-----"+ChatColor.GOLD+"Scoreboard"+ChatColor.YELLOW+""+ChatColor.STRIKETHROUGH+"-----"+ChatColor.GRAY+"X";
+	// String designLine = PowerBoard.pr+"§7X§e§m-----§6Scoreboard§e§m-----§7X";
+
+	// TODO: 03/06/2023 Remove this
 	PowerBoard pl = PowerBoard.pl;
 	
 	@Override
@@ -47,14 +49,14 @@ public class ScoreboardCommand implements CommandExecutor, TabCompleter {
 				s.sendMessage(PowerBoard.pr+ChatColor.RED+"Sorry, but you need the permission "+ChatColor.GRAY+"powerboard.toggle.scoreboard"+ChatColor.RED+" to do that.");
 
 		}else if(args.length == 1 && (args[0].equalsIgnoreCase("reload") || args[0].equalsIgnoreCase("rl"))) {
-			if(!(s instanceof Player) || (s instanceof Player && ((Player) s).hasPermission("powerboard.reload"))) {
+			if(!(s instanceof Player) || s.hasPermission("powerboard.reload")) {
 				Config.reloadConfigs(s);
 				return true;
 			}else
 				s.sendMessage(PowerBoard.pr+ChatColor.RED+"Sorry, but you need the permission "+ChatColor.GRAY+"powerboard.reload"+ChatColor.RED+" to do that.");
 		}else if(args.length >= 1 && args[0].equalsIgnoreCase("update")) {
 			if(args.length >= 2 && args[1].equalsIgnoreCase("confirm")) {
-				if(!(s instanceof Player) || (s instanceof Player && ((Player) s).hasPermission("powerboard.update"))) {
+				if(!(s instanceof Player) || s.hasPermission("powerboard.update")) {
 					s.sendMessage(PowerBoard.pr+ChatColor.GREEN+"Downloading the newest version...");
 					if(Updater.downloadFile(false)) {
 						s.sendMessage(PowerBoard.pr+ChatColor.GREEN+"Download finished. Please restart your server as soon as possible!");
@@ -78,7 +80,7 @@ public class ScoreboardCommand implements CommandExecutor, TabCompleter {
 						+ "Please type "+ChatColor.YELLOW+"/pb update confirm"+ChatColor.RED+" to confirm.");
 
 		}else if(args.length == 1 && args[0].equalsIgnoreCase("debug")) {
-			if(!(s instanceof Player) || (s instanceof Player && ((Player) s).hasPermission("powerboard.debug"))) {
+			if(!(s instanceof Player) || s.hasPermission("powerboard.debug")) {
 				if(PowerBoard.debug) {
 					PowerBoard.debug = false;
 					s.sendMessage(PowerBoard.pr+ChatColor.RED+"Disabled debug.");
@@ -119,7 +121,7 @@ public class ScoreboardCommand implements CommandExecutor, TabCompleter {
 	}
 	@Override
 	public List<String> onTabComplete(CommandSender s, Command cmd, String alias, String[] args) {
-		List<String> list = new ArrayList<String>();
+		List<String> list = new ArrayList<>();
 		if(s instanceof Player) {
 			Player p = (Player) s;
 			if(args.length == 1) {
@@ -133,13 +135,11 @@ public class ScoreboardCommand implements CommandExecutor, TabCompleter {
 				if(p.hasPermission("powerboard.debug"))
 					list.add("debug");
 			}
-		}else {
-			if(args.length == 1) {
-				list.add("info");
-				list.add("reload");
-				list.add("update");
-				list.add("debug");
-			}
+		}else if(args.length == 1) {
+			list.add("info");
+			list.add("reload");
+			list.add("update");
+			list.add("debug");
 		}
 		return list;
 	}
