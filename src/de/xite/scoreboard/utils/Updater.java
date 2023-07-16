@@ -30,7 +30,7 @@ public class Updater {
 					return d;
 				}
 			} catch (IOException e) {
-				pl.getLogger().info("Updater -> Cannot look for updates: " + e.getMessage());
+				pl.getLogger().info(updaterPrefix + "Cannot look for updates: " + e.getMessage());
 				return "Could not check for updates! You probably restarted your server to often, so SpigotMC blocked your IP. You probably have to wait a few minutes or hours.";
 			}
 			
@@ -41,9 +41,10 @@ public class Updater {
 	}
 	
 	public static boolean checkVersion() {
-		if(getVersion().equals(pl.getDescription().getVersion()))
-			return false;
-		return true;
+		Version current = new Version(pl.getDescription().getVersion());
+		Version newest = new Version(getVersion());
+
+		return current.compareTo(newest) < 0;
 	}
 	public static boolean downloadFile(boolean forceUpdate) {
 		if(updateSuccessful) {
