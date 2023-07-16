@@ -1,0 +1,105 @@
+#####################################################################################################
+### Powerboard: Scoreboard + Tablist + Prefix + Chat | Animated                                   ###
+###                                                                                               ###
+### You need some help? Have a look at our wiki: https://github.com/Xitee1/PowerBoard/wiki        ###
+### For bugreports and proposals join our Discord: https://discord.gg/VqK3ctsbz7                  ###
+###                                                                                               ###
+### You can find the source code at: https://github.com/Xitee1/PowerBoard                         ###
+#####################################################################################################
+
+# Info: If there's an option to enable or disable something, you have to do it with the words true and false (Enable = true; Disable = false)
+
+###############
+### Modules ###
+###############
+scoreboard: true # enable/disable the scoreboard
+scoreboard-default: 'scoreboard' # The scoreboard that will be set after a player joins the server
+
+tablist:
+  text: true # enable/disable the header/footers
+  text-default: 'tablist' # The tablist that will be set after a player joins the server
+  ranks: true # enable/disable the rank system (only tablist)
+
+chat:
+  ranks: true # enable/disable the chat system
+  colorperm: 'chat.color' # The permission to use colorcodes in chat. To disable set it to "none".
+  allowHexColors: true # Allow players to use hex colors in chat. It uses the 'colorperm' permission.
+
+#############
+### Ranks ###
+#############
+ranks:
+  # You can use the following permission systems:
+  # - none (the player needs the specified permission)
+  # - LuckPerms (Features: Seperate admin & owner rank's, auto update (no rejoin needed after group change - only API!), (optional) use prefixes you have set in luckperms)
+  # - API (Only for devs - set this if you want to use the PowerBoard API only)
+  # For more infos visit the wiki!
+  permissionsystem: 'none'
+  
+  update-interval: -1 # Interval for automatically updating the ranks (in minutes). Useful if placeholders in prefixes/suffixes are used. Set to -1 to disable (default).
+
+  options:
+    show-prefix-in-tab: true
+    show-suffix-in-tab: true
+  
+  # If you want to sync all your prefixes with all your servers or just want to use the prefixes that you have set for the groups in
+  # LuckPerms, enable this setting. But make sure that you have configured the LuckPerms groups properly! More infos are in the wiki.
+  luckperms-api:
+    enable: false
+    prefix-suffix-space: false # Set a space behind the prefix and infront of the suffix
+    chat-layout: '%prefix% %player_name% &7» ' # This is the fallback chat-prefix if there is no specific for the rank
+    chat-prefix:
+      owner: '&4Owner &7| &4%player_name% &7» '
+      admin: '&cAdmin &7| &c%player_name% &7» '
+      player: '&7Player | %player_name% » '
+  
+  ##########################################################################################
+  ### If you have luckperms api enabled, ignore everything in the config section "list"!
+  ### You can add as many ranks as you want.
+  ### Note: The limit of characters in prefix/suffix in the tab is 16 (MC v1.13+ the limit is 64!) included color codes (e.g. &6 is counted as 1 character).
+  ###       The chat prefix has no limits!
+  list:
+    owner: # It doesn't matter what you like to call it. It doesn't affect anything at all.
+      permission: 'rank.owner' # If the permission system above is not "none", replace the permission with the name of the group - more infos in the wiki
+      prefix: '&4Owner &7| &4'
+      suffix: ' &7[&eTeam&7]'
+      chatPrefix: '&7[&cOwner&7] %player_name% » '
+      placeholder-name: 'Owner' # This will replace the %rank% placeholder
+    admin:
+      permission: 'rank.admin'
+      prefix: '&cAdmin &7| &c'
+      suffix: ' &7[&eTeam&7]'
+      chatPrefix: '&7[&4Admin&7] %player_name% » '
+      placeholder-name: 'Admin'
+    player:
+      permission: 'rank.player'
+      prefix: '&7Player | '
+      suffix: ''
+      chatPrefix: '&7[&aPlayer&7] %player_name% » '
+      placeholder-name: 'Player'
+
+####################
+### Placeholders ###
+####################
+placeholder:
+  prefer-plugin-placeholders: true # Prefer replacing the placeholders by the plugin itself and not PAPI
+  time-format: 'HH:mm' # If you don't know what to set here, have a look at this: https://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
+  date-format: 'dd.MM.yyyy'
+  money-decimals: 2 # The maximum decimals for the placeholder %player_money%.
+  hexColorSyntax: '#000000' # Set the syntax to trigger hex colors. For example 'color:000000' or just '#000000' - whatever you want. WARNING NOT WORKING CHARS: { } ( )
+  world-names: # Replace world names for the %player_world% placeholder
+    world: 'Overworld'
+    world_nether: 'Nether'
+    world_the_end: 'The End'
+
+######################
+### Plugin Updater ###
+######################
+update:
+  notification: true # Send a message to all Admins on join if a new update is available
+  autoupdater: false # With this option, the plugin will be automatically updated
+
+################################################
+#### The debug can help you to find problems ###
+################################################
+debug: false
