@@ -34,13 +34,8 @@ public class Updater {
 				return "Could not check for updates! You probably restarted your server to often, so SpigotMC blocked your IP. You probably have to wait a few minutes or hours.";
 			}
 			
-			// Set it to null again after an hour to check again (there might be a new version)
-			Bukkit.getScheduler().runTaskLaterAsynchronously(PowerBoard.pl, new Runnable() {
-				@Override
-				public void run() {
-					version = null;
-				}
-			}, 20*60*60);
+			// Set it to null again after 24h to check again (there might be a new version)
+			Bukkit.getScheduler().runTaskLaterAsynchronously(PowerBoard.pl, () -> version = null, 20*60*60*24);
 		}
 		return version;
 	}
