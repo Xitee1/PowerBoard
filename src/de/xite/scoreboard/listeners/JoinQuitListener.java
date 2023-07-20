@@ -39,7 +39,7 @@ public class JoinQuitListener implements Listener {
 			});
 		}
 		// Set a new scoreboard for the player to prevent bugs
-		if(pl.getConfig().getBoolean("tablist.ranks") || pl.getConfig().getBoolean("scoreboard")) {
+		if((pl.getConfig().getBoolean("tablist.ranks") || pl.getConfig().getBoolean("scoreboard")) && !pl.getConfig().getBoolean("scoreboard-advanced-settings.force-new-scoreboard")) {
 			p.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
 		}
 		
