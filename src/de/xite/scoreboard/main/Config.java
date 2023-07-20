@@ -36,7 +36,7 @@ public class Config {
 		pl.getLogger().info("Loading configs..");
 		
 		File folder = new File(PowerBoard.pluginfolder);
-		if(folder == null || !folder.isDirectory())
+		if(!folder.isDirectory())
 			folder.mkdirs();
 		
 		// (create) and load config.yml
