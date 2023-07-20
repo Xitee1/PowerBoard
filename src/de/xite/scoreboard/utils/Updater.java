@@ -27,7 +27,6 @@ public class Updater {
 				if(scanner.hasNext()) {
 					String d = scanner.next();
 					version = d;
-					return d;
 				}
 			} catch (IOException e) {
 				pl.getLogger().info(updaterPrefix + "Cannot look for updates: " + e.getMessage());
