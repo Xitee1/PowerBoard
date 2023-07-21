@@ -1,5 +1,6 @@
 package de.xite.scoreboard.main;
 
+import de.xite.scoreboard.versions.VersionSpecific;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
@@ -45,7 +46,9 @@ public class PowerBoard extends JavaPlugin {
 		// In 1.13+ a lot of things have changed. For example 128 Chars in the scoreboard instead of 32
 		if(Version.CURRENT.isAtLeast(Version.v1_13))
 			aboveMC_1_13 = true;
-		
+
+		VersionSpecific.init();
+
 		// Migrate from old versions:
 		UpgradeVersion.rename(); // Rename Scoreboard to PowerBoard - migration will be removed on v3.7
 		
