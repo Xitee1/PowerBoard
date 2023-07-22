@@ -104,7 +104,7 @@ public class ScoreTitleUtils {
 				}catch (IllegalArgumentException e) {
 					team.setPrefix(ChatColor.RED+"-too long-");
 					PowerBoard.pl.getLogger().warning(" ");
-					PowerBoard.pl.getLogger().warning("-> The scoreboard-score is too long! The limit is 128 chars!");
+					PowerBoard.pl.getLogger().warning("-> The scoreboard-score is too long! The limit is around 128 chars!");
 					if(sm != null)
 						PowerBoard.pl.getLogger().warning("-> Scoreboard: "+sm.getName());
 					PowerBoard.pl.getLogger().warning("-> Score: "+score);
@@ -117,7 +117,7 @@ public class ScoreTitleUtils {
 				if(s == null) {
 					team.setPrefix(ChatColor.RED+"-too long-");
 					PowerBoard.pl.getLogger().warning(" ");
-					PowerBoard.pl.getLogger().warning("-> The scoreboard-score is too long! The limit is 30 chars!");
+					PowerBoard.pl.getLogger().warning("-> The scoreboard-score is too long! The limit is around 30 chars!");
 					if(sm != null)
 						PowerBoard.pl.getLogger().warning("-> Scoreboard: "+sm.getName());
 					PowerBoard.pl.getLogger().warning("-> Score: \""+score+"\", chars: "+score.length());
