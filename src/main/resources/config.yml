@@ -100,7 +100,7 @@ placeholder:
 ######################
 update:
   notification: true # Send a message to all Admins on join if a new update is available
-  autoupdater: false # With this option, the plugin will be automatically updated
+  autoupdater: false # With this option, the plugin will be automatically updated (No longer recommended because of some glitches)
 
 #############################################
 #### The debug can help you find problems ###
