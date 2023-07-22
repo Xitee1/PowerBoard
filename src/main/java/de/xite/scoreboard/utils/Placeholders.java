@@ -2,9 +2,7 @@ package de.xite.scoreboard.utils;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,7 +20,7 @@ import me.clip.placeholderapi.PlaceholderAPI;
 public class Placeholders {
 	static PowerBoard pl = PowerBoard.pl;
 	public static String hexColorBegin = "", hexColorEnd = ""; // hex color Syntax
-	
+
 	// All registered custom placeholders
 	public static Set<CustomPlaceholders> ph = new HashSet<>();
 	
@@ -31,146 +29,145 @@ public class Placeholders {
 		for(CustomPlaceholders ph : ph)
 			s = ph.replace(p, s);
 		
-		// Placeholder API if PAPI prefered
+		// First replace with PAPI if preferred
 		if(ExternalPlugins.hasPapi && !pl.getConfig().getBoolean("prefer-plugin-placeholders"))
 			try {
 				s = PlaceholderAPI.setPlaceholders(p, s);
 			}catch (Exception e) {
+				pl.getLogger().severe("Could not replace PAPI Placeholders in String "+s+". This is NOT a bug of PowerBoard!"
+						+ "Instead it is caused by an external plugin that provides placeholders to PAPI."
+						+ "It just says PowerBoard there, because PB requests these placeholders from PAPI and therefore is the root cause.");
 				if(PowerBoard.debug) {
-					pl.getLogger().severe("Could not replace PAPI Placeholders in String "+s+". This is NOT a bug of PowerBoard!"
-							+ "Instead it is caused by an external plugin that provides placeholders to PAPI."
-							+ "It just says PowerBoard there, because PB requests these placeholders from PAPI and therefore is the root cause.");
 					e.printStackTrace();
 				}
 			}
   			
 		
 		// ---- Deprecated ---- //
-  		if(s.contains("%tps%")) {
-  			s = s.replace("%tps%", "%server_tps%");
-  			pl.getLogger().warning("You are using deprecated placeholders! Change %tps% to %server_tps% - The old placeholder will be removed in v3.7");
-  		}
-  			
-  		if(s.contains("%ping%")) {
-  			s = s.replace("%ping%", "%player_ping%");
-  			pl.getLogger().warning("You are using deprecated placeholders! Change %ping% to %player_ping% - The old placeholder will be removed in v3.7");
-  		}
-  		if(s.contains("%money%")) {
-  			s = s.replace("%money%", "%player_money%");
-  			pl.getLogger().warning("You are using deprecated placeholders! Change %money% to %player_money% - The old placeholder will be removed in v3.7");
-  		}
-  		if(s.contains("%rank%")) {
-  			s = s.replace("%rank%", "%player_rank%");
-  			pl.getLogger().warning("You are using deprecated placeholders! Change %rank% to %player_rank% - The old placeholder will be removed in v3.7");
-  		}
-  		if(s.contains("%name%")) {
-  			s = s.replace("%name%", "%player_name%");
-  			pl.getLogger().warning("You are using deprecated placeholders! Change %name% to %player_name% - The old placeholder will be removed in v3.7");
-  		}
-  		if(s.contains("%loc_x%")) {
-  			s = s.replace("%loc_x%", "%player_loc_x%");
-  			pl.getLogger().warning("You are using deprecated placeholders! Change %loc_x% to %player_loc_x% - The old placeholder will be removed in v3.7");
-  		}
-  		if(s.contains("%loc_y%")) {
-  			s = s.replace("%loc_y%", "%player_loc_y%");
-  			pl.getLogger().warning("You are using deprecated placeholders! Change %loc_y% to %player_loc_y% - The old placeholder will be removed in v3.7");
-  		}
-  		if(s.contains("%loc_z%")) {
-  			s = s.replace("%loc_z%", "%player_loc_z%");
-  			pl.getLogger().warning("You are using deprecated placeholders! Change %loc_z% to %player_loc_z% - The old placeholder will be removed in v3.7");
-  		}
-  		if(s.contains("%world%")) {
-  			s = s.replace("%world%", "%player_world%");
-  			pl.getLogger().warning("You are using deprecated placeholders! Change %world% to %player_world% - The old placeholder will be removed in v3.7");
-  		}
-		if(s.contains("%playeronline%")) {
-			s = s.replace("%playeronline%", "%server_online_players%");
-  			pl.getLogger().warning("You are using deprecated placeholders! Change %playeronline% to %server_online_players% - The old placeholder will be removed in v3.7");
-  		}
-  		if(s.contains("%playermax%")) {
-  			s = s.replace("%playermax%", "%server_max_players%");
-  			pl.getLogger().warning("You are using deprecated placeholders! Change %playermax% to %server_max_players% - The old placeholder will be removed in v3.7");
-  		}
+		HashMap<String, String> deprecatedPlaceholders = new HashMap<>();
+
+		deprecatedPlaceholders.put("%tps%", "%player_tps%");
+		deprecatedPlaceholders.put("%ping%", "%player_ping%");
+		deprecatedPlaceholders.put("%money%", "%player_money%");
+		deprecatedPlaceholders.put("%rank%", "%player_rank%");
+		deprecatedPlaceholders.put("%name%", "%player_name%");
+		deprecatedPlaceholders.put("%loc_x%", "%player_loc_x%");
+		deprecatedPlaceholders.put("%loc_y%", "%player_loc_y%");
+		deprecatedPlaceholders.put("%loc_z%", "%player_loc_z%");
+		deprecatedPlaceholders.put("%world%", "%player_world%");
+		deprecatedPlaceholders.put("%playeronline%", "%server_online_players%");
+		deprecatedPlaceholders.put("%playermax%", "%server_max_players%");
+
+		for(Map.Entry<String, String> ph : deprecatedPlaceholders.entrySet()) {
+			String oldPH = ph.getKey();
+			String newPH = ph.getValue();
+			if(s.contains(oldPH)) {
+				s = s.replace(oldPH, newPH);
+				pl.getLogger().warning("You are using deprecated placeholders! Change "+oldPH+" to "+newPH+" - The old placeholders will be removed soon.");
+			}
+		}
 		
-		// ---- Placeholders from Scoreboard Plugin ---- //
+		// ---- Placeholders from PowerBoard Plugin ---- //
+		String ph;
+
 		// TPS
-		if(s.contains("%server_tps%"))
-			s = s.replace("%server_tps%", String.valueOf(TPS.getTPS()));
+		ph = "%server_tps%";
+		if(s.contains(ph)) {
+			s = s.replace(ph, String.valueOf(TPS.getTPS()));
+		}
 		
 		// Players on server
-		if(s.contains("%server_online_players%"))
-  			s = s.replace("%server_online_players%", String.valueOf(Bukkit.getOnlinePlayers().size()));
+		ph = "%server_online_players%";
+		if(s.contains(ph)) {
+			s = s.replace(ph, String.valueOf(Bukkit.getOnlinePlayers().size()));
+		}
 		
 		// Max players on server
-  		if(s.contains("%server_max_players%"))
-  			s = s.replace("%server_max_players%", String.valueOf(Bukkit.getMaxPlayers()));
+		ph = "%server_max_players%";
+  		if(s.contains(ph)) {
+		    s = s.replace(ph, String.valueOf(Bukkit.getMaxPlayers()));
+	    }
   		
   		// Player name
-  		if(s.contains("%player_name%")) {
-  			s = s.replace("%player_name%", p.getName());
-  		}
-  		
+		ph = "%player_name%";
+  		if(s.contains(ph)) {
+		    s = s.replace(ph, p.getName());
+	    }
+
   		// Player name
-  		if(s.contains("%player_displayname%")) {
-  			s = s.replace("%player_name%", p.getDisplayName());
+		ph = "%player_displayname%";
+  		if(s.contains(ph)) {
+  			s = s.replace(ph, p.getDisplayName());
   		}
   			
   		// World from the player
-  		if(s.contains("%player_world%")) {
+		ph = "%player_world%";
+  		if(s.contains(ph)) {
   			String world = p.getWorld().getName();
   			if(pl.getConfig().isString("placeholder.world-names."+world))
   				world = ChatColor.translateAlternateColorCodes('&', pl.getConfig().getString("placeholder.world-names."+world));
-  			s = s.replace("%player_world%", world);
+  			s = s.replace(ph, world);
   		}
+
   		// Location
-  		if(s.contains("%player_loc_x%"))
-  			s = s.replace("%player_loc_x%", String.valueOf(p.getLocation().getBlockX()));
-  		if(s.contains("%player_loc_y%"))
-  			s = s.replace("%player_loc_y%", String.valueOf(p.getLocation().getBlockY()));
-  		if(s.contains("%player_loc_z%"))
-  			s = s.replace("%player_loc_z%", String.valueOf(p.getLocation().getBlockZ()));
+		ph = "%player_loc_x%";
+  		if(s.contains(ph))
+  			s = s.replace(ph, String.valueOf(p.getLocation().getBlockX()));
+
+		ph = "%player_loc_y%";
+  		if(s.contains(ph))
+  			s = s.replace(ph, String.valueOf(p.getLocation().getBlockY()));
+
+		ph = "%player_loc_z%";
+  		if(s.contains(ph))
+  			s = s.replace(ph, String.valueOf(p.getLocation().getBlockZ()));
   		
   		// Player food level
-  		if(s.contains("%player_food%"))
-  			s = s.replace("%player_food%", String.valueOf((int) p.getFoodLevel()));
+		ph = "%player_food%";
+  		if(s.contains(ph))
+  			s = s.replace(ph, String.valueOf(p.getFoodLevel()));
   		
   		// Player saturation
-  		if(s.contains("%player_saturation%"))
-  			s = s.replace("%player_saturation%", String.valueOf((int) p.getSaturation()));
+		ph = "%player_saturation%";
+  		if(s.contains(ph))
+  			s = s.replace(ph, String.valueOf((int) p.getSaturation()));
   		
   		// Player health
-  		if(s.contains("%player_health%"))
-  			s = s.replace("%player_health%", String.valueOf((int) p.getHealth()));
-  		
-  		
+		ph = "%player_health%";
+  		if(s.contains(ph))
+  			s = s.replace(ph, String.valueOf((int) p.getHealth()));
+
   		// Server time
-  		if(s.contains("%time%")) {
+		ph = "%time%";
+  		if(s.contains(ph)) {
   			String format = pl.getConfig().getString("placeholder.time-format");
   			if(format != null) {
   				try {
-  					s = s.replace("%time%", new SimpleDateFormat(format).format(new Date()));
+  					s = s.replace(ph, new SimpleDateFormat(format).format(new Date()));
   				}catch (Exception e2) {
   					pl.getLogger().severe("Invalid time format! Please check your placeholder settings in your config.yml!");
 				}
   			}else
-  				s = s.replace("%time%", new SimpleDateFormat("HH:mm").format(new Date()));
+  				s = s.replace(ph, new SimpleDateFormat("HH:mm").format(new Date()));
   		}
   		
   		// Server date
-  		if(s.contains("%date%")) {
+		ph = "%date%";
+  		if(s.contains(ph)) {
   			String format = pl.getConfig().getString("placeholder.date-format");
   			if(format != null) {
   				try {
-  					s = s.replace("%date%", new SimpleDateFormat(format).format(new Date()));
+  					s = s.replace(ph, new SimpleDateFormat(format).format(new Date()));
   				}catch (Exception e2) {
   					pl.getLogger().severe("Invalid date format! Please check your placeholder settings in your config.yml!");
 				}
   			}else
-  				s = s.replace("%date%", new SimpleDateFormat("dd.MM.yyyy").format(new Date()));
+  				s = s.replace(ph, new SimpleDateFormat("dd.MM.yyyy").format(new Date()));
   		}
   		
   		// Rank displayname
-  		if(s.contains("%player_rank%")) {
+		ph = "%player_rank%";
+  		if(s.contains(ph)) {
   			Teams teams = Teams.get(p);
 			/*if(teams == null) {
 				RankManager.register(p);
@@ -178,70 +175,87 @@ public class Placeholders {
 			}*/
   			if(teams != null) {
   				if(teams.getRankDisplayName() == null) {
-  					s = s.replace("%player_rank%", teams.getPrefix());
+  					s = s.replace(ph, teams.getPrefix());
   				}else {
-  					s = s.replace("%player_rank%", teams.getRankDisplayName());
+  					s = s.replace(ph, teams.getRankDisplayName());
   				}
-  			}
+  			}else
+				  s = s.replace(ph, "unknown");
   		}
 
 		// Player prefix
-		if(s.contains("%player_prefix%")) {
+		ph = "%player_prefix%";
+		if(s.contains(ph)) {
 			Teams teams = Teams.get(p);
-			if(teams != null)
-				s = s.replace("%player_prefix%", teams.getPrefix());
+			if(teams != null) {
+				s = s.replace(ph, teams.getPrefix());
+			}else
+				s = s.replace(ph, "unknown");
 		}
 
 		// Player prefix
-		if(s.contains("%player_suffix%")) {
+		ph = "%player_suffix%";
+		if(s.contains(ph)) {
 			Teams teams = Teams.get(p);
 			if(teams != null)
-				s = s.replace("%player_suffix%", teams.getSuffix());
+				s = s.replace(ph, teams.getSuffix());
 		}
   		
   		// Money
-  		if(s.contains("%player_money%")) {
+		ph = "%player_money%";
+  		if(s.contains(ph)) {
   			if(ExternalPlugins.hasVault) {
   				int decimals = pl.getConfig().getInt("placeholder.money-decimals");
   				// If the decimals are set to 0, cast it to int to remove the '.0'
   				if(decimals != 0) {
-  					s = s.replace("%player_money%", String.valueOf(MathUtils.round(VaultAPI.econ.getBalance(p), decimals)));
+  					s = s.replace(ph, String.valueOf(MathUtils.round(VaultAPI.econ.getBalance(p), decimals)));
   				}else
-  					s = s.replace("%player_money%", String.valueOf((int) VaultAPI.econ.getBalance(p)));
+  					s = s.replace(ph, String.valueOf((int) VaultAPI.econ.getBalance(p)));
   			}else {
   				pl.getLogger().severe("Could not get the player's money because you haven't Vault installed or set up! You need Vault and a money system that supports Vault on your server!");
-  				s = s.replace("%player_money%", "Error: See console");
+  				s = s.replace(ph, "Error: See console");
   			}
   		}
   		
   		// Memory
   		try {
-  	  		if(s.contains("%mem_total%"))
-  	  			s = s.replace("%mem_total%", getReadableSize((int) getTotalMemory()));
-  	  		if(s.contains("%mem_free%"))
-  	  			s = s.replace("%mem_free%", getReadableSize((int) getFreeMemory()));
-  	  		if(s.contains("%mem_used%"))
-  	  			s = s.replace("%mem_used%", getReadableSize((int) getUsedMemory()));
-  	  		if(s.contains("%mem_max%"))
-  	  			s = s.replace("%mem_max%", getReadableSize((int) getMaxMemory()));
+		    ph = "%mem_total%";
+  	  		if(s.contains(ph))
+  	  			s = s.replace(ph, getReadableSize((int) getTotalMemory()));
+
+		    ph = "%mem_free%";
+  	  		if(s.contains(ph))
+  	  			s = s.replace(ph, getReadableSize((int) getFreeMemory()));
+
+		    ph = "%mem_used%";
+  	  		if(s.contains(ph))
+  	  			s = s.replace(ph, getReadableSize((int) getUsedMemory()));
+
+		    ph = "%mem_max%";
+  	  		if(s.contains(ph))
+  	  			s = s.replace(ph, getReadableSize((int) getMaxMemory()));
   		}catch (Exception e) {pl.getLogger().severe("Failed to get memory information's! This is not a bug with the plugin - please contact your server-hoster.");}
 
   		// Ping
-  		if(s.contains("%player_ping%")) {
+		ph = "%player_ping%";
+  		if(s.contains(ph)) {
 		    int ping = VersionSpecific.current.getPing(p);
   			
   			if(ping > 999) {
-  				s = s.replace("%player_ping%", ChatColor.RED+"999+");
+  				s = s.replace(ph, ChatColor.RED+"999+");
   			}else
-  				s = s.replace("%player_ping%", String.valueOf(ping));
+  				s = s.replace(ph, String.valueOf(ping));
   		}
   			
   		// -------------------------------------//
   		// Replace colors (MC color codes)
   		s = ChatColor.translateAlternateColorCodes('&', s);
+
   		// Replace colors (HEX) - only 1.16+
   		s = translateHexColor(s);
+
   		//s = IridiumColorAPI.process(s);
+
   		// Replace PAPI if plugin preferred
   		if(ExternalPlugins.hasPapi && pl.getConfig().getBoolean("prefer-plugin-placeholders"))
   			s = PlaceholderAPI.setPlaceholders(p, s);
@@ -249,10 +263,22 @@ public class Placeholders {
 		return s;
 	}
    
-	public static long getTotalMemory() { return Runtime.getRuntime().totalMemory() / 1048576L; }
-	public static long getFreeMemory() { return Runtime.getRuntime().freeMemory() / 1048576L; }
-	public static long getUsedMemory() { return (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1048576L; }
-	public static long getMaxMemory() { return Runtime.getRuntime().maxMemory() / 1048576L; }
+	public static long getTotalMemory() {
+		return Runtime.getRuntime().totalMemory() / 1048576L;
+	}
+
+	public static long getFreeMemory() {
+		return Runtime.getRuntime().freeMemory() / 1048576L;
+	}
+
+	public static long getUsedMemory() {
+		return (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1048576L;
+	}
+
+	public static long getMaxMemory() {
+		return Runtime.getRuntime().maxMemory() / 1048576L;
+	}
+
 	public static String getReadableSize(int size){
 	    String s = "";
 	    size *= 1024; // Because we get the size in mb and not kb
@@ -296,7 +322,9 @@ public class Placeholders {
             return matcher.appendTail(buffer).toString();
     	}catch (Exception e) {
     		pl.getLogger().severe("You have an invalid HEX-Color-Code! Please check the syntax! Text: "+message);
-    		return "InvalidHexColor";
+			if(PowerBoard.debug)
+				e.printStackTrace();
+    		return "Invalid_Color";
 		}
     }
 }

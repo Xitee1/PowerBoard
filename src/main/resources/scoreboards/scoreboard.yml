@@ -1,22 +1,22 @@
 # Here you can customize the scoreboard.
 # You can add as many animation steps as you like.
 #
-# For every score (line) you can set a different speed.
-# You can set up to 14 scores. For that, just add a new number like "'7':"
+# For every score (row) you can set a different speed.
+# You can use up to 14 rows. To add a new row, just add a new number like this: '7':
+# But to prevent issues, you can also copy & paste the last row for example and then modify the text.
 #
-# If you have static scores (no animations or updates needed): Set the 'speed' value to '-1' or '9999' or higher. Then the scheduler won't start to save performance.
-# Note: Specify the speed in ticks, not seconds. 20 ticks = one second
+# Note: For static lines (no animations or updates needed): Set the 'speed' value to '-1'. This will save performance.
+# Note: You need to specify the speed in ticks, not seconds: 20 ticks = one second.
+# Note: The speed value can not be higher than 9999.
 #
-# To use multiple scoreboards, read this wiki: https://github.com/Xitee1/PowerBoard/wiki/Create-and-use-multiple-scoreboards
+# Wiki for using multiple scoreboards: https://github.com/Xitee1/PowerBoard/wiki/Create-and-use-multiple-scoreboards
+# Wiki for using conditions: https://github.com/Xitee1/PowerBoard/wiki/Conditions
 
 title:
   speed: 6
   titles:
   - '&4PowerBoard'
-  - '&4PowerBoard'
   - '&cPowerBoard'
-  - '&cPowerBoard'
-  - '&6PowerBoard'
   - '&6PowerBoard'
   - '&ePowerBoard'
   - '&ePowerBoard'
@@ -26,10 +26,6 @@ title:
   - '&aPowerBoard'
   - '&bPowerBoard'
   - '&bPowerBoard'
-  - '&3PowerBoard'
-  - '&3PowerBoard'
-  - '&1PowerBoard'
-  - '&1PowerBoard'
   - '&9PowerBoard'
   - '&9PowerBoard'
   - '&dPowerBoard'
@@ -39,12 +35,7 @@ title:
   - '&fPowerBoard'
   - '&fPowerBoard'
   - '&7PowerBoard'
-  - '&7PowerBoard'
   - '&8PowerBoard'
-  - '&8PowerBoard'
-  - '&0PowerBoard'
-  - '&0PowerBoard'
-  - '&aPowerBoard'
   - '&aPowerBoard'
   - '&f&oPowerBoard'
   - '&f&kPowerBoard'
@@ -52,14 +43,17 @@ title:
   - '&f&mPowerBoard'
   - '&f&o&nPowerBoard'
   - ' '
+
 '0':
-  speed: 9999
+  speed: -1
   scores:
   - -Not animated-
+
 '1':
-  speed: 9999
+  speed: -1
   scores:
   - ' '
+
 '2':
   speed: 13
   scores:
@@ -85,15 +79,13 @@ title:
   - '&c-Ani-'
   - '&b-An-'
   - '&a-A-'
+
 '3':
-  speed: 99999
+  speed: -1
   scores:
   - ' '
+
 '4':
-  speed: 99999
-  scores:
-  - '&dInformations:'
-'5':
   speed: 30
   scores:
   - '&bPlayers:'
@@ -108,7 +100,8 @@ title:
   - '&bYour hearts:'
   - '&bServer TPS:'
   - '&bServer RAM:'
-'6':
+
+'5':
   speed: 30
   scores:
   - '&a%server_online_players%&7/&a%server_max_players%'
@@ -123,5 +116,6 @@ title:
   - '&a%player_health%'
   - '&a%server_tps%'
   - '&a%mem_used%/%mem_total%'
+
 conditions:
-- '&Add conditions here'
+- 'Add conditions here'

@@ -19,13 +19,12 @@ public class ScoreboardPlayer {
 	
 	// All players with scoreboards
 	public static HashMap<Player, String> players = new HashMap<>(); // Player; Scoreboard config file name
-	
-	@SuppressWarnings("deprecation")
+
 	public static void setScoreboard(Player p, boolean API, ScoreboardManager sm) {
 		Scoreboard board = p.getScoreboard();
 		
 		// ---- Scoreboard ---- //
-		if(ConditionListener.checkConditions(p, Config.scoreboardBlacklistConditions)) {
+		if(ConditionListener.checkConditions(p, ScoreboardManager.scoreboardBlacklistConditions)) {
 			removeScoreboard(p, false);
 			if(!API)
 				players.put(p, "blacklisted");

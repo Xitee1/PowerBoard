@@ -22,7 +22,7 @@ public class ScoreboardManager {
 	
 	// All registered scoreboards
 	public static HashMap<String, ScoreboardManager> scoreboards = new HashMap<>();
-	
+	public static ArrayList<String> scoreboardBlacklistConditions = new ArrayList<>();
 	
 	// The name of the scoreboard
 	String name;
@@ -113,7 +113,7 @@ public class ScoreboardManager {
 			}
 		}
 		if(scores.size() > 14) // Check if more than 14 scores
-			pl.getLogger().warning("You have more than 14 scors in you scoreboard! Some scores cannot be displayed! This is a limitation of Minecraft.");
+			pl.getLogger().warning("You have more than 14 scores in you scoreboard! Some scores cannot be displayed! This is a limitation of Minecraft.");
 		
 	}
 	private void importTitle(YamlConfiguration cfg) {		
@@ -134,7 +134,7 @@ public class ScoreboardManager {
 		currentTitle = title.get(0);
 		
 		// check if scheduler is needed (don't schedule if higher than '9999' or negative)
-		if(speed >= 9999 || speed < 0) {
+		if(speed > 9999 || speed < 0) {
 			if(PowerBoard.debug)
 				pl.getLogger().info("Scoreboard-Title (Name: "+name+"): no animation needed (speed higher than 9999 or negative)");
 			return;
@@ -241,6 +241,7 @@ public class ScoreboardManager {
 	
 	public static void registerAllScoreboards() {
 		ArrayList<String> boards = new ArrayList<>();
+
 		// Get all scoreboards from the scoreboard folder
 		File f = new File(PowerBoard.pluginfolder+"/scoreboards/");
 		FilenameFilter filter = new FilenameFilter() {
@@ -250,15 +251,22 @@ public class ScoreboardManager {
 			}
 		};
 		File[] files = f.listFiles(filter);
-		
-		for(int i = 0; i < files.length; i++) {
-			String s = files[i].getName();
-			boards.add(s.substring(0, s.lastIndexOf(".yml")));
+		if(files != null) {
+			for (File file : files) {
+				String s = file.getName();
+				boards.add(s.substring(0, s.lastIndexOf(".yml")));
+			}
 		}
+
 		for(String board : boards) {
 			ScoreboardManager.get(board);
 			pl.getLogger().info("Registered scoreboard '"+board+"'.");
 		}
+
+		File sbBlacklist = new File(PowerBoard.pluginfolder+"/scoreboards/scoreboard-blacklist.yml");
+		YamlConfiguration cfg = Config.loadConfiguration(sbBlacklist);
+		if(cfg != null)
+			scoreboardBlacklistConditions.addAll(cfg.getStringList("conditions"));
 	}
 	public static void unregisterAllScoreboards() {
 		for(Iterator<ScoreboardManager> iterator = scoreboards.values().iterator(); iterator.hasNext();) {
@@ -267,5 +275,6 @@ public class ScoreboardManager {
 				task.cancel();
 			iterator.remove();
 		}
+		scoreboardBlacklistConditions.clear();
 	}
 }

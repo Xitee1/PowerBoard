@@ -1,0 +1,7 @@
+# If any of the conditions match, no scoreboard will be displayed.
+#
+# Wiki for using multiple scoreboards: https://github.com/Xitee1/PowerBoard/wiki/Create-and-use-multiple-scoreboards
+# Wiki for using conditions: https://github.com/Xitee1/PowerBoard/wiki/Conditions
+
+conditions:
+- world:some_world_with_no_sb

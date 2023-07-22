@@ -68,10 +68,10 @@ public class ConditionListener implements Listener {
 					String world = p.getLocation().getWorld().getName();
 					if(value.endsWith("*")) {
 						// Ignore everything after the * to allow to check for all maps that begin with the value and ignore the rest of it
-						if(!(world.startsWith(value.substring(0, value.length()-2))))
+						if(!world.startsWith(value.substring(0, value.length()-2)))
 							match = false;
 					}else
-						if(!(world.equalsIgnoreCase(value)))
+						if(!world.equalsIgnoreCase(value))
 							match = false;
 				}
 				if(s.startsWith("permission:")) {

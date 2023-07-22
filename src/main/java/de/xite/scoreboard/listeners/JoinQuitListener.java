@@ -28,11 +28,7 @@ public class JoinQuitListener implements Listener {
 					if(Updater.checkVersion()) {
 						if(pl.getConfig().getBoolean("update.notification")) {
 							p.sendMessage(PowerBoard.pr+ChatColor.RED+"A new update is available ("+ChatColor.AQUA+"v"+Updater.getVersion()+ChatColor.RED+")! Installed version: "+ChatColor.AQUA+"v"+pl.getDescription().getVersion());
-							if(pl.getConfig().getBoolean("update.autoupdater")) {
-								p.sendMessage(PowerBoard.pr+ChatColor.GREEN+"The plugin will be updated automatically after a server restart.");
-							}else {
-								p.sendMessage(PowerBoard.pr+ChatColor.RED+"You can download the newest version here: https://www.spigotmc.org/resources/powerboard-scoreboard-tablist-prefix-chat-animated.73854/");
-							}
+							p.sendMessage(PowerBoard.pr+ChatColor.RED+"You can download the newest version here: https://www.spigotmc.org/resources/powerboard-scoreboard-tablist-prefix-chat-animated.73854/");
 						}
 					}
 				}
