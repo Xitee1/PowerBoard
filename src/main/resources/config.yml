@@ -16,7 +16,7 @@ scoreboard: true # enable/disable the scoreboard
 scoreboard-default: 'scoreboard' # The scoreboard that will be set after a player joins the server
 
 scoreboard-advanced-settings:
-  force-new-scoreboard: false # Always leave this false unless you use another scoreboard/rank plugin and you have issues. If you do have such a plugin, this option might fix these issues.
+  use-existing-scoreboard: false # Always leave this false unless you use another scoreboard/rank plugin and have issues. In this case the option might fix issues with other plugins.
 
 tablist:
   text: true # enable/disable the header/footers
