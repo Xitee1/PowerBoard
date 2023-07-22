@@ -11,7 +11,6 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
 import de.xite.scoreboard.listeners.ConditionListener;
-import de.xite.scoreboard.main.Config;
 import de.xite.scoreboard.main.PowerBoard;
 
 public class ScoreboardPlayer {

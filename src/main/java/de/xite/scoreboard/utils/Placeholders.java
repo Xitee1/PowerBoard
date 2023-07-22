@@ -99,13 +99,13 @@ public class Placeholders {
   		if(s.contains(ph)) {
   			s = s.replace(ph, p.getDisplayName());
   		}
-  			
+
   		// World from the player
 		ph = "%player_world%";
   		if(s.contains(ph)) {
   			String world = p.getWorld().getName();
   			if(pl.getConfig().isString("placeholder.world-names."+world))
-  				world = ChatColor.translateAlternateColorCodes('&', pl.getConfig().getString("placeholder.world-names."+world));
+  				world = pl.getConfig().getString("placeholder.world-names."+world);
   			s = s.replace(ph, world);
   		}
 
@@ -280,7 +280,7 @@ public class Placeholders {
 	}
 
 	public static String getReadableSize(int size){
-	    String s = "";
+	    String s;
 	    size *= 1024; // Because we get the size in mb and not kb
 	    
 	    double m = size/1024.0;

@@ -91,7 +91,7 @@ public class ScoreboardManager {
 				int id = Integer.parseInt(s);
 
 				List<String> list = cfg.getStringList(id+".scores");
-				if(list != null && !list.isEmpty()) {
+				if(!list.isEmpty()) {
 					int speed = cfg.getInt(id+".speed");
 					
 					// Check if the numbers are in the correct order and begin with 0
@@ -102,7 +102,7 @@ public class ScoreboardManager {
 					i++;
 					
 					// Add all animations
-					scores.put(id, new ArrayList<String>());
+					scores.put(id, new ArrayList<>());
 					scores.get(id).addAll(list);
 					
 					// Start the animation

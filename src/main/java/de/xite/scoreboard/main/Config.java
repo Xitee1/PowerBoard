@@ -4,7 +4,6 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.common.base.Charsets;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
@@ -94,13 +93,12 @@ public class Config {
 	}
 	
 
-	private static boolean copyDefaultConfig(String configPath) {
+	private static void copyDefaultConfig(String configPath) {
 		File file = new File(PowerBoard.pl.getDataFolder(), configPath);
 		if(file.exists())
-			return false;
+			return;
 
 		pl.saveResource(configPath, false);
-		return true;
 	}
 	
 	public static YamlConfiguration loadConfiguration(File file) {

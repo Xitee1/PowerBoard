@@ -120,7 +120,7 @@ public class SelfCheck {
 			
 			for(String s : checkBoolean) {
 				// Here we check if the option exists.
-				// We re-add it if it is new or the user (accidently) deleted it.
+				// We re-add it if it is new or the user (accidentally) deleted it.
 				if(!cfgNoDefaults.contains(s)) {
 					pl.getLogger().warning(prefix+"The setting \""+s+"\" does not exists! Adding..");
 					cfg.set(s, cfgDefault.getBoolean(s));

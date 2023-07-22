@@ -22,14 +22,11 @@ public class JoinQuitListener implements Listener {
 	public void onJoin(PlayerJoinEvent e) {
 		Player p = e.getPlayer();
 		if(p.hasPermission("powerboard.update") || p.isOp()) {
-			Bukkit.getScheduler().runTaskAsynchronously(pl, new Runnable() {
-				@Override
-				public void run() {
-					if(Updater.checkVersion()) {
-						if(pl.getConfig().getBoolean("update.notification")) {
-							p.sendMessage(PowerBoard.pr+ChatColor.RED+"A new update is available ("+ChatColor.AQUA+"v"+Updater.getVersion()+ChatColor.RED+")! Installed version: "+ChatColor.AQUA+"v"+pl.getDescription().getVersion());
-							p.sendMessage(PowerBoard.pr+ChatColor.RED+"You can download the newest version here: https://www.spigotmc.org/resources/powerboard-scoreboard-tablist-prefix-chat-animated.73854/");
-						}
+			Bukkit.getScheduler().runTaskAsynchronously(pl, () -> {
+				if(Updater.checkVersion()) {
+					if(pl.getConfig().getBoolean("update.notification")) {
+						p.sendMessage(PowerBoard.pr+ChatColor.RED+"A new update is available ("+ChatColor.AQUA+"v"+Updater.getVersion()+ChatColor.RED+")! Installed version: "+ChatColor.AQUA+"v"+pl.getDescription().getVersion());
+						p.sendMessage(PowerBoard.pr+ChatColor.RED+"You can download the newest version here: https://www.spigotmc.org/resources/powerboard-scoreboard-tablist-prefix-chat-animated.73854/");
 					}
 				}
 			});
