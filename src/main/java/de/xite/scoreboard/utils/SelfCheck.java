@@ -1,11 +1,11 @@
 package de.xite.scoreboard.utils;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
+import com.google.common.base.Charsets;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -19,15 +19,16 @@ public class SelfCheck {
 		String prefix = "(SelfCheck) config.yml -> ";
 		
 		try {
+			boolean allowModify = false;
+
 			File file = new File(PowerBoard.pluginfolder+"/config.yml");
 			if(!file.exists()) {
 				pl.getLogger().severe("Skipped SelfCheck -> config.yml does not exist!");
 				return false;
 			}
-			if(!Version.CURRENT.isAtLeast(Version.v1_18)) {
-				pl.getLogger().warning("Skipped SelfCheck. Only works on 1.18+.");
-				return true;
-			}
+
+			if(Version.CURRENT.isAtLeast(Version.v1_18))
+				allowModify = true;
 			
 			// If the boolean is true at the end, the plugin will be disabled
 			boolean disablePlugin = false;
@@ -41,7 +42,7 @@ public class SelfCheck {
 			/* Load all the configs.
 			 * We need 3 versions of the config.yml.
 			 * 
-			 * First, we have the actual config to write to if nessasary.
+			 * First, we have the actual config to write to if necessary.
 			 * We just shorten it here for easier access.
 			 * 
 			 * Second, we have the actual config but without the default settings in it if something is missing.
@@ -53,121 +54,88 @@ public class SelfCheck {
 			 */
 			
 			// Preserving the comments when making changes
-			pl.getConfig().options().parseComments(true);
+			if(allowModify)
+				pl.getConfig().options().parseComments(true);
 			
 			FileConfiguration cfg = pl.getConfig();
 			
 			YamlConfiguration cfgNoDefaults = YamlConfiguration.loadConfiguration(file);
 			
 			// Load the default configurations
-			File config_selfcheck = new File(PowerBoard.pluginfolder+"/.config_selfcheck.yml"); // This file is temporary. We delete it at the end of SelfCheck.
-			try(InputStream inputStream = pl.getClass().getClassLoader().getResourceAsStream("config.yml");
-			     OutputStream outputStream = new FileOutputStream(config_selfcheck)) {
-			        int length;
-			        byte[] bytes = new byte[1024];
-			        // copy data from input stream to output stream
-			        while ((length = inputStream.read(bytes)) != -1) {
-			            outputStream.write(bytes, 0, length);
-			        }
+			final InputStream defConfigStream = pl.getResource("config.yml");
+			if (defConfigStream == null)
+				return false;
+			YamlConfiguration cfgDefault = YamlConfiguration.loadConfiguration(new InputStreamReader(defConfigStream, Charsets.UTF_8));
 
-			} catch (IOException ex) {
-			    ex.printStackTrace();
-			}
-			YamlConfiguration cfgDefault = Config.loadConfiguration(config_selfcheck);
-			
-			
-			/*	Here we could just use the "isX" fuctions to do everything with a single for-loop. Could.
-			 * 	The reason we don't do that here is because the user could for example by mistake set an option
-			 * 	to 'true' instead true, which would make it to a string and cause errors.
-			 * 
-			 *	The only settings that won't be checked are the ranks list, luckperms-api chat-prefix and placeholder world-names because it is too complicated (at least for me right now).
-			 *	But if you are reading this, feel free to implement it.
-			 * 
-			 */
-			
-			
-			String[] checkBoolean = {
-					"scoreboard",
-					"tablist.text",
-					"tablist.ranks",
-					"chat.ranks",
-					"chat.allowHexColors",
-					"ranks.luckperms-api.enable",
-					"ranks.luckperms-api.prefix-suffix-space",
-					"placeholder.prefer-plugin-placeholders",
-					"update.notification",
-					"update.autoupdater",
-					"debug"
-					};
-			
-			String[] checkString = {
-					"scoreboard-default",
-					"tablist.text-default",
-					"chat.colorperm",
-					"ranks.permissionsystem",
-					"ranks.luckperms-api.chat-layout",
-					
-					"placeholder.time-format",
-					"placeholder.date-format",
-					"placeholder.hexColorSyntax"
-					};
-			
-			String[] checkInt = {
-					"ranks.update-interval",
-					"placeholder.money-decimals",
-					};
-			
-			
-			for(String s : checkBoolean) {
-				// Here we check if the option exists.
-				// We re-add it if it is new or the user (accidentally) deleted it.
-				if(!cfgNoDefaults.contains(s)) {
-					pl.getLogger().warning(prefix+"The setting \""+s+"\" does not exists! Adding..");
-					cfg.set(s, cfgDefault.getBoolean(s));
-					needUpdate = true;
+
+			for(Map.Entry<String, Object> e : cfgDefault.getConfigurationSection("").getValues(true).entrySet()) {
+				String key = e.getKey();
+				Object value = e.getValue();
+
+				String currentType;
+				boolean addToConfig = false;
+				boolean missingFromConfig = false;
+
+				if(value instanceof String) {
+					String v = (String) value;
+					currentType = "String";
+
+					if(!cfgNoDefaults.contains(key) || !cfgNoDefaults.isString(key)) {
+						cfg.set(key, v);
+						addToConfig = true;
+					}
+				}else
+
+				if(value instanceof Integer) {
+					int v = (Integer) value;
+					currentType = "Integer";
+
+					if(!cfgNoDefaults.contains(key) || !cfgNoDefaults.isInt(key)) {
+						cfg.set(key, v);
+						addToConfig = true;
+					}
+				}else
+
+				if(value instanceof Boolean) {
+					boolean v = (Boolean) value;
+					currentType = "Boolean";
+
+					List<String> booleanVariants = new ArrayList<>();
+					booleanVariants.add("true");
+					booleanVariants.add("false");
+					booleanVariants.add("'true'");
+					booleanVariants.add("'false'");
+					booleanVariants.add("\"true\"");
+					booleanVariants.add("\"false\"");
+					if(cfgNoDefaults.isString(key) && booleanVariants.contains(cfgNoDefaults.getString(key))) {
+						pl.getLogger().warning("The option '"+key+"' needs to be a boolean! Please remove any quotes from the value and write down the plain word (true/false).");
+					}
+
+					if(!cfgNoDefaults.contains(key) || !cfgNoDefaults.isBoolean(key)) {
+						cfg.set(key, v);
+						addToConfig = true;
+					}
+				}else {
+					currentType = "other";
 				}
-				// Here we check if it's the correct type
-				if(!cfg.isBoolean(s)) {
-					pl.getLogger().severe(prefix+"The setting \""+s+"\" is invalid! Please check your config.yml!");
-					disablePlugin = true;
-				}
-			}
-			
-			for(String s : checkString) {
-				if(!cfgNoDefaults.contains(s)) {
-					pl.getLogger().warning(prefix+"The setting \""+s+"\" does not exists! Adding..");
-					cfg.set(s, cfgDefault.getString(s));
-					needUpdate = true;
-				}
-				if(!cfg.isString(s)) {
-					pl.getLogger().severe(prefix+"The setting \""+s+"\" is invalid! Please check your config.yml!");
-					disablePlugin = true;
+				if(PowerBoard.debug)
+					pl.getLogger().info(key+" is type "+currentType+"; Value: "+value);
+
+				if(addToConfig) {
+					if(allowModify) {
+						pl.getLogger().warning(prefix+"The missing option \""+key+"\" has been added to your config.yml");
+						needUpdate = true;
+					}else {
+						pl.getLogger().warning(prefix+"The option \""+key+"\" is missing from your config.yml. Please add it. The default-value is: "+value);
+					}
 				}
 			}
-			
-			for(String s : checkInt) {
-				if(!cfgNoDefaults.contains(s)) {
-					pl.getLogger().warning(prefix+"The setting \""+s+"\" does not exists! Adding..");
-					cfg.set(s, cfgDefault.getInt(s));
-					needUpdate = true;
-				}
-				if(!cfg.isInt(s)) {
-					pl.getLogger().severe(prefix+"The setting \""+s+"\" is invalid! Please check your config.yml!");
-					disablePlugin = true;
-				}
-			}
-			
-			
-			config_selfcheck.delete();
 			
 			if(needUpdate)
 				pl.saveConfig();
 			
 			pl.getLogger().info(prefix+"Finished!");
 			pl.getLogger().info(" ");
-			
-			if(disablePlugin)
-				return false;
 			
 			return true;
 		}catch (Exception e) {

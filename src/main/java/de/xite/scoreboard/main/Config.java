@@ -50,19 +50,8 @@ public class Config {
 		}
 		
 		// Register hex color syntax
-		String s = pl.getConfig().getString("placeholder.hexColorSyntax");
-		if(s != null && s.length() != 0) {
-			if(s.contains("000000")) {
-				s = s.replace("{", "").replace("}", "").replace("(", "").replace(")", "");
-				String[] s2 = s.split("000000");
-				if(s2.length > 0)
-					Placeholders.hexColorBegin = s2[0];
-				if(s2.length > 1)
-					Placeholders.hexColorEnd = s2[1];
-			}else {
-				pl.getLogger().severe("You have an invalid HEX-Color syntax in your config!");
-			}
-		}
+		String hexSyntax = pl.getConfig().getString("placeholder.hexColorSyntax");
+		loadHEXColorSyntax(hexSyntax);
 		
 		// Create scoreboard folder if not exists
 		File sbfolder = new File(PowerBoard.pluginfolder+"/scoreboards/");
@@ -81,7 +70,7 @@ public class Config {
 		copyDefaultConfig("scoreboards/scoreboard.yml");
 		copyDefaultConfig("scoreboards/scoreboard-blacklist.yml");
 		
-		// migrate from tablist_footer.yml and tablist_header.yml - migration will be removed on v3.6
+		// migrate from tablist_footer.yml and tablist_header.yml - migration will be removed on v3.7
 		UpgradeVersion.upgradeDoubleTabConfig();
 		
 		// create default tablist.yml
@@ -121,23 +110,40 @@ public class Config {
 	 
 	    return config;
 	}
+
+	private static void loadHEXColorSyntax(String syntax) {
+		if(syntax != null && syntax.length() != 0) {
+			if(syntax.contains("000000")) {
+				syntax = syntax.replace("{", "").replace("}", "").replace("(", "").replace(")", "");
+				String[] s2 = syntax.split("000000");
+				if(s2.length > 0)
+					Placeholders.hexColorBegin = s2[0];
+				if(s2.length > 1)
+					Placeholders.hexColorEnd = s2[1];
+			}else {
+				pl.getLogger().severe("You have an invalid HEX-Color syntax in your config!");
+			}
+		}
+	}
 	
 	private static boolean reloadDelay = false;
 
 	public static void reloadConfigs(CommandSender s) {
 		Bukkit.getScheduler().runTaskAsynchronously(pl, () -> {
+			// Reload delay
 			if(reloadDelay) {
 				s.sendMessage(PowerBoard.pr+ChatColor.RED+"Please wait 2 seconds before you reload again.");
 				return;
 			}
 			reloadDelay = true;
 			Bukkit.getScheduler().runTaskLater(pl, () -> reloadDelay = false, 40);
+
 			// General config
 			sendConfigReloadMessage(s, ChatColor.GRAY+"Reloading "+ChatColor.YELLOW+"config"+ChatColor.GRAY+"...");
 			Config.loadConfig();
 
 			// Load all external plugin APIs
-			sendConfigReloadMessage(s, ChatColor.YELLOW+"Initializing external plugins"+ChatColor.GRAY+"...");
+			sendConfigReloadMessage(s, ChatColor.GRAY+"Initializing "+ChatColor.YELLOW+"external plugins"+ChatColor.GRAY+"...");
 			Bukkit.getScheduler().runTask(pl, ExternalPlugins::initializePlugins);
 
 			// Scoreboards
@@ -174,6 +180,7 @@ public class Config {
 			sendConfigReloadMessage(s, ChatColor.GREEN+"Plugin reloaded!");
 		});
 	}
+
 	private static void sendConfigReloadMessage(CommandSender s, String message) {
 		if(s instanceof Player)
 			s.sendMessage(PowerBoard.pr+"Config Reload: "+message);
