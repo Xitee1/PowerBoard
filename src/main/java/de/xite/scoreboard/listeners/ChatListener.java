@@ -9,8 +9,8 @@ import de.xite.scoreboard.main.PowerBoard;
 import de.xite.scoreboard.utils.Teams;
 
 public class ChatListener implements Listener{
-	// TODO: 03/06/2023 Remove this
 	static PowerBoard pl = PowerBoard.pl;
+	
 	@EventHandler
 	public void onChat(AsyncPlayerChatEvent e) {
 		Player p = e.getPlayer();
@@ -24,7 +24,7 @@ public class ChatListener implements Listener{
 				}else
 					pl.getLogger().warning("The player "+p.getName()+" has no Rank! Make sure that he has the correct permissions.");
 			}else
-				pl.getLogger().warning("The player "+p.getName()+" has no team! Please rejoin and try it again. If the problem persist, please check your Plugin configuration!");
+				pl.getLogger().warning("The player "+p.getName()+" has no team! Please rejoin and try it again. If the problem persist, please check your configuration!");
 		}
 	}
 }

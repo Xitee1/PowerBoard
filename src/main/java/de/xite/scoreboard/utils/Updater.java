@@ -25,8 +25,7 @@ public class Updater {
 		if(version == null) {
 			try(InputStream inputStream = new URL("https://api.spigotmc.org/legacy/update.php?resource=" + pluginID).openStream(); Scanner scanner = new Scanner(inputStream)) {
 				if(scanner.hasNext()) {
-					String d = scanner.next();
-					version = d;
+					version = scanner.next();
 				}
 			} catch (IOException e) {
 				pl.getLogger().info(updaterPrefix + "Cannot look for updates: " + e.getMessage());
@@ -45,6 +44,7 @@ public class Updater {
 
 		return current.compareTo(newest) < 0;
 	}
+
 	public static boolean downloadFile(boolean forceUpdate) {
 		if(updateSuccessful) {
 			pl.getLogger().info("Ignoring update request. Plugin has already been updated.");

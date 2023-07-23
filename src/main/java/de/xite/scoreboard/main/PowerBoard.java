@@ -123,11 +123,6 @@ public class PowerBoard extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
-		// Download the newest version if update is available & auto updater is enabled
-		if(pl.getConfig().getBoolean("update.autoupdater"))
-			if(Updater.checkVersion())
-				Updater.downloadFile(false);
-		
 		// Unregister scoreboards and teams
 		for(Player all : Bukkit.getOnlinePlayers()) {
 			ScoreboardPlayer.removeScoreboard(all, true);
@@ -138,5 +133,10 @@ public class PowerBoard extends JavaPlugin {
 		// Unregister tablist
 		if(pl.getConfig().getBoolean("tablist.text"))
 			TablistManager.unregisterAllTablists();
+
+		// Download the newest version if update is available & auto updater is enabled
+		if(pl.getConfig().getBoolean("update.autoupdater"))
+			if(Updater.checkVersion())
+				Updater.downloadFile(true);
 	}
 }

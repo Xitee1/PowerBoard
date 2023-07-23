@@ -44,14 +44,16 @@ public class Teams {
 		
 		TeamCount++;
 		this.teamName = String.format("%03d", weight)
-				+"team-"
+				+"t-"
 				+TeamCount;
 	}
+
 	public static Teams addPlayer(Player p, String prefix, String suffix, ChatColor nameColor, String chatPrefix, String placeholderName, String playerListName, int weight) {
 		Teams teams = new Teams(p, prefix, suffix, nameColor, chatPrefix, placeholderName, playerListName, weight);
 		TeamsList.put(p, teams);
 		return teams;
 	}
+
 	public static Teams addPlayer(Player p, String prefix, String suffix, String nameColor, String chatPrefix, String placeholderName, String playerListName, int weight) {
 		nameColor = nameColor.replace("&", "").replace("§", "");
 		ChatColor nameColorChat = ChatColor.WHITE;
@@ -64,14 +66,17 @@ public class Teams {
 		}
 		return addPlayer(p, prefix, suffix, nameColorChat, chatPrefix, placeholderName, playerListName, weight);
 	}
+
 	public static void removePlayer(Player p) {
 		if(TeamsList.containsKey(p)) {
-			if(p.getScoreboard().getTeam(Teams.get(p).teamName) != null)
-				p.getScoreboard().getTeam(Teams.get(p).teamName).unregister();
+			Teams t = Teams.get(p);
+			if(p.getScoreboard().getTeam(t.getTeamName()) != null)
+				p.getScoreboard().getTeam(t.getTeamName()).unregister();
 			
 			TeamsList.remove(p);
 		}
 	}
+
 	public static Teams get(Player p) {
 		if(TeamsList.containsKey(p))
 			return TeamsList.get(p);
