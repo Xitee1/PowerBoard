@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import de.xite.scoreboard.commands.ScoreboardCommand;
+import de.xite.scoreboard.commands.PowerBoardCommand;
 import de.xite.scoreboard.listeners.ChatListener;
 import de.xite.scoreboard.listeners.ConditionListener;
 import de.xite.scoreboard.listeners.JoinQuitListener;
@@ -25,7 +25,6 @@ import net.md_5.bungee.api.ChatColor;
 import java.util.logging.Logger;
 
 public class PowerBoard extends JavaPlugin {
-	// TODO: 03/06/2023 Remove this
 	public static PowerBoard pl;
 	
 	public static String pluginfolder = "plugins/PowerBoard"; // plugin folder
@@ -41,7 +40,6 @@ public class PowerBoard extends JavaPlugin {
 		Logger logger = getLogger();
 		logger.info("--------------------------------------------------");
 		logger.info("--------------- Loading PowerBoard ---------------");
-		logger.info(" ");
 		
 		// In 1.13+ a lot of things have changed. For example 128 Chars in the scoreboard instead of 32
 		if(Version.CURRENT.isAtLeast(Version.v1_13))
@@ -54,7 +52,7 @@ public class PowerBoard extends JavaPlugin {
 		
 		// Load the config - disable plugin if failed
 		if(!Config.loadConfig()) {
-			logger.severe("There were errors when loading the configuration! You should see more information above. Disabling plugin...");
+			logger.severe("There were severe errors when loading the configuration! You should see more information above. Disabling plugin...");
 			logger.severe(" ");
 			logger.severe("---- Errors occurred while loading PowerBoard ----");
 			logger.severe("--------------------------------------------------");
@@ -80,10 +78,12 @@ public class PowerBoard extends JavaPlugin {
 
 		
 		// ---- Register commands and events ---- //
-		getCommand("pb").setExecutor(new ScoreboardCommand());
-		getCommand("powerboard").setExecutor(new ScoreboardCommand());
-		getCommand("pb").setTabCompleter(new ScoreboardCommand());
-		getCommand("powerboard").setTabCompleter(new ScoreboardCommand());
+		getCommand("pb").setExecutor(new PowerBoardCommand());
+		getCommand("pb").setTabCompleter(new PowerBoardCommand());
+
+		getCommand("powerboard").setExecutor(new PowerBoardCommand());
+		getCommand("powerboard").setTabCompleter(new PowerBoardCommand());
+
 		PluginManager pm = Bukkit.getPluginManager();
 		pm.registerEvents(new JoinQuitListener(), this);
 		pm.registerEvents(new ChatListener(), this);
@@ -97,38 +97,33 @@ public class PowerBoard extends JavaPlugin {
 		// tablist
 		if(pl.getConfig().getBoolean("tablist.text"))
 			TablistManager.registerAllTablists();
+
+		if(pl.getConfig().getBoolean("tablist.ranks"))
+			RankManager.startTablistRanksUpdateScheduler();
 		
-		Bukkit.getScheduler().runTaskLater(pl, new Runnable() {
-			@Override
-			public void run() {
-				pl.getLogger().info("Registering players...");
-				for(Player all : Bukkit.getOnlinePlayers()) {
-					// Register Teams if chat ranks or tablist ranks are used
-					if(pl.getConfig().getBoolean("chat.ranks") || pl.getConfig().getBoolean("tablist.ranks")) {
-						Teams teams = Teams.get(all);
-						if(teams == null)
-							RankManager.register(all);
-						
-					}
-					if(pl.getConfig().getBoolean("tablist.ranks"))
-						RankManager.startTablistRanksUpdateScheduler();
-					
-					if(pl.getConfig().getBoolean("scoreboard"))
-						ScoreboardPlayer.setScoreboard(all, false, null);
-					
-					if(pl.getConfig().getBoolean("tablist.text"))
-						TablistPlayer.addPlayer(all, null);
-				}
-				pl.getLogger().info("All players have been registered.");
+		Bukkit.getScheduler().runTaskLater(pl, () -> {
+			pl.getLogger().info("Registering players...");
+			for(Player all : Bukkit.getOnlinePlayers()) {
+				// Register Teams if chat ranks or tablist ranks are used
+				if(pl.getConfig().getBoolean("chat.ranks") || pl.getConfig().getBoolean("tablist.ranks"))
+					RankManager.register(all);
+
+				if(pl.getConfig().getBoolean("scoreboard"))
+					ScoreboardPlayer.setScoreboard(all, false, null);
+
+				if(pl.getConfig().getBoolean("tablist.text"))
+					TablistPlayer.addPlayer(all, null);
 			}
+			pl.getLogger().info("All players have been registered.");
 		}, 30);
 		pl.getLogger().info(" ");
 		pl.getLogger().info("--------------- PowerBoard  loaded ---------------");
 		pl.getLogger().info("--------------------------------------------------");
 	}
+
 	@Override
 	public void onDisable() {
-		// Download newest version if update is available
+		// Download the newest version if update is available & auto updater is enabled
 		if(pl.getConfig().getBoolean("update.autoupdater"))
 			if(Updater.checkVersion())
 				Updater.downloadFile(false);
