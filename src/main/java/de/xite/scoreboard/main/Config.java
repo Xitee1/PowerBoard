@@ -24,7 +24,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
 
 public class Config {
-	// TODO: 03/06/2023 Remove this
 	static PowerBoard pl = PowerBoard.pl;
 	
 	public static boolean loadConfig() {
@@ -111,6 +110,10 @@ public class Config {
 	    return config;
 	}
 
+	public static YamlConfiguration getConfigNoDefaults() {
+		return Config.loadConfiguration(new File(pl.getDataFolder(), "config.yml"));
+	}
+
 	private static void loadHEXColorSyntax(String syntax) {
 		if(syntax != null && syntax.length() != 0) {
 			if(syntax.contains("000000")) {
@@ -145,7 +148,7 @@ public class Config {
 
 			// Load all external plugin APIs
 			sendConfigReloadMessage(s, ChatColor.GRAY+"Initializing "+ChatColor.YELLOW+"external plugins"+ChatColor.GRAY+"...");
-			Bukkit.getScheduler().runTask(pl, ExternalPlugins::initializePlugins);
+			ExternalPlugins.initializePlugins();
 
 			// Scoreboards
 			sendConfigReloadMessage(s, ChatColor.GRAY+"Reloading "+ChatColor.YELLOW+"scoreboards"+ChatColor.GRAY+"...");
@@ -182,14 +185,14 @@ public class Config {
 
 			sendConfigReloadMessage(s, ChatColor.GREEN+"Plugin reloaded!");
 			if(s instanceof Player)
-				s.sendMessage(ChatColor.DARK_GRAY+"Possible errors aren't displayed here. You should check the console.");
+				s.sendMessage(PowerBoard.pr+ChatColor.DARK_GRAY+"Possible errors aren't displayed here. You should check the console.");
 			pl.getLogger().info(" ");
 		});
 	}
 
 	private static void sendConfigReloadMessage(CommandSender s, String message) {
 		if(s instanceof Player)
-			s.sendMessage(PowerBoard.pr+"Config Reload: "+message);
-		pl.getLogger().info("Config Reload: "+message);
+			s.sendMessage(PowerBoard.pr+"Config reload: "+message);
+		pl.getLogger().info("Config reload: "+message);
 	}
 }
