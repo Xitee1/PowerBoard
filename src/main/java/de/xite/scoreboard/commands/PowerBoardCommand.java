@@ -15,7 +15,7 @@ import de.xite.scoreboard.modules.board.ScoreboardPlayer;
 import de.xite.scoreboard.utils.Updater;
 import net.md_5.bungee.api.ChatColor;
 
-public class ScoreboardCommand implements CommandExecutor, TabCompleter {
+public class PowerBoardCommand implements CommandExecutor, TabCompleter {
 	String designLine = PowerBoard.pr+ChatColor.GRAY+"X"+ChatColor.YELLOW+""+ChatColor.STRIKETHROUGH+"-----"+ChatColor.GOLD+"PowerBoard"+ChatColor.YELLOW+""+ChatColor.STRIKETHROUGH+"-----"+ChatColor.GRAY+"X";
 	// String designLine = PowerBoard.pr+"§7X§e§m-----§6Scoreboard§e§m-----§7X";
 
@@ -25,7 +25,8 @@ public class ScoreboardCommand implements CommandExecutor, TabCompleter {
 	@Override
 	public boolean onCommand(CommandSender s, Command cmd, String arg2, String[] args) {
 		if(args.length == 1 && args[0].equalsIgnoreCase("info")) {
-			// powerboard info
+			// PowerBoard info
+
 			s.sendMessage(designLine);
 			s.sendMessage(PowerBoard.pr+ChatColor.YELLOW+"Installed version: "+ChatColor.DARK_AQUA+"v"+PowerBoard.pl.getDescription().getVersion());
 			s.sendMessage(PowerBoard.pr+ChatColor.YELLOW+"Newest version: "+ChatColor.DARK_AQUA+"v"+Updater.getVersion());
@@ -57,15 +58,15 @@ public class ScoreboardCommand implements CommandExecutor, TabCompleter {
 			// toggle the scoreboard for the player
 			if(ScoreboardPlayer.players.containsKey(p)) {
 				ScoreboardPlayer.removeScoreboard(p, true);
-				s.sendMessage(PowerBoard.pr+ChatColor.GRAY+"Disabled scoreboard.");
+				s.sendMessage(PowerBoard.pr+ChatColor.GRAY+"Scoreboard "+ChatColor.RED+"disabled.");
 			}else {
 				ScoreboardPlayer.setScoreboard(p, false, null);
-				s.sendMessage(PowerBoard.pr+ChatColor.GRAY+"Enabled scoreboard.");
+				s.sendMessage(PowerBoard.pr+ChatColor.GRAY+"Scoreboard "+ChatColor.GREEN+"enabled.");
 			}
 
 			return true;
 		}else if(args.length == 1 && (args[0].equalsIgnoreCase("reload") || args[0].equalsIgnoreCase("rl"))) {
-			// powerboard reload
+			// PowerBoard reload
 
 			// check if sender has permission for this command
 			if(!checkPermission(s, "powerboard.reload"))
@@ -76,7 +77,7 @@ public class ScoreboardCommand implements CommandExecutor, TabCompleter {
 
 			return true;
 		}else if((args.length == 1 || args.length == 2) && args[0].equalsIgnoreCase("update")) {
-			// scoreboard update (download newest jar)
+			// PowerBoard update (download newest jar)
 			if(!checkPermission(s, "powerboard.update"))
 				return true;
 
@@ -122,9 +123,9 @@ public class ScoreboardCommand implements CommandExecutor, TabCompleter {
 
 			PowerBoard.debug = !PowerBoard.debug;
 			if(PowerBoard.debug) {
-				s.sendMessage(PowerBoard.pr+ChatColor.RED+"Disabled debug.");
+				s.sendMessage(PowerBoard.pr+ChatColor.GRAY+"Debug "+ChatColor.GREEN+"enabled.");
 			}else {
-				s.sendMessage(PowerBoard.pr+ChatColor.GREEN+"Enabled debug.");
+				s.sendMessage(PowerBoard.pr+ChatColor.GRAY+"Debug "+ChatColor.RED+"disabled.");
 			}
 
 			return true;
