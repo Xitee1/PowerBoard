@@ -4,4 +4,4 @@
 # Wiki for using conditions: https://github.com/Xitee1/PowerBoard/wiki/Conditions
 
 conditions:
-- world:some_world_with_no_sb
+- 'world:some_world_with_no_sb'

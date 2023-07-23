@@ -47,7 +47,7 @@ title:
 '0':
   speed: -1
   scores:
-  - -Not animated-
+  - '-Not animated-'
 
 '1':
   speed: -1
@@ -118,4 +118,4 @@ title:
   - '&a%mem_used%/%mem_total%'
 
 conditions:
-- 'Add conditions here'
+- 'add conditions here'
