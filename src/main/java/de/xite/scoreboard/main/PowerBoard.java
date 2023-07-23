@@ -61,7 +61,7 @@ public class PowerBoard extends JavaPlugin {
 		}
 		
 		// Load all external plugin APIs
-		ExternalPlugins.initializePlugins(); 
+		ExternalPlugins.initializePlugins();
 		
 		// Start TPS calculator
 		Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new TPS(), 100L, 1L);

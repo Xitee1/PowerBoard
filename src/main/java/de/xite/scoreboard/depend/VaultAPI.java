@@ -10,27 +10,21 @@ import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 
 public class VaultAPI {
-	static PowerBoard pl = PowerBoard.pl;
-	public static Economy econ = null;
+	public static Economy economy = null;
 	
-	public static boolean setupEconomy() {
-		RegisteredServiceProvider<Economy> rsp = pl.getServer().getServicesManager().getRegistration(Economy.class);
-		if(rsp == null) {
-			pl.getLogger().warning("Error hooking into Vault-Economy! <- Ignore if you don't have a money system or don't need PowerBoards's %player_money% placeholder, otherwise check, if your money system supports Vault.");
+	public static boolean registerEconomy() {
+		RegisteredServiceProvider<Economy> rsp = PowerBoard.pl.getServer().getServicesManager().getRegistration(Economy.class);
+		if(rsp == null)
 			return false;
-		}
-		econ = rsp.getProvider();
-		return econ != null;
+		economy = rsp.getProvider();
+		return true;
 	}
-	public static void setupChat() {
-	    ServicesManager servicesManager = pl.getServer().getServicesManager();
 
-	    Permission permission = new VaultPermissionImpl();
+	public static boolean isActive() {
+		return economy != null;
+	}
 
-	    servicesManager.register(Permission.class, permission, pl, ServicePriority.Highest);
-		
-	    servicesManager.register(Chat.class, new VaultChatImpl(permission), pl, ServicePriority.Highest);
-		
-		pl.getLogger().info("Registered Vault-Chat");
+	public static Economy getAPI() {
+		return economy;
 	}
 }

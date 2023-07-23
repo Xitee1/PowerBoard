@@ -2,6 +2,7 @@ package de.xite.scoreboard.modules.ranks;
 
 import java.util.ArrayList;
 
+import de.xite.scoreboard.depend.LuckPermsAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -10,7 +11,6 @@ import org.bukkit.scoreboard.Team;
 
 import de.xite.scoreboard.api.TeamSetEvent;
 import de.xite.scoreboard.depend.LuckPermsRanks;
-import de.xite.scoreboard.main.ExternalPlugins;
 import de.xite.scoreboard.main.PowerBoard;
 import de.xite.scoreboard.utils.Teams;
 
@@ -71,7 +71,7 @@ public class RankManager {
 					
 					
 					boolean luckperms = false;
-					if(ExternalPlugins.luckPerms != null && pl.getConfig().getString("ranks.permissionsystem").equalsIgnoreCase("luckperms"))
+					if(LuckPermsAPI.isActive() && pl.getConfig().getString("ranks.permissionsystem").equalsIgnoreCase("luckperms"))
 						if(LuckPermsRanks.isPlayerInGroup(p, permission))
 							luckperms = true;
 					

@@ -27,6 +27,8 @@ import java.util.logging.Level;
 import java.util.stream.Collectors;
 import java.util.zip.GZIPOutputStream;
 import javax.net.ssl.HttpsURLConnection;
+
+import de.xite.scoreboard.main.PowerBoard;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -317,6 +319,8 @@ public class BStatsMetrics {
           builder.append(line);
         }
       }
+        if(PowerBoard.debug)
+	        PowerBoard.pl.getLogger().info("Analytics sent to BStats");
       if (logResponseStatusText) {
         infoLogger.accept("Sent data to bStats and received response: " + builder);
       }

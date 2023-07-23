@@ -211,9 +211,9 @@ public class Placeholders {
   				int decimals = pl.getConfig().getInt("placeholder.money-decimals");
   				// If the decimals are set to 0, cast it to int to remove the '.0'
   				if(decimals != 0) {
-  					s = s.replace(ph, String.valueOf(MathUtils.round(VaultAPI.econ.getBalance(p), decimals)));
+  					s = s.replace(ph, String.valueOf(MathUtils.round(VaultAPI.getAPI().getBalance(p), decimals)));
   				}else
-  					s = s.replace(ph, String.valueOf((int) VaultAPI.econ.getBalance(p)));
+  					s = s.replace(ph, String.valueOf((int) VaultAPI.getAPI().getBalance(p)));
   			}else {
   				pl.getLogger().severe("Could not get the player's money because you haven't Vault installed or set up! You need Vault and a money system that supports Vault on your server!");
   				s = s.replace(ph, "Error: See console");

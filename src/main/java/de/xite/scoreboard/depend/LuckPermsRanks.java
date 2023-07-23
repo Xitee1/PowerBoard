@@ -2,6 +2,7 @@ package de.xite.scoreboard.depend;
 
 import java.io.File;
 
+import de.xite.scoreboard.main.Config;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -18,24 +19,24 @@ public class LuckPermsRanks {
 	
 	public static boolean registerLuckPermsAPIRank(Player p) {
 		//--- LuckPerms (with API) ---//
-		if(ExternalPlugins.luckPerms == null) {
-			pl.getLogger().severe("LuckPerms-API enabled, but LuckPerms is not installed!");
+		if(!LuckPermsAPI.isActive()) {
+			pl.getLogger().severe("LuckPerms-API is enabled, but LuckPerms is not installed!");
 			return false;
 		}
 		//Get user and rank data from LuckPerms
-		LuckPerms api = ExternalPlugins.luckPerms;
+		LuckPerms api = LuckPermsAPI.getAPI();
 		User user = api.getUserManager().getUser(p.getUniqueId());
 		Group group = api.getGroupManager().getGroup(user.getPrimaryGroup());
-		
+
 		// Get the team name
-		int weight = 0;
+		int weight;
 		try {
 			int i = group.getWeight().getAsInt();
-			if(i > 999) {
-				PowerBoard.pl.getLogger().severe("Sorry, but PB does not support LP weights higher than 999! Please use smaller values.");
+			if(i > 9999) {
+				PowerBoard.pl.getLogger().severe("Sorry, but PB does not support LP weights higher than 9999! Please use smaller values.");
 				return false;
 			}
-			weight = 999 - i;
+			weight = 9999 - i;
 		}catch (Exception e) {
 			PowerBoard.pl.getLogger().severe("---------------------------------------------------------------------------------------------------------------------------");
 			PowerBoard.pl.getLogger().severe("The group \""+group.getName()+"\" has no weight! Please set the weight with /lp group <group> setweight <weight>");
@@ -44,7 +45,7 @@ public class LuckPermsRanks {
 			return false;
 		}
 		
-		String suffix = "", prefix = "", displayname = "", nameColor = "";
+		String prefix, suffix, displayname, nameColor;
 		
 		// Get the data
 		prefix = user.getCachedData().getMetaData().getPrefix();
@@ -66,24 +67,18 @@ public class LuckPermsRanks {
 		
 		
 		if(displayname == null) {
-			PowerBoard.pl.getLogger().severe("--------------------------------------------------------------------------------------------------------------------------------------------------");
-			PowerBoard.pl.getLogger().severe("The group \""+group.getName()+"\" has no Displayname! Give the group the permission 'displayname.<displayname>', for example 'displayname.&4Owner'");
-			PowerBoard.pl.getLogger().severe("--------------------------------------------------------------------------------------------------------------------------------------------------");
+			PowerBoard.pl.getLogger().severe("The LP group \""+group.getName()+"\" has no displayname! Please add the permission 'displayname.<displayname>' to that group. (e.g. 'displayname.&4Owner')");
 			return false;
 		}
-		
-		YamlConfiguration configNoDefaultSettings = YamlConfiguration.loadConfiguration(new File(PowerBoard.pluginfolder+"/config.yml"));
+
+		YamlConfiguration cfgNoDefaults = Config.getConfigNoDefaults();
 		
 		// Get chat for the rank
-		String chat = configNoDefaultSettings.getString("ranks.luckperms-api.chat-prefix."+group.getName());
+		String chat = cfgNoDefaults.getString("ranks.luckperms-api.chat-prefix."+group.getName());
 		
 		// Get fallback chat if rank is not listed
 		if(chat == null)
-			chat = configNoDefaultSettings.getString("ranks.luckperms-api.chat-layout");
-		
-		// Deprecated - Check for old configuration - support will be removed on v3.7
-		if(chat == null) 
-			chat = configNoDefaultSettings.getString("ranks.luckperms.chat-layout");
+			chat = pl.getConfig().getString("ranks.luckperms-api.chat-layout");
 		
 		// Send error if there is no chat prefix
 		if(chat == null) {
@@ -115,7 +110,7 @@ public class LuckPermsRanks {
 	
 	// LuckPerms without API
 	public static boolean isPlayerInGroup(Player p, String g) {
-		LuckPerms api = ExternalPlugins.luckPerms;
+		LuckPerms api = LuckPermsAPI.getAPI();
 		User user = api.getUserManager().getUser(p.getUniqueId());
 		String group = user.getPrimaryGroup();
 		if(PowerBoard.debug)
