@@ -36,16 +36,14 @@ public class Teams {
 			return;
 		}
 		
-		if(weight < 0 || weight > 999) {
+		if(weight < 0 || weight > 9999) {
 			PowerBoard.pl.getLogger().warning("---------------------------------------------------------------------------------------------------------------------------");
-			PowerBoard.pl.getLogger().warning("Warning! You cannot use negative or above 999 weights! Player \""+p.getName()+"\". This will cause issues with the tablist sorting.");
+			PowerBoard.pl.getLogger().warning("Warning! You cannot use negative or above 9999 weights! Player \""+p.getName()+"\". This will cause issues with the tablist sorting.");
 			PowerBoard.pl.getLogger().warning("---------------------------------------------------------------------------------------------------------------------------");
 		}
 		
 		TeamCount++;
-		this.teamName = String.format("%03d", weight)
-				+"t-"
-				+TeamCount;
+		this.teamName = String.format("%04d", weight) +"t-" + TeamCount;
 	}
 
 	public static Teams addPlayer(Player p, String prefix, String suffix, ChatColor nameColor, String chatPrefix, String placeholderName, String playerListName, int weight) {
