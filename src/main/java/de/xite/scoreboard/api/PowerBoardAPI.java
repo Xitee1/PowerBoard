@@ -18,41 +18,108 @@ public class PowerBoardAPI {
 	public static void registerCustomPlaceholders(CustomPlaceholders ph) {
 		Placeholders.ph.add(ph);
 	}
+
+
 	// ---------------------//
 	// ---- Scoreboard ---- //
 	// ---------------------//
+
+	/**
+	 * Set a scoreboard for the player.
+	 * If you want to set a scoreboard that is configured in the PB's config files, set custom to false.
+	 * Then you can either define a specific scoreboardName (name of the xxx.yml file) or set it to null.
+	 * If it is null, it will automatically set a scoreboard based on the conditions of that scoreboard.
+	 * If you want to set a complete custom scoreboard with this API, set custom to true and set scoreboardName to null.
+	 *
+	 * @param p the player
+	 * @param custom is this a custom scoreboard (set through the api)?
+	 * @param scoreboardName the name of the scoreboard.
+	 */
 	public static void setScoreboard(Player p, boolean custom, String scoreboardName) {
-		if(custom || scoreboardName == null) {
-			ScoreboardPlayer.setScoreboard(p, custom, null);
+		if(custom) {
+			ScoreboardPlayer.setScoreboard(p, true, null);
 		}else {
-			// Custom is always 'false'
-			ScoreboardPlayer.setScoreboard(p, false, ScoreboardManager.get(scoreboardName));
+			ScoreboardManager sm = null;
+			if(scoreboardName != null)
+				sm = ScoreboardManager.get(scoreboardName);
+			ScoreboardPlayer.setScoreboard(p, false, sm);
 		}
 	}
+
 	public static void removeScoreboard(Player p) {
 		ScoreboardPlayer.removeScoreboard(p, true);
 	}
+
 	public static boolean hasConfigScoreboard(Player p) {
 		return ScoreboardPlayer.players.containsKey(p);
 	}
-	
+
+	/**
+	 * Set the scoreboard title.
+	 * Before using this method, first set a scoreboard using {@link PowerBoardAPI#setScoreboard(Player, boolean, String)}.
+	 *
+	 * @param p the player
+	 * @param title The title of the scoreboard
+	 * @param usePlaceholders if placeholders should be replaced by PB
+	 */
 	public static void setScoreboardTitle(Player p, String title, boolean usePlaceholders) {
 		if(!ScoreTitleUtils.setTitle(p, title, usePlaceholders, null))
 				PowerBoard.pl.getLogger().severe("Failed to set the Scoreboard-Title! "+p.getName()+"'s scoreboard is not registered yet - please set the scoreboard first!");
 	}
+
+	/**
+	 * Set the scoreboard title.
+	 * Before using this method, first set a scoreboard using {@link PowerBoardAPI#setScoreboard(Player, boolean, String)}.
+	 *
+	 * @param p the player
+	 * @param score The text of the score
+	 * @param index The index of the score
+	 * @param usePlaceholders if placeholders should be replaced by PB
+	 */
 	public static void setScoreboardScore(Player p, String score, int index, boolean usePlaceholders) {
 		if(!ScoreTitleUtils.setScore(p, score, index, usePlaceholders, null))
 			PowerBoard.pl.getLogger().severe("Failed to set the Scoreboard-Score! "+p.getName()+"'s scoreboard is not registered yet - please set the scoreboard first!");
 	}
+
+	/**
+	 * Set the scoreboard title.
+	 * Before using this method, first set a scoreboard using {@link PowerBoardAPI#setScoreboard(Player, boolean, String)}.
+	 *
+	 * @param p the player
+	 * @param scores A list with all scores that should be displayed
+	 * @param usePlaceholders if placeholders should be replaced by PB
+	 */
 	public static void setScoreboardScores(Player p, ArrayList<String> scores, boolean usePlaceholders) {
 		if(!ScoreTitleUtils.setScores(p, scores, usePlaceholders, null))
 			PowerBoard.pl.getLogger().severe("Failed to set the Scoreboard-Scores! "+p.getName()+"'s scoreboard is not registered yet - please set the scoreboard first with!");
 	}
-	
+
+
 	// ----------------//
 	// ---- Ranks ---- //
 	// ----------------//
-	// Set
+
+	/**
+	 *
+	 * @param p the player
+	 * @return the player's prefix
+	 */
+	public String getPrefix(Player p) {
+		Teams t = Teams.get(p);
+		if(t == null)
+			return null;
+		return t.getPrefix();
+	}
+
+	/**
+	 * Set the player's prefix. This suffix is used in the chat and tablist.
+	 * It will also appear above the player's head and standard MC messages.
+	 * Important: The player needs to already have a rank! You are only able to modify the prefix.
+	 *
+	 * @param p the player
+	 * @param prefix the prefix for that player
+	 * @return true if successful
+	 */
 	public static boolean setPrefix(Player p, String prefix) {
 		Teams t = Teams.get(p);
 		if(t == null)
@@ -60,6 +127,29 @@ public class PowerBoardAPI {
 		t.setPrefix(prefix);
 		return true;
 	}
+
+
+	/**
+	 *
+	 * @param p the player
+	 * @return the player's suffix
+	 */
+	public String getSuffix(Player p) {
+		Teams t = Teams.get(p);
+		if(t == null)
+			return null;
+		return t.getSuffix();
+	}
+
+	/**
+	 * Set the player's suffix. This suffix is used in the chat and tablist.
+	 * It will also appear above the player's head and standard MC messages.
+	 * Important: The player needs to already have a rank! You are only able to modify the suffix.
+	 *
+	 * @param p the player
+	 * @param suffix the player's suffix
+	 * @return true if successful
+	 */
 	public static boolean setSuffix(Player p, String suffix) {
 		Teams t = Teams.get(p);
 		if(t == null)
@@ -67,33 +157,53 @@ public class PowerBoardAPI {
 		t.setSuffix(suffix);
 		return true;
 	}
-	public static boolean setNameColorChar(Player p, ChatColor color) {
-		Teams t = Teams.get(p);
-		if(t == null)
-			return false;
-		t.setNameColor(color);
-		return true;
-	}
-	// Get
-	public String getPrefix(Player p) {
-		Teams t = Teams.get(p);
-		if(t == null)
-			return null;
-		return t.getPrefix();
-	}
-	public String getSuffix(Player p) {
-		Teams t = Teams.get(p);
-		if(t == null)
-			return null;
-		return t.getSuffix();
-	}
+
+	/**
+	 * Gets the ChatColor of the player's name in the tablist.
+	 *
+	 * @param p the player
+	 * @return The ChatColor
+	 */
 	public ChatColor getNameColor(Player p) {
 		Teams t = Teams.get(p);
 		if(t == null)
 			return null;
 		return t.getNameColor();
 	}
+
+	/**
+	 *
+	 * @deprecated use {@link PowerBoardAPI#setNameColor(Player, ChatColor)} instead.
+	 */
+	public static boolean setNameColorChar(Player p, ChatColor color) {
+		return setNameColor(p, color);
+	}
+
+	/**
+	 * The ChatColor for the player's name in the tablist. If not set, the player's name will be white.
+	 * Important: The player needs to already have a rank! You are only able to modify the nameColor.
+	 *
+	 * @param p the player
+	 * @param color the ChatColor
+	 * @return true if successful
+	 */
+	public static boolean setNameColor(Player p, ChatColor color) {
+		Teams t = Teams.get(p);
+		if(t == null)
+			return false;
+		t.setNameColor(color);
+		return true;
+	}
+
 	// Utils
+
+	/**
+	 * Updates the ranks in the tablist for that player.
+	 * This is needed after prefix, suffix or name color has been changed,
+	 * or they include a placeholder that needs to be updated.
+	 *
+	 * @param p the player
+	 */
 	public static void updateTablistRanks(Player p) {
 		RankManager.updateTablistRanks(p);
 	}
