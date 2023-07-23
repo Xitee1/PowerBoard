@@ -230,6 +230,7 @@ public class RankManager {
 		boolean showPrefixInTab = pl.getConfig().getBoolean("ranks.options.show-prefix-in-tab");
 		boolean showSuffixInTab = pl.getConfig().getBoolean("ranks.options.show-suffix-in-tab");
 		boolean usePlayListName = pl.getConfig().getBoolean("ranks.options.use-player-list-name");
+		boolean usePrefixSuffixForPlayerListName = pl.getConfig().getBoolean("ranks.options.try-player-head-with-pln");
 
 		try {
 			if(showPrefixInTab && prefix.length() != 0)
@@ -257,8 +258,10 @@ public class RankManager {
 		}
 
 		if(playerListName != null) {
-			t.setPrefix("");
-			t.setSuffix("");
+			if(!usePrefixSuffixForPlayerListName) {
+				t.setPrefix("");
+				t.setSuffix("");
+			}
 			p.setPlayerListName(playerListName);
 		}
 	}
