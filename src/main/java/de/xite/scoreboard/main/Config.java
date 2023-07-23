@@ -138,6 +138,7 @@ public class Config {
 			reloadDelay = true;
 			Bukkit.getScheduler().runTaskLater(pl, () -> reloadDelay = false, 40);
 
+			pl.getLogger().info(" ");
 			// General config
 			sendConfigReloadMessage(s, ChatColor.GRAY+"Reloading "+ChatColor.YELLOW+"config"+ChatColor.GRAY+"...");
 			Config.loadConfig();
@@ -168,6 +169,8 @@ public class Config {
 				for(Player all : Bukkit.getOnlinePlayers())
 					RankManager.register(all);
 			}
+			if(pl.getConfig().getBoolean("tablist.ranks"))
+				RankManager.startTablistRanksUpdateScheduler();
 
 			if(PowerBoard.pl.getConfig().getBoolean("tablist.text")) {
 				sendConfigReloadMessage(s, ChatColor.GRAY+"Reloading "+ChatColor.YELLOW+"tablists"+ChatColor.GRAY+"...");
@@ -178,6 +181,9 @@ public class Config {
 			}
 
 			sendConfigReloadMessage(s, ChatColor.GREEN+"Plugin reloaded!");
+			if(s instanceof Player)
+				s.sendMessage(ChatColor.DARK_GRAY+"Possible errors aren't displayed here. You should check the console.");
+			pl.getLogger().info(" ");
 		});
 	}
 

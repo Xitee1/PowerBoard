@@ -7,7 +7,6 @@ import javax.annotation.Nonnull;
 import java.util.logging.Logger;
 
 public class Version implements Comparable<Version> {
-
 	private final String version;
 
 	public Version(@Nonnull String version) {
@@ -18,17 +17,22 @@ public class Version implements Comparable<Version> {
 
 	public static final Version CURRENT;
 	static {
-		Logger log = PowerBoard.pl.getLogger();
+		Logger logger = PowerBoard.pl.getLogger();
 		Version v;
 		try {
 			String s = Bukkit.getBukkitVersion();
 			String version = s.substring(0, s.lastIndexOf("-R")).replace("_", ".");
-			log.info("Detected Server Version (original): " + s);
-			log.info("Detected Server Version (extracted): " + version);
+
+			if(PowerBoard.debug) {
+				logger.info(" ");
+				logger.info("Detected Server Version (original): " + s);
+				logger.info("Detected Server Version (extracted): " + version);
+			}
+
 			v = new Version(version);
 		} catch (Exception e) {
 			e.printStackTrace();
-			log.severe("Could not extract MC version! Defaulting to 1.13.");
+			logger.severe("Could not extract MC version! Defaulting to 1.13.");
 			v = Version.v1_13;
 		}
 		CURRENT = v;
