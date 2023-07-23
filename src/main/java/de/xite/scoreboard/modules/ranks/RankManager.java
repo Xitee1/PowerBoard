@@ -229,6 +229,7 @@ public class RankManager {
 	public static void setPrefixSuffix(Player p, Team t, String prefix, String suffix, String playerListName) {
 		boolean showPrefixInTab = pl.getConfig().getBoolean("ranks.options.show-prefix-in-tab");
 		boolean showSuffixInTab = pl.getConfig().getBoolean("ranks.options.show-suffix-in-tab");
+		boolean usePlayListName = pl.getConfig().getBoolean("ranks.options.use-player-list-name");
 
 		try {
 			if(showPrefixInTab && prefix.length() != 0)
@@ -239,6 +240,12 @@ public class RankManager {
 		}catch (IllegalArgumentException e) {
 			// IllegalArgumentException in this case is thrown if prefix or suffix is too long
 			// With setPlayerListName you can bypass this limit, however the prefix and suffix will no longer be displayed above the player head
+			usePlayListName = true;
+			if(PowerBoard.debug)
+				pl.getLogger().info("Using prefix/suffix too long bypass for player "+p.getName()+". The player won't have a prefix above his head.");
+		}
+
+		if(usePlayListName) {
 			playerListName = "";
 			if(showPrefixInTab)
 				playerListName += prefix;
@@ -248,32 +255,23 @@ public class RankManager {
 			if(showSuffixInTab)
 				playerListName += suffix;
 		}
+
 		if(playerListName != null) {
 			t.setPrefix("");
 			t.setSuffix("");
 			p.setPlayerListName(playerListName);
-			
-			if(PowerBoard.debug) {
-				pl.getLogger().info("Using prefix/suffix too long bypass for player "+p.getName()+".");
-				pl.getLogger().info("With this, there will be no prefix or suffix displayed above the player head, only in the tablist.");
-				pl.getLogger().info("To prevent this, use less than 64 chars or less than 16 chars in MC 1.12 or below.");
-			}
 		}
 	}
 
 	private static void delay(Player p, int i) {
-		if(tablistRankUpdateDelay.contains(p))
+		if(!tablistRankUpdateDelay.contains(p))
+			tablistRankUpdateDelay.add(p);
+
+		Bukkit.getScheduler().runTaskLaterAsynchronously(pl, () -> {
 			tablistRankUpdateDelay.remove(p);
-		tablistRankUpdateDelay.add(p);
-		Bukkit.getScheduler().runTaskLater(pl, new Runnable() {
-			@Override
-			public void run() {
-				if(tablistRankUpdateDelay.contains(p))
-					tablistRankUpdateDelay.remove(p);
-				if(tablistRankUpdateWaiting.contains(p)) {
-					tablistRankUpdateWaiting.remove(p);
-					updateTablistRanks(p);
-				}
+			if(tablistRankUpdateWaiting.contains(p)) {
+				tablistRankUpdateWaiting.remove(p);
+				updateTablistRanks(p);
 			}
 		}, i);
 	}
