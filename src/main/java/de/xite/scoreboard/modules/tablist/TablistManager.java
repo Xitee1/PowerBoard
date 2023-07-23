@@ -6,7 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
- import de.xite.scoreboard.versions.VersionSpecific;
+import de.xite.scoreboard.modules.board.ScoreboardManager;
+import de.xite.scoreboard.versions.VersionSpecific;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -75,12 +76,12 @@ public class TablistManager {
 			try {
 				int i = Integer.parseInt(line);
 				if(!headers.containsKey(i))
-					headers.put(i, new ArrayList<String>());
+					headers.put(i, new ArrayList<>());
 				for(String header : cfg.getStringList("header."+i+".lines")) {
 					headers.get(i).add(header);
 				}
 			}catch (Exception e) {
-				PowerBoard.pl.getLogger().severe("Wrong header entry in tablist '"+name+"'! Line: "+line);
+				PowerBoard.pl.getLogger().severe("Invalid header entry in tablist '"+name+"'! Line: "+line);
 				return;
 			}
 		}
@@ -90,12 +91,12 @@ public class TablistManager {
 			try {
 				int i = Integer.parseInt(line);
 				if(!footers.containsKey(i))
-					footers.put(i, new ArrayList<String>());
+					footers.put(i, new ArrayList<>());
 				for(String footer : cfg.getStringList("footer."+i+".lines")) {
 					footers.get(i).add(footer);
 				}
 			}catch (Exception e) {
-				PowerBoard.pl.getLogger().severe("Wrong footer entry in tablist '"+name+"'! Line: "+line);
+				PowerBoard.pl.getLogger().severe("Invalid footer entry in tablist '"+name+"'! Line: "+line);
 			}
 		}
 		
@@ -116,12 +117,9 @@ public class TablistManager {
 		
 		// The scheduler which will send the tablist to all players
 		scheduler.add(
-			Bukkit.getScheduler().runTaskTimerAsynchronously(PowerBoard.pl, new Runnable() {
-				@Override
-				public void run() {
-					for(Player p : players) {
-						sendPlayer(p);
-					}
+			Bukkit.getScheduler().runTaskTimerAsynchronously(PowerBoard.pl, () -> {
+				for(Player p : players) {
+					sendPlayer(p);
 				}
 			}, 20, interval)
 		);
@@ -145,6 +143,7 @@ public class TablistManager {
 		scheduler.add(
 			Bukkit.getScheduler().runTaskTimerAsynchronously(pl, new Runnable() {
 				int step = 0;
+
 				@Override
 				public void run() {
 					String text = headers.get(line).get(step);
@@ -173,6 +172,7 @@ public class TablistManager {
 		scheduler.add(
 			Bukkit.getScheduler().runTaskTimerAsynchronously(pl, new Runnable() {
 				int step = 0;
+
 				@Override
 				public void run() {
 					String text = footers.get(line).get(step);
@@ -189,7 +189,7 @@ public class TablistManager {
 	
 	private void sendPlayer(Player p) {
 		String header = "", footer = "";
-		
+
 		for(Entry<Integer, String> e : currentHeader.entrySet())
 			header += e.getValue()+"\n";
 		for(Entry<Integer, String> e : currentFooter.entrySet())
@@ -215,16 +215,13 @@ public class TablistManager {
 	public void unregister() {
 		for(BukkitTask task : scheduler)
 			task.cancel();
-		for(Player p : players) {
-			if(TablistPlayer.players.containsKey(p))
-				TablistPlayer.players.remove(p);
-		}
+		for(Player p : players)
+			TablistPlayer.players.remove(p);
 		players.clear();
 		tablists.remove(name);
 	}
 	public static void unregisterAllTablists() {
-		List<TablistManager> list = new ArrayList<>();
-		list.addAll(tablists.values());
+		List<TablistManager> list = new ArrayList<>(tablists.values());
 		for(TablistManager sm : list)
 			sm.unregister();
 	}
@@ -245,10 +242,14 @@ public class TablistManager {
 			String s = files[i].getName();
 			tabs.add(s.substring(0, s.lastIndexOf(".yml")));
 		}
-		for(String tab : tabs)
+		for(String tab : tabs) {
 			TablistManager.get(tab);
+			pl.getLogger().info("Registered tablist '"+tab+"'.");
+		}
 		*/
+
 		TablistManager.get(pl.getConfig().getString("tablist.text-default"));
+		pl.getLogger().info("Registered tablist.");
 	}
 	
 	public void addPlayer(Player p) {
@@ -257,6 +258,7 @@ public class TablistManager {
 			sendPlayer(p);
 		}
 	}
+
 	public void removePlayer(Player p, boolean sendBlankTablist) {
 		if(players.contains(p)) {
 			players.remove(p);

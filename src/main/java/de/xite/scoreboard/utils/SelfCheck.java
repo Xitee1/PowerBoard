@@ -19,19 +19,13 @@ public class SelfCheck {
 		String prefix = "(SelfCheck) config.yml -> ";
 		
 		try {
-			boolean allowModify = false;
+			boolean allowModify = Version.CURRENT.isAtLeast(Version.v1_18);
 
-			File file = new File(PowerBoard.pluginfolder+"/config.yml");
+			File file = new File(pl.getDataFolder(),"config.yml");
 			if(!file.exists()) {
-				pl.getLogger().severe("Skipped SelfCheck -> config.yml does not exist!");
+				pl.getLogger().severe("SelfCheck failed -> config.yml does not exist!");
 				return false;
 			}
-
-			if(Version.CURRENT.isAtLeast(Version.v1_18))
-				allowModify = true;
-			
-			// If the boolean is true at the end, the plugin will be disabled
-			boolean disablePlugin = false;
 			
 			// If anything has been added, this is true so the config will be saved.
 			boolean needUpdate = false;
@@ -59,7 +53,11 @@ public class SelfCheck {
 			
 			FileConfiguration cfg = pl.getConfig();
 			
-			YamlConfiguration cfgNoDefaults = YamlConfiguration.loadConfiguration(file);
+			YamlConfiguration cfgNoDefaults = Config.loadConfiguration(file);
+			if(cfgNoDefaults == null) {
+				pl.getLogger().severe("SelfCheck failed -> Your config.yml is invalid and could not be loaded!");
+				return false;
+			}
 			
 			// Load the default configurations
 			final InputStream defConfigStream = pl.getResource("config.yml");
@@ -74,7 +72,6 @@ public class SelfCheck {
 
 				String currentType;
 				boolean addToConfig = false;
-				boolean missingFromConfig = false;
 
 				if(value instanceof String) {
 					String v = (String) value;

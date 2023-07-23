@@ -29,17 +29,17 @@ public class ScoreboardManager {
 	
 	// Conditions
 	List<String> conditions;
+
+	// the title with all animations
+	ArrayList<String> title = new ArrayList<>(); // <animations>
 	
 	// all scores with all animations
 	HashMap<Integer, ArrayList<String>> scores = new HashMap<>(); // <score ID, <animations>>
 	
-	// the title with all animations
-	ArrayList<String> title = new ArrayList<>(); // <animatons>
-	
 	// Store all schedulers to stop them later
 	ArrayList<BukkitTask> scheduler = new ArrayList<>();
 	
-	// Store all players with this scoreboard
+	// All players that have this scoreboard
 	ArrayList<Player> players = new ArrayList<>();
 	
 	// Current title & scores
@@ -144,9 +144,10 @@ public class ScoreboardManager {
 		
 		// Check for config errors
 		if(title.size() == 0) {
-			pl.getLogger().severe("You have an error in your scoreboard config! Even a simple space can create this error. Look closely. ("+name+".yml - title)");
+			pl.getLogger().severe("You have an error in your scoreboard config! ("+name+".yml - title)");
 			return;
 		}
+
 		// Start animation scheduler
 		scheduler.add(
 			Bukkit.getScheduler().runTaskTimerAsynchronously(pl, new Runnable() {
@@ -166,6 +167,7 @@ public class ScoreboardManager {
 				}
 			}, 20, speed));
 	}
+
 	private void startScoreAnimation(int id, int speed) {
 		currentScores.put(id, scores.get(id).get(0));
 		
