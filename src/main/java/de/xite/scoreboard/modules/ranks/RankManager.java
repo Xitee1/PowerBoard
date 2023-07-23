@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.Team;
 
 import de.xite.scoreboard.api.TeamSetEvent;
@@ -18,6 +19,8 @@ public class RankManager {
 	
 	private static ArrayList<Player> tablistRankUpdateDelay = new ArrayList<>();
 	private static ArrayList<Player> tablistRankUpdateWaiting = new ArrayList<>();
+
+	private static BukkitTask tablistRanksUpdateScheduler = null;
 
 	public static boolean register(Player p) {
 		if(pl.getConfig().getBoolean("ranks.luckperms-api.enable")) {
@@ -202,20 +205,20 @@ public class RankManager {
 	}
 	
 	public static void startTablistRanksUpdateScheduler() {
+		if(tablistRanksUpdateScheduler != null)
+			tablistRanksUpdateScheduler.cancel();
+
 		int interval = pl.getConfig().getInt("ranks.update-interval");
-		if(interval <= 0) // Do not auto-update ranks if set to -1 (or anything below 0)
+		if(interval <= 0) // Do not auto-update ranks if below or equal 0
 			return;
 		
 		interval = interval * 20 * 60; // Convert minutes to ticks
-		
-		Bukkit.getScheduler().runTaskTimerAsynchronously(pl, new Runnable() {
-			@Override
-			public void run() {
-				for(Player all : Bukkit.getOnlinePlayers()) {
-					if(PowerBoard.debug)
-						pl.getLogger().info("Updating all ranks (rank.update-interval)");
-					updateTablistRanks(all);
-				}
+
+		tablistRanksUpdateScheduler = Bukkit.getScheduler().runTaskTimerAsynchronously(pl, () -> {
+			for(Player all : Bukkit.getOnlinePlayers()) {
+				if(PowerBoard.debug)
+					pl.getLogger().info("Updating all ranks (rank.update-interval)");
+				updateTablistRanks(all);
 			}
 		}, interval, interval);
 	}
