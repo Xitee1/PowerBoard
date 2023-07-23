@@ -18,10 +18,6 @@ It is already really powerful. But of course there are also always a few bugs. S
 [Discord](https://discord.gg/VqK3ctsbz7)
 
 
-### Important news:<br>
-This plugin is no longer in active development (but still maintained). Currently I won't make new feature, nor fix bugs. But everyone is welcome to continue developing the plugin and to make PRs.
-I really hope that someone contributes, maybe I'll start do something myself again.
-
 # Developer API
 Click [here](https://github.com/Xitee1/PowerBoard/wiki/Developer-API).
 
