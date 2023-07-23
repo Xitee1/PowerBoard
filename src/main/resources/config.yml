@@ -1,13 +1,17 @@
 #####################################################################################################
-### Powerboard: Scoreboard + Tablist + Prefix + Chat | Animated                                   ###
+### PowerBoard: Scoreboard + Tablist + Prefix + Chat | Animated                                   ###
 ###                                                                                               ###
-### You need some help? Have a look at our wiki: https://github.com/Xitee1/PowerBoard/wiki        ###
-### For bugreports and proposals join our Discord: https://discord.gg/VqK3ctsbz7                  ###
+### Wiki: https://github.com/Xitee1/PowerBoard/wiki                                               ###
+### Need some help? Support is given on our Discord Server:  https://discord.gg/VqK3ctsbz7        ###
+### Found a bug? Report it either on GitHub or Discord.                                           ###
 ###                                                                                               ###
-### You can find the source code at: https://github.com/Xitee1/PowerBoard                         ###
+### (For developers) Source-Code: https://github.com/Xitee1/PowerBoard                            ###
 #####################################################################################################
 
-# Info: If there's an option to enable or disable something, you have to do it with the words true and false (Enable = true; Disable = false)
+# Before reaching out to support, read this!!
+# Be careful when modifying the config! It is very sensitive to typing mistakes.
+# A space too much or a missing ' and the plugin no longer works.
+# To prevent these errors, ONLY modify the VALUES! Also keep an eye on the single quotes (don't remove them!).
 
 ###############
 ### Modules ###
@@ -25,7 +29,7 @@ tablist:
 
 chat:
   ranks: true # enable/disable the chat system
-  colorperm: 'chat.color' # The permission to use colorcodes in chat. To disable set it to "none".
+  colorperm: 'chat.color' # The permission to use colorcodes in chat. To disable (preventing all players from using colors in chat), set it to "none".
   allowHexColors: true # Allow players to use hex colors in chat. It uses the 'colorperm' permission.
 
 #############
@@ -42,7 +46,7 @@ ranks:
   update-interval: -1 # Interval for automatically updating the ranks (in minutes). Useful if placeholders in prefixes/suffixes are used. Set to -1 to disable (default).
 
   options:
-    show-prefix-in-tab: true
+    show-prefix-in-tab: true # In case you have another plugin for the tablist prefix.
     show-suffix-in-tab: true
   
   # If you want to sync all your prefixes with all your servers or just want to use the prefixes that you have set for the groups in
@@ -55,19 +59,19 @@ ranks:
       owner: '&4Owner &7| &4%player_name% &7» '
       admin: '&cAdmin &7| &c%player_name% &7» '
       player: '&7Player | %player_name% » '
-  
-  ##########################################################################################
-  ### If you have luckperms api enabled, ignore everything in the config section "list"!
+
+  ### (If you have LuckPerms API enabled, ignore the rank list in this config.)
   ### You can add as many ranks as you want.
-  ### Note: The limit of characters in prefix/suffix in the tab is 16 (MC v1.13+ the limit is 64!) included color codes (e.g. &6 is counted as 1 character).
-  ###       The chat prefix has no limits!
+  ### Note: There's a limit of 64 chars in the prefix/suffix. Depending on your MC version, this limit can be higher or lower.
+  ###       If you are unsure, just try it out after how much chars it stops working.
+  ###       The chat prefix does not have these limits.
   list:
-    owner: # It doesn't matter what you like to call it. It doesn't affect anything at all.
-      permission: 'rank.owner' # If the permission system above is not "none", replace the permission with the name of the group - more infos in the wiki
+    owner:
+      permission: 'rank.owner' # If the perm system above is "none", use a permission here. If it's not "none", use the group name instead (E.g. 'owner' instead of 'rank.owner').
       prefix: '&4Owner &7| &4'
       suffix: ' &7[&eTeam&7]'
       chatPrefix: '&7[&cOwner&7] %player_name% » '
-      placeholder-name: 'Owner' # This will replace the %rank% placeholder
+      placeholder-name: 'Owner' # This will replace the %player_rank% placeholder
     admin:
       permission: 'rank.admin'
       prefix: '&cAdmin &7| &c'
@@ -85,12 +89,12 @@ ranks:
 ### Placeholders ###
 ####################
 placeholder:
-  prefer-plugin-placeholders: true # Prefer replacing the placeholders by the plugin itself and not PAPI
+  prefer-plugin-placeholders: true # If PB overwrites a PAPI placeholder you want to use, set this to false.
   time-format: 'HH:mm' # If you don't know what to set here, have a look at this: https://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
   date-format: 'yyyy-MM-dd'
   money-decimals: 2 # The maximum decimals for the placeholder %player_money%.
-  hexColorSyntax: '#000000' # Set the syntax to trigger hex colors. For example 'color:000000' or just '#000000' - whatever you want. WARNING NOT WORKING CHARS: { } ( )
-  world-names: # Replace world names for the %player_world% placeholder
+  hexColorSyntax: '#000000' # Set the hex color syntax. For example 'color:000000' or just '#000000' - whatever you want. WARNING NOT WORKING CHARS: { } ( )
+  world-names: # Used in the %player_world% placeholder. You can add other worlds too.
     world: 'Overworld'
     world_nether: 'Nether'
     world_the_end: 'The End'
