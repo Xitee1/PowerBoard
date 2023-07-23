@@ -23,6 +23,22 @@ public class Placeholders {
 
 	// All registered custom placeholders
 	public static Set<CustomPlaceholders> ph = new HashSet<>();
+
+	private static final Map<String, String> deprecatedPlaceholders = new HashMap<String, String>(11, 1) {
+		{
+			put("%tps%", "%player_tps%");
+			put("%ping%", "%player_ping%");
+			put("%money%", "%player_money%");
+			put("%rank%", "%player_rank%");
+			put("%name%", "%player_name%");
+			put("%loc_x%", "%player_loc_x%");
+			put("%loc_y%", "%player_loc_y%");
+			put("%loc_z%", "%player_loc_z%");
+			put("%world%", "%player_world%");
+			put("%playeronline%", "%server_online_players%");
+			put("%playermax%", "%server_max_players%");
+		}
+	};
 	
 	public static String replace(Player p, String s) {
 		// Import placeholders from APIs
@@ -44,19 +60,6 @@ public class Placeholders {
   			
 		
 		// ---- Deprecated ---- //
-		HashMap<String, String> deprecatedPlaceholders = new HashMap<>();
-
-		deprecatedPlaceholders.put("%tps%", "%player_tps%");
-		deprecatedPlaceholders.put("%ping%", "%player_ping%");
-		deprecatedPlaceholders.put("%money%", "%player_money%");
-		deprecatedPlaceholders.put("%rank%", "%player_rank%");
-		deprecatedPlaceholders.put("%name%", "%player_name%");
-		deprecatedPlaceholders.put("%loc_x%", "%player_loc_x%");
-		deprecatedPlaceholders.put("%loc_y%", "%player_loc_y%");
-		deprecatedPlaceholders.put("%loc_z%", "%player_loc_z%");
-		deprecatedPlaceholders.put("%world%", "%player_world%");
-		deprecatedPlaceholders.put("%playeronline%", "%server_online_players%");
-		deprecatedPlaceholders.put("%playermax%", "%server_max_players%");
 
 		for(Map.Entry<String, String> ph : deprecatedPlaceholders.entrySet()) {
 			String oldPH = ph.getKey();
