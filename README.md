@@ -3,10 +3,13 @@
 [![](https://img.shields.io/discord/800477577684844585?color=44be16&label=Discord)]()
 [![](https://img.shields.io/github/v/release/Xitee1/PowerBoard?label=Release)]()
 
-PowerBoard is an Open Source project for your Minecraft Server.
-Normally you would need for everything like ranks, tablist and scoreboard an extra plugin. And these plugins aren't always so good and are missing some features like animations and are lacking of performance.
-PowerBoard tries to put all these things into one plugin and to make these perfect.
+PowerBoard is a very useful Open Source plugin for your Minecraft Server.
+It lets you easily add Ranks, a Tablist, a Scoreboard and houses a small chat system with prefixes.
+It supports multiple (animated) scoreboards based on [conditions](https://github.com/Xitee1/PowerBoard/wiki/Conditions). It's all easy to set-up.
+For the ranks it is recommended to use the [LuckPerms API](https://github.com/Xitee1/PowerBoard/wiki/Conditions). However you can use any permission system you like.
+If you are a more advanced server owner, you can use the PowerBoard API for easy access to scoreboard and ranks.
 
+PowerBoard tries to put all these things into one plugin and to make these perfect.
 It is already really powerful. But of course there are also always a few bugs. So feel free to join this project and contribute to it.
 
 [Download](https://github.com/Xitee1/PowerBoard/releases)
