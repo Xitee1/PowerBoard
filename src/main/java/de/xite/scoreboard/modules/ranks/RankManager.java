@@ -140,8 +140,16 @@ public class RankManager {
 			
 			for(Player all : Bukkit.getOnlinePlayers()) {
 				Team t = all.getScoreboard().getTeam(teams.getTeamName());
-				if(t == null)
-					t = all.getScoreboard().registerNewTeam(teams.getTeamName());
+				if(t == null) {
+					try {
+						t = all.getScoreboard().registerNewTeam(teams.getTeamName());
+					}catch (IllegalArgumentException e) {
+						pl.getLogger().warning("Team could not be registered. You can usually ignore this message. If you encounter problems, you can enable the debug to get more details.");
+						if(PowerBoard.debug)
+							e.printStackTrace();
+					}
+				}
+
 				
 				setPrefixSuffix(p, t, teams.getPrefix(), teams.getSuffix(), teams.getPlayerListName());
 				
