@@ -105,8 +105,11 @@ public class PowerBoard extends JavaPlugin {
 			pl.getLogger().info("Registering players...");
 			for(Player all : Bukkit.getOnlinePlayers()) {
 				// Register Teams if chat ranks or tablist ranks are used
-				if(pl.getConfig().getBoolean("chat.ranks") || pl.getConfig().getBoolean("tablist.ranks"))
+				if(pl.getConfig().getBoolean("chat.ranks") || pl.getConfig().getBoolean("tablist.ranks")) {
 					RankManager.register(all);
+					if(pl.getConfig().getBoolean("tablist.ranks"))
+						RankManager.setTablistRanks(all);
+				}
 
 				if(pl.getConfig().getBoolean("scoreboard"))
 					ScoreboardPlayer.setScoreboard(all, false, null);

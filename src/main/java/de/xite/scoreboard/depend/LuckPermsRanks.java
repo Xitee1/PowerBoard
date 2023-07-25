@@ -102,7 +102,7 @@ public class LuckPermsRanks {
 			Teams.addPlayer(p, prefix, suffix, nameColor, chat, displayname, null, weight);
 			return true;
 		}catch (Exception e) {
-			// If somehow something does no work, send a error message to configure the rank properly.
+			// If somehow something does no work, send an error message to configure the rank properly.
 			pl.getLogger().severe("The player "+p.getName()+" could not be added to a team! Please check your rank configuration!");
 		}
 		return false;

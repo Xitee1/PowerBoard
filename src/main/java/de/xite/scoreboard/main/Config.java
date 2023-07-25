@@ -169,8 +169,11 @@ public class Config {
 				sendConfigReloadMessage(s, ChatColor.DARK_AQUA+"Reloading "+ChatColor.YELLOW+"ranks"+ChatColor.GRAY+"...");
 				for(Player all : Bukkit.getOnlinePlayers())
 					Teams.removePlayer(all);
-				for(Player all : Bukkit.getOnlinePlayers())
+				for(Player all : Bukkit.getOnlinePlayers()) {
 					RankManager.register(all);
+					if(pl.getConfig().getBoolean("tablist.ranks"))
+						RankManager.setTablistRanks(all);
+				}
 			}
 			if(pl.getConfig().getBoolean("tablist.ranks"))
 				RankManager.startTablistRanksUpdateScheduler();
@@ -192,7 +195,7 @@ public class Config {
 
 	private static void sendConfigReloadMessage(CommandSender s, String message) {
 		if(s instanceof Player)
-			s.sendMessage(PowerBoard.pr+"Config reload: "+message);
-		pl.getLogger().info("Config reload: "+message);
+			s.sendMessage(PowerBoard.pr+"Config: "+message);
+		pl.getLogger().info("Config: "+message);
 	}
 }

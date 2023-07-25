@@ -29,9 +29,9 @@ public class LuckPermsListener {
 			      Teams teams = Teams.get(p);
 			    if(teams != null) {
 		            if(PowerBoard.pl.getConfig().getBoolean("tablist.ranks")) {
-			            if(RankManager.updateTablistRanks(p))
-				            if(PowerBoard.debug)
-					            PowerBoard.pl.getLogger().info("(LuckPermsAPI) Updated "+p.getName()+"'s rank");
+			            if(PowerBoard.debug)
+				            PowerBoard.pl.getLogger().info("LuckPermsAPI: Request for updating "+p.getName()+"'s rank..");
+			            RankManager.updateTablistRanks(p, false);
 		            }
 	            }
 		    }

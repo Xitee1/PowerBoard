@@ -25,51 +25,42 @@ public class RankManager {
 	public static boolean register(Player p) {
 		if(pl.getConfig().getBoolean("ranks.luckperms-api.enable")) {
 			//--- Perm System: LuckPerms API ---//
-			boolean b = LuckPermsRanks.registerLuckPermsAPIRank(p);
-			if(b)
-				if(pl.getConfig().getBoolean("tablist.ranks"))
-					RankManager.setTablistRanks(p);
-			return b;
+			return LuckPermsRanks.registerLuckPermsAPIRank(p);
 			
 		}else if(pl.getConfig().getString("ranks.permissionsystem").equalsIgnoreCase("api")) {
 			//--- Perm System: PB API ---//
 
 			TeamSetEvent tse = new TeamSetEvent(p);
-			Bukkit.getScheduler().runTask(pl, new Runnable() {
-				@Override
-				public void run() {
-					Bukkit.getPluginManager().callEvent(tse);
-					if(!tse.isCancelled()) {
-						Teams.addPlayer(p, tse.getPrefix(), tse.getSuffix(), tse.getNameColor(), tse.getChatPrefix(), tse.getRankDisplayName(), tse.getPlayerListName(), tse.getWeight());
-						if(pl.getConfig().getBoolean("tablist.ranks"))
-							RankManager.setTablistRanks(p);
-						if(PowerBoard.debug) {
-							pl.getLogger().info("------------------------------------------------------");
-							pl.getLogger().info("(PB API) The player "+p.getName()+" has now the rank:");
-							pl.getLogger().info("Prefix:          "+tse.getPrefix());
-							pl.getLogger().info("ChatPrefix:      "+tse.getChatPrefix());
-							pl.getLogger().info("Suffix:          "+tse.getSuffix());
-							pl.getLogger().info("NameColor:       "+tse.getNameColor()+"(Example Text)");
-							pl.getLogger().info("RankDisplayName: "+tse.getRankDisplayName());
-							pl.getLogger().info("PlayerListName:  "+tse.getPlayerListName());
-							pl.getLogger().info("Weight:          "+tse.getWeight());
-							pl.getLogger().info("------------------------------------------------------");
-						}
-					}else
-						if(PowerBoard.debug)
-							pl.getLogger().info("TeamSetEvent cancelled for player: "+p.getName());
-				}
+			Bukkit.getScheduler().runTask(pl, () -> {
+				Bukkit.getPluginManager().callEvent(tse);
+				if(!tse.isCancelled()) {
+					Teams.addPlayer(p, tse.getPrefix(), tse.getSuffix(), tse.getNameColor(), tse.getChatPrefix(), tse.getRankDisplayName(), tse.getPlayerListName(), tse.getWeight());
+
+					if(PowerBoard.debug) {
+						pl.getLogger().info("------------------------------------------------------");
+						pl.getLogger().info("(PB API) The player "+p.getName()+" has now the rank:");
+						pl.getLogger().info("Prefix:          "+tse.getPrefix());
+						pl.getLogger().info("ChatPrefix:      "+tse.getChatPrefix());
+						pl.getLogger().info("Suffix:          "+tse.getSuffix());
+						pl.getLogger().info("NameColor:       "+tse.getNameColor()+"COLOR");
+						pl.getLogger().info("RankDisplayName: "+tse.getRankDisplayName());
+						pl.getLogger().info("PlayerListName:  "+tse.getPlayerListName());
+						pl.getLogger().info("Weight:          "+tse.getWeight());
+						pl.getLogger().info("------------------------------------------------------");
+					}
+				}else
+					if(PowerBoard.debug)
+						pl.getLogger().info("TeamSetEvent cancelled for player: "+p.getName());
 			});
 			return true;
 			
 		}else {
-			//--- Perm System: None ---//
+			//--- PB's rank system ---//
 			int weight = 0;
 			for(String line : pl.getConfig().getConfigurationSection("ranks.list").getValues(false).keySet()) {
 				if(!line.contains(".")) {
 					String permission = pl.getConfig().getString("ranks.list."+line+".permission");
-					
-					
+
 					boolean luckperms = false;
 					if(LuckPermsAPI.isActive() && pl.getConfig().getString("ranks.permissionsystem").equalsIgnoreCase("luckperms"))
 						if(LuckPermsRanks.isPlayerInGroup(p, permission))
@@ -82,8 +73,7 @@ public class RankManager {
 						String placeholderName =	pl.getConfig().getString("ranks.list."+line+".placeholder-name");
 						String nameColor = 			ChatColor.getLastColors(ChatColor.translateAlternateColorCodes('&', prefix));
 
-						Teams.addPlayer(p, prefix, suffix, nameColor, chatPrefix, placeholderName, null, weight);
-						Teams t = Teams.get(p);
+						Teams t = Teams.addPlayer(p, prefix, suffix, nameColor, chatPrefix, placeholderName, null, weight);
 						t.setRankDisplayName(t.getNameColor()+t.getRankDisplayName());
 						
 						if(PowerBoard.debug)
@@ -91,8 +81,7 @@ public class RankManager {
 								pl.getLogger().info("The player "+p.getName()+" has now the rank (PermSystem: none): Prefix: "+prefix+"; Suffix: "+suffix+"; Permission: "+permission);
 							}else
 								pl.getLogger().info("The player "+p.getName()+" has now the rank (PermSystem: LuckPerms): Prefix: "+prefix+"; Suffix: "+suffix+"; Permission: "+permission);
-						if(pl.getConfig().getBoolean("tablist.ranks"))
-							RankManager.setTablistRanks(p);
+
 						return true;
 					}
 					weight++;
@@ -105,13 +94,14 @@ public class RankManager {
 		}
 		return false;
 	}
+
 	public static void setTablistRanks(Player p) {
 		if(p == null)
 			return;
 
 		delay(p, 20*10);
 		
-		// Set all players that are online for the new player
+		// Set all player's ranks for the new player
 		for(Player all : Bukkit.getOnlinePlayers()) {
 			if(all != p) {
 				Teams teams = Teams.get(all);
@@ -164,18 +154,20 @@ public class RankManager {
 		if(PowerBoard.debug)
 			pl.getLogger().info("Ranks set for player "+p.getName());
 	}
-	
-	public static boolean updateTablistRanks(Player p) {
-		if(p == null)
-			return false;
 
+	/**
+	 *
+	 * @param p the Player
+	 * @param queueIfDelayed if the player should be added to the queue if delayed
+	 */
+	public static void updateTablistRanks(Player p, boolean queueIfDelayed) {
 		// Only let it update every 3 seconds
 		if(tablistRankUpdateDelay.contains(p)) {
-			if(!tablistRankUpdateWaiting.contains(p))
+			if(queueIfDelayed && !tablistRankUpdateWaiting.contains(p))
 				tablistRankUpdateWaiting.add(p);
 			if(PowerBoard.debug)
 				pl.getLogger().info("Updating "+p.getName()+"'s rank has been delayed to prevent lags and performance issues. The rank will automatically update in a few seconds.");
-			return false;
+			return;
 		}
 		delay(p, 20*5);
 		
@@ -208,8 +200,7 @@ public class RankManager {
 			pl.getLogger().warning("There was an error whilst updating "+p.getName()+"'s rank!");
 		}
 		if(PowerBoard.debug)
-			pl.getLogger().info("Rank has been updated.");
-		return true;
+			pl.getLogger().info(p.getName() + "'s rank has been updated.");
 	}
 	
 	public static void startTablistRanksUpdateScheduler() {
@@ -226,7 +217,7 @@ public class RankManager {
 			for(Player all : Bukkit.getOnlinePlayers()) {
 				if(PowerBoard.debug)
 					pl.getLogger().info("Updating all ranks (rank.update-interval)");
-				updateTablistRanks(all);
+				updateTablistRanks(all, false);
 			}
 		}, interval, interval);
 	}
@@ -282,7 +273,7 @@ public class RankManager {
 			tablistRankUpdateDelay.remove(p);
 			if(tablistRankUpdateWaiting.contains(p)) {
 				tablistRankUpdateWaiting.remove(p);
-				updateTablistRanks(p);
+				updateTablistRanks(p, false);
 			}
 		}, i);
 	}

@@ -39,8 +39,11 @@ public class JoinQuitListener implements Listener {
 		Bukkit.getScheduler().runTaskLaterAsynchronously(pl, () -> {
 			// Register Teams if chat ranks or tablist ranks are used
 			if(pl.getConfig().getBoolean("chat.ranks") || pl.getConfig().getBoolean("tablist.ranks"))
-				if(Teams.get(p) == null)
+				if(Teams.get(p) == null) {
 					RankManager.register(p);
+					if(pl.getConfig().getBoolean("tablist.ranks"))
+						RankManager.setTablistRanks(p);
+				}
 
 			if(pl.getConfig().getBoolean("scoreboard"))
 				ScoreboardPlayer.setScoreboard(p, false, null);
