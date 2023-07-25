@@ -2,6 +2,7 @@ package de.xite.scoreboard.api;
 
 import java.util.ArrayList;
 
+import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -36,6 +37,8 @@ public class PowerBoardAPI {
 	 * @param scoreboardName the name of the scoreboard.
 	 */
 	public static void setScoreboard(Player p, boolean custom, String scoreboardName) {
+		Validate.notNull(p, "The player cannot be null!");
+
 		if(custom) {
 			ScoreboardPlayer.setScoreboard(p, true, null);
 		}else {
@@ -63,6 +66,8 @@ public class PowerBoardAPI {
 	 * @param usePlaceholders if placeholders should be replaced by PB
 	 */
 	public static void setScoreboardTitle(Player p, String title, boolean usePlaceholders) {
+		Validate.notNull(p, "The player cannot be null!");
+
 		if(!ScoreTitleUtils.setTitle(p, title, usePlaceholders, null))
 				PowerBoard.pl.getLogger().severe("Failed to set the Scoreboard-Title! "+p.getName()+"'s scoreboard is not registered yet - please set the scoreboard first!");
 	}
@@ -77,6 +82,8 @@ public class PowerBoardAPI {
 	 * @param usePlaceholders if placeholders should be replaced by PB
 	 */
 	public static void setScoreboardScore(Player p, String score, int index, boolean usePlaceholders) {
+		Validate.notNull(p, "The player cannot be null!");
+
 		if(!ScoreTitleUtils.setScore(p, score, index, usePlaceholders, null))
 			PowerBoard.pl.getLogger().severe("Failed to set the Scoreboard-Score! "+p.getName()+"'s scoreboard is not registered yet - please set the scoreboard first!");
 	}
@@ -90,6 +97,9 @@ public class PowerBoardAPI {
 	 * @param usePlaceholders if placeholders should be replaced by PB
 	 */
 	public static void setScoreboardScores(Player p, ArrayList<String> scores, boolean usePlaceholders) {
+		Validate.notNull(p, "The player cannot be null!");
+		Validate.notNull(scores, "The scores array cannot be null!");
+
 		if(!ScoreTitleUtils.setScores(p, scores, usePlaceholders, null))
 			PowerBoard.pl.getLogger().severe("Failed to set the Scoreboard-Scores! "+p.getName()+"'s scoreboard is not registered yet - please set the scoreboard first with!");
 	}
@@ -105,6 +115,8 @@ public class PowerBoardAPI {
 	 * @return the player's prefix
 	 */
 	public String getPrefix(Player p) {
+		Validate.notNull(p, "The player cannot be null!");
+
 		Teams t = Teams.get(p);
 		if(t == null)
 			return null;
@@ -121,6 +133,8 @@ public class PowerBoardAPI {
 	 * @return true if successful
 	 */
 	public static boolean setPrefix(Player p, String prefix) {
+		Validate.notNull(p, "The player cannot be null!");
+
 		Teams t = Teams.get(p);
 		if(t == null)
 			return false;
@@ -135,6 +149,8 @@ public class PowerBoardAPI {
 	 * @return the player's suffix
 	 */
 	public String getSuffix(Player p) {
+		Validate.notNull(p, "The player cannot be null!");
+
 		Teams t = Teams.get(p);
 		if(t == null)
 			return null;
@@ -151,6 +167,8 @@ public class PowerBoardAPI {
 	 * @return true if successful
 	 */
 	public static boolean setSuffix(Player p, String suffix) {
+		Validate.notNull(p, "The player cannot be null!");
+
 		Teams t = Teams.get(p);
 		if(t == null)
 			return false;
@@ -165,6 +183,8 @@ public class PowerBoardAPI {
 	 * @return The ChatColor
 	 */
 	public ChatColor getNameColor(Player p) {
+		Validate.notNull(p, "The player cannot be null!");
+
 		Teams t = Teams.get(p);
 		if(t == null)
 			return null;
@@ -176,6 +196,8 @@ public class PowerBoardAPI {
 	 * @deprecated use {@link PowerBoardAPI#setNameColor(Player, ChatColor)} instead.
 	 */
 	public static boolean setNameColorChar(Player p, ChatColor color) {
+		Validate.notNull(p, "The player cannot be null!");
+
 		return setNameColor(p, color);
 	}
 
@@ -188,6 +210,8 @@ public class PowerBoardAPI {
 	 * @return true if successful
 	 */
 	public static boolean setNameColor(Player p, ChatColor color) {
+		Validate.notNull(p, "The player cannot be null!");
+
 		Teams t = Teams.get(p);
 		if(t == null)
 			return false;
@@ -203,8 +227,13 @@ public class PowerBoardAPI {
 	 * or they include a placeholder that needs to be updated.
 	 *
 	 * @param p the player
+	 * @param queueIfDelayed if the player should be added to the queue if delayed
 	 */
-	public static void updateTablistRanks(Player p) {
-		RankManager.updateTablistRanks(p);
+	public static void updateTablistRanks(Player p, boolean queueIfDelayed) {
+		Validate.notNull(p, "The player cannot be null!");
+
+		if(PowerBoard.debug)
+			PowerBoard.pl.getLogger().info("Updating "+p.getName()+"'s rank from PB API.");
+		RankManager.updateTablistRanks(p, queueIfDelayed);
 	}
 }
