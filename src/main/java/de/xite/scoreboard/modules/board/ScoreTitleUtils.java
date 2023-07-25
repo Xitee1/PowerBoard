@@ -95,48 +95,32 @@ public class ScoreTitleUtils {
 				score = Placeholders.replace(p, score);
 			
 			// ---- Set all scores ---- //
-			if(PowerBoard.aboveMC_1_13) { // In version 1.13 you can use up to 64 chars in prefix and suffix
-				// Set the score for 1.13+
-				String[] s = getScorePrefixSuffix(score, 64, 999);
-				try {
-					team.setPrefix(s[0]);
-					team.setSuffix(s[1]);
-				}catch (IllegalArgumentException e) {
-					team.setPrefix(ChatColor.RED+"-too long-");
-					PowerBoard.pl.getLogger().warning(" ");
-					PowerBoard.pl.getLogger().warning("-> The scoreboard-score is too long! The limit is around 128 chars!");
-					if(sm != null)
-						PowerBoard.pl.getLogger().warning("-> Scoreboard: "+sm.getName());
-					PowerBoard.pl.getLogger().warning("-> Score: "+score);
-					PowerBoard.pl.getLogger().warning("-> Player: "+p.getName());
-					PowerBoard.pl.getLogger().warning(" ");
-				}
-			}else {
-				// Set the score for 1.12-
-				String[] s = getScorePrefixSuffix(score, 16, 30);
-				if(s == null) {
-					team.setPrefix(ChatColor.RED+"-too long-");
-					PowerBoard.pl.getLogger().warning(" ");
-					PowerBoard.pl.getLogger().warning("-> The scoreboard-score is too long! The limit is around 30 chars!");
-					if(sm != null)
-						PowerBoard.pl.getLogger().warning("-> Scoreboard: "+sm.getName());
-					PowerBoard.pl.getLogger().warning("-> Score: \""+score+"\", chars: "+score.length());
-					PowerBoard.pl.getLogger().warning("-> Player: "+p.getName());
-					PowerBoard.pl.getLogger().warning(" ");
-				}else {
-					team.setPrefix(s[0]);
-					team.setSuffix(s[1]);
-				}
+			int limit = 16;
+			if(PowerBoard.aboveMC_1_13) // In version 1.13 you can use up to 64 chars in prefix and suffix
+				limit = 64;
+
+			String[] s = getScorePrefixSuffix(score, limit);
+			try {
+				team.setPrefix(s[0]);
+				team.setSuffix(s[1]);
+			}catch (IllegalArgumentException e) {
+				team.setPrefix(ChatColor.RED+"-too long-");
+
+				PowerBoard.pl.getLogger().warning(" ");
+				PowerBoard.pl.getLogger().warning("-> The scoreboard-score is too long! The limit is around "+limit*2+" chars!");
+				if(sm != null)
+					PowerBoard.pl.getLogger().warning("-> Scoreboard: "+sm.getName());
+				PowerBoard.pl.getLogger().warning("-> Score: "+score);
+				PowerBoard.pl.getLogger().warning("-> Player: "+p.getName());
+				PowerBoard.pl.getLogger().warning(" ");
 			}
 		}catch (IllegalStateException e) { }
 		//if(sm != null)
 			//sm.addPlayer(p);
 		return true;
 	}
-	public static String[] getScorePrefixSuffix(String score, int split, int maxchars) {
+	public static String[] getScorePrefixSuffix(String score, int split) {
 		String[] s = new String[2];
-		if(score.length() > maxchars)
-			return null;
 		
 		if(score.length() > split) { // Check if suffix is needed
 			s[0] = score.substring(0, split); // Set the prefix
