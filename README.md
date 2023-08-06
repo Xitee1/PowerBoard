@@ -2,6 +2,7 @@
 [![](https://img.shields.io/github/downloads/Xitee1/PowerBoard/total?color=44be16&label=Downloads)]()
 [![](https://img.shields.io/discord/800477577684844585?color=44be16&label=Discord)]()
 [![](https://img.shields.io/github/v/release/Xitee1/PowerBoard?label=Release)]()
+[![](https://img.shields.io/badge/Send%20me%20a%20small%20gift-PayPal-blue.svg?style=flat-square)](https://paypal.me/xitee)
 
 PowerBoard is a very useful Open Source plugin for your Minecraft Server.
 It lets you easily add Ranks, a Tablist, a Scoreboard and houses a small chat system with prefixes.
