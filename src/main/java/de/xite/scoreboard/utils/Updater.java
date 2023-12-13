@@ -56,7 +56,9 @@ public class Updater {
 	}
 
 	public boolean isUpdateAvailable() {
-		return !getLatestVersion().equals(getCurrentVersion());
+		Version current = new Version(getCurrentVersion());
+		Version newest = new Version(getLatestVersion());
+		return current.compareTo(newest) < 0;
 	}
 
 	public boolean infoMessageEnabled() {
