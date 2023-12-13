@@ -7,7 +7,7 @@
 PowerBoard is a very powerful open source plugin for your Minecraft server.
 It lets you easily add ranks, a tablist, Scoreboards and a small chat system with prefixes and placeholders.
 It supports multiple (animated) scoreboards based on [conditions](https://github.com/Xitee1/PowerBoard/wiki/Conditions).
-For the ranks it is recommended to use the permission sytem [LuckPerms](https://luckperms.net/). However you can use any permission system you like.
+For the ranks it is recommended to use the permission sytem [LuckPerms](https://luckperms.net/). However, you can use any permission system you like.
 If you are a more advanced server owner, you can use the PowerBoard API for easy access to scoreboard and ranks.
 
 PowerBoard to puts all these things into one plugin and tries to make them perfect.
