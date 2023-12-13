@@ -26,12 +26,4 @@ It is already really powerful. But of course there are also always a few bugs. S
 Click [here](https://github.com/Xitee1/PowerBoard/wiki/Developer-API).
 
 # Donate
-### Bitcoin
-
-Address: bc1q6eh8mpkyu5pne7m72f4lyh6fw4k4ugpvzjfljd
-
-![image](https://user-images.githubusercontent.com/59659167/147228233-1b2ed89c-f9ab-499a-862a-30a9520cd7c6.png)
-
-Note to Bitcoin:
-1. I hope this works. I have a Bitcoin wallet and know how to use it. But I'm not exactly an expert.
-2. You only get the Discord "Donator" rank if you donate with PP.
+Click [here](https://github.com/Xitee1#donate)
