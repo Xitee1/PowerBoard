@@ -20,21 +20,32 @@ public class LuckPermsRanks {
 			pl.getLogger().severe("LuckPerms-API is enabled, but LuckPerms is not installed!");
 			return false;
 		}
-		//Get user and rank data from LuckPerms
+
+		// Get user and rank data from LuckPerms
 		LuckPerms api = LuckPermsAPI.getAPI();
+
 		User user = api.getUserManager().getUser(p.getUniqueId());
+		if(user == null) {
+			pl.getLogger().warning("Player "+p.getName()+" is not registered by LuckPerms!");
+			return false;
+		}
+
 		Group group = api.getGroupManager().getGroup(user.getPrimaryGroup());
+		if(group == null) {
+			pl.getLogger().warning("Player "+p.getName()+" has no LuckPerms group!");
+			return false;
+		}
 
 		// Get the team name
 		int weight;
-		try {
+		if(group.getWeight().isPresent()) {
 			int i = group.getWeight().getAsInt();
 			if(i > 9999) {
 				PowerBoard.pl.getLogger().severe("Sorry, but PB does not support LP weights higher than 9999! Please use smaller values.");
 				return false;
 			}
 			weight = 9999 - i;
-		}catch (Exception e) {
+		}else {
 			PowerBoard.pl.getLogger().severe("---------------------------------------------------------------------------------------------------------------------------");
 			PowerBoard.pl.getLogger().severe("The group \""+group.getName()+"\" has no weight! Please set the weight with /lp group <group> setweight <weight>");
 			PowerBoard.pl.getLogger().severe("Read the wiki to see which weights you have to set: https://github.com/Xitee1/PowerBoard/wiki#configure-the-ranks-optional");
