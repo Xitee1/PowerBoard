@@ -1,13 +1,10 @@
 package de.xite.scoreboard.depend;
 
-import java.io.File;
-
 import de.xite.scoreboard.main.Config;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
-import de.xite.scoreboard.main.ExternalPlugins;
 import de.xite.scoreboard.main.PowerBoard;
 import de.xite.scoreboard.utils.Teams;
 import net.luckperms.api.LuckPerms;
