@@ -46,7 +46,7 @@ public class PowerBoardCommand implements CommandExecutor, TabCompleter {
 			}
 
 			// check if sender has permission for this command
-			if(!checkPermission(s, permPrefix+"toggle.scoreboard"))
+			if(checkPermission(s, permPrefix + "toggle.scoreboard"))
 				return true;
 
 			// check if the scoreboard is enabled before trying to toggle it
@@ -71,7 +71,7 @@ public class PowerBoardCommand implements CommandExecutor, TabCompleter {
 			// PowerBoard reload
 
 			// check if sender has permission for this command
-			if(!checkPermission(s, permPrefix+"reload"))
+			if(checkPermission(s, permPrefix + "reload"))
 				return true;
 
 			// reload PB
@@ -80,7 +80,7 @@ public class PowerBoardCommand implements CommandExecutor, TabCompleter {
 			return true;
 		}else if((args.length == 1 || args.length == 2) && args[0].equalsIgnoreCase("update")) {
 			// PowerBoard update (download newest jar)
-			if(!checkPermission(s, permPrefix+"update"))
+			if(checkPermission(s, permPrefix + "update"))
 				return true;
 
 			if(args.length == 1) {
@@ -120,7 +120,7 @@ public class PowerBoardCommand implements CommandExecutor, TabCompleter {
 			// scoreboard debug (temporarily enable debug until next restart)
 
 			// check if sender has permission for this command
-			if(!checkPermission(s, permPrefix+".debug"))
+			if(checkPermission(s, permPrefix + ".debug"))
 				return true;
 
 			PowerBoard.debug = !PowerBoard.debug;

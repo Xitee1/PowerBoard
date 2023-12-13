@@ -15,7 +15,7 @@ import org.apache.commons.io.FileUtils;
 import de.xite.scoreboard.main.PowerBoard;
 
 public class Updater {
-	private static String updaterPrefix = "Updater -> ";
+	private static final String updaterPrefix = "Updater -> ";
 	private static final PowerBoard instance = PowerBoard.getInstance();
 	private static final Logger logger = PowerBoard.getInstance().getLogger();
 	

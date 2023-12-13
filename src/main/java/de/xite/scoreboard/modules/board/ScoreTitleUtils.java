@@ -89,7 +89,7 @@ public class ScoreTitleUtils {
 				team.addEntry(colorcode);
 				obj.getScore(colorcode).setScore(scoreId);
 			}
-			if(score.length() == 0) // If length == 0 set to " " for free space in scoreboard
+			if(score.isEmpty()) // If length == 0 set to " " for free space in scoreboard
 				score = " ";
 			if(!score.equals(" ") && usePlaceholders)
 				score = Placeholders.replace(p, score);

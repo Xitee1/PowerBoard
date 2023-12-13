@@ -17,8 +17,8 @@ import de.xite.scoreboard.utils.Teams;
 public class RankManager {
 	static PowerBoard pl = PowerBoard.pl;
 	
-	private static ArrayList<Player> tablistRankUpdateDelay = new ArrayList<>();
-	private static ArrayList<Player> tablistRankUpdateWaiting = new ArrayList<>();
+	private static final ArrayList<Player> tablistRankUpdateDelay = new ArrayList<>();
+	private static final ArrayList<Player> tablistRankUpdateWaiting = new ArrayList<>();
 
 	private static BukkitTask tablistRanksUpdateScheduler = null;
 
@@ -232,9 +232,9 @@ public class RankManager {
 		boolean usePrefixSuffixForPlayerListName = pl.getConfig().getBoolean("ranks.options.try-player-head-with-pln");
 
 		try {
-			if(showPrefixInTab && prefix.length() != 0)
+			if(showPrefixInTab && !prefix.isEmpty())
 				t.setPrefix(prefix);
-			if(showSuffixInTab && suffix.length() != 0)
+			if(showSuffixInTab && !suffix.isEmpty())
 				t.setSuffix(suffix);
 			p.setPlayerListName(null);
 		}catch (IllegalArgumentException e) {

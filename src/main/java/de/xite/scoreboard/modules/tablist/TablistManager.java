@@ -68,7 +68,8 @@ public class TablistManager {
 		// ---- Initialize ---- //
 		
 		// Check for errors
-		SelfCheck.checkTablist(name, cfg);
+		if(!SelfCheck.checkTablist(name, cfg))
+			return;
 		
 		// ---- Read Data ---- //
 		// Header

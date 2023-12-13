@@ -6,7 +6,7 @@ import de.xite.scoreboard.main.PowerBoard;
 
 public class TPS implements Runnable {
 	private static int TICK_COUNT= 0;
-	private static long[] TICKS= new long[600];
+	private static final long[] TICKS= new long[600];
 	
 	public static double currentTPS = 20;
 

@@ -8,8 +8,8 @@ import org.bukkit.entity.Player;
 import de.xite.scoreboard.main.PowerBoard;
 
 public class Teams {
-	public static HashMap<Player, Teams> TeamsList = new HashMap<>();
-	private static int TeamCount = 0;
+	private static HashMap<Player, Teams> teamsList = new HashMap<>();
+	private static int teamCount = 0;
 	
 	Player p;
 	String prefix;
@@ -42,13 +42,13 @@ public class Teams {
 			PowerBoard.pl.getLogger().warning("---------------------------------------------------------------------------------------------------------------------------");
 		}
 		
-		TeamCount++;
-		this.teamName = String.format("%04d", weight) +"t-" + TeamCount;
+		teamCount++;
+		this.teamName = String.format("%04d", weight) +"t-" + teamCount;
 	}
 
 	public static Teams addPlayer(Player p, String prefix, String suffix, ChatColor nameColor, String chatPrefix, String placeholderName, String playerListName, int weight) {
 		Teams teams = new Teams(p, prefix, suffix, nameColor, chatPrefix, placeholderName, playerListName, weight);
-		TeamsList.put(p, teams);
+		teamsList.put(p, teams);
 		return teams;
 	}
 
@@ -66,18 +66,18 @@ public class Teams {
 	}
 
 	public static void removePlayer(Player p) {
-		if(TeamsList.containsKey(p)) {
+		if(teamsList.containsKey(p)) {
 			Teams t = Teams.get(p);
 			if(p.getScoreboard().getTeam(t.getTeamName()) != null)
 				p.getScoreboard().getTeam(t.getTeamName()).unregister();
 			
-			TeamsList.remove(p);
+			teamsList.remove(p);
 		}
 	}
 
 	public static Teams get(Player p) {
-		if(TeamsList.containsKey(p))
-			return TeamsList.get(p);
+		if(teamsList.containsKey(p))
+			return teamsList.get(p);
 		return null;
 	}
 	
