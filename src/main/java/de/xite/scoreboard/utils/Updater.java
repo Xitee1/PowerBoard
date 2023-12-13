@@ -6,48 +6,66 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Date;
 import java.util.Scanner;
+import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
-import org.bukkit.Bukkit;
 
 import de.xite.scoreboard.main.PowerBoard;
 
 public class Updater {
-	static String updaterPrefix = "Updater -> ";
-	static boolean updateSuccessful = false;
-
-	private static PowerBoard pl = PowerBoard.pl;
-	private static int pluginID = 73854;
-	private static String version;
+	private static String updaterPrefix = "Updater -> ";
+	private static final PowerBoard instance = PowerBoard.getInstance();
+	private static final Logger logger = PowerBoard.getInstance().getLogger();
 	
-	public static String getVersion() {
-		if(version == null) {
+	final private int pluginID;
+	private Date lastUpdated;
+	private String latestVersion;
+	private final String currentVersion;
+	private final boolean infoMessageEnabled;
+	private boolean updateSuccessful = false;
+
+	public Updater(int pluginID) {
+		this.pluginID = pluginID;
+		latestVersion = null;
+		currentVersion = instance.getDescription().getVersion();
+		infoMessageEnabled = instance.getConfig().getBoolean("update.notification");
+	}
+
+	private void updateVersion() {
+		if(latestVersion == null || new Date().getTime() - lastUpdated.getTime() > 1000*60*60*12) { // TODO needs testing
+			lastUpdated = new Date();
 			try(InputStream inputStream = new URL("https://api.spigotmc.org/legacy/update.php?resource=" + pluginID).openStream(); Scanner scanner = new Scanner(inputStream)) {
 				if(scanner.hasNext()) {
-					version = scanner.next();
+					latestVersion = scanner.next();
 				}
 			} catch (IOException e) {
-				pl.getLogger().info(updaterPrefix + "Cannot look for updates: " + e.getMessage());
-				return "Could not check for updates! You probably restarted your server to often, so SpigotMC blocked your IP. You probably have to wait a few minutes or hours.";
+				logger.info("Updater -> Cannot look for updates: " + e.getMessage());
 			}
-			
-			// Set it to null again after 24h to check again (there might be a new version)
-			Bukkit.getScheduler().runTaskLaterAsynchronously(PowerBoard.pl, () -> version = null, 20*60*60*24);
 		}
-		return version;
-	}
-	
-	public static boolean checkVersion() {
-		Version current = new Version(pl.getDescription().getVersion());
-		Version newest = new Version(getVersion());
-
-		return current.compareTo(newest) < 0;
 	}
 
-	public static boolean downloadFile(boolean forceUpdate) {
-		if(updateSuccessful) {
-			pl.getLogger().info("Ignoring update request. Plugin has already been updated.");
+	public String getLatestVersion() {
+		updateVersion();
+		return latestVersion;
+	}
+
+	public String getCurrentVersion() {
+		return currentVersion;
+	}
+
+	public boolean isUpdateAvailable() {
+		return !getLatestVersion().equals(getCurrentVersion());
+	}
+
+	public boolean infoMessageEnabled() {
+		return infoMessageEnabled;
+	}
+
+	public boolean downloadFile(boolean forceUpdate) {
+		if(this.updateSuccessful) {
+			logger.info("Ignoring update request. Plugin has already been updated.");
 			return false;
 		}
 
@@ -55,7 +73,7 @@ public class Updater {
 
 		try {
 			// Download new PowerBoard.jar to plugins/PowerBoard.update.jar
-			pl.getLogger().info("Updater -> Downloading newest version...");
+			logger.info("Updater -> Downloading newest version...");
 			File file = new File("plugins/" + pluginName + ".jar.update");
 			if(forceUpdate)
 				file = new File("plugins/" + pluginName + ".jar");
@@ -82,7 +100,7 @@ public class Updater {
 			inputStream.close();
 			connection.disconnect();
 		} catch (Exception e) {
-			pl.getLogger().info(updaterPrefix+"Download failed! Please try it later again.");
+			logger.info(updaterPrefix+"Download failed! Please try it later again.");
 			e.printStackTrace();
 			return false;
 		}
@@ -99,7 +117,7 @@ public class Updater {
 		// Delete PowerBoard.old.jar if exists
 		if (oldFile.exists()) {
 			if (!oldFile.delete()) {
-				pl.getLogger().severe(updaterPrefix+"Could not delete PowerBoard.old.jar even tough it exists!");
+				logger.severe(updaterPrefix+"Could not delete PowerBoard.old.jar even tough it exists!");
 				return false;
 			}
 		}
@@ -108,7 +126,7 @@ public class Updater {
 		try {
 			FileUtils.moveFile(currentFile, oldFile);
 		} catch (IOException e) {
-			pl.getLogger().severe(updaterPrefix+"Could not rename current PowerBoard.jar file.");
+			logger.severe(updaterPrefix+"Could not rename current PowerBoard.jar file.");
 			e.printStackTrace();
 			return false;
 		}
@@ -118,22 +136,22 @@ public class Updater {
 			try {
 				FileUtils.moveFile(newFile, currentFile);
 			} catch (IOException e) {
-				pl.getLogger().severe(updaterPrefix+"Could not rename new PowerBoard.jar file.");
+				logger.severe(updaterPrefix+"Could not rename new PowerBoard.jar file.");
 				e.printStackTrace();
 				return false;
 			}
 		}else {
-			pl.getLogger().severe(updaterPrefix+"Old file still exists. Could not update PowerBoard!");
+			logger.severe(updaterPrefix+"Old file still exists. Could not update PowerBoard!");
 		}
 
 
 		// Clear files
 		if(!newFile.delete()) {
-			pl.getLogger().warning(updaterPrefix+"Could not delete update-file. Please manually delete plugins/"+pluginName+".update.jar");
+			logger.warning(updaterPrefix+"Could not delete update-file. Please manually delete plugins/"+pluginName+".update.jar");
 		}
 
 		updateSuccessful = true;
-		pl.getLogger().info(updaterPrefix+"Update finished! To apply the new update, you have to restart your server.");
+		logger.info(updaterPrefix+"Update finished! To apply the new update, you have to restart your server.");
 		return true;
 	}
 }

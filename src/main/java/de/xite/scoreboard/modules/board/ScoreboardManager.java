@@ -55,7 +55,7 @@ public class ScoreboardManager {
 		}
 		
 		// Get the config
-		File f = new File(PowerBoard.pluginfolder+"/scoreboards/"+name+".yml");
+		File f = new File(Config.getConfigFolder() + "/scoreboards/"+name+".yml");
 		if(!f.exists()) {
 			pl.getLogger().severe("Could not load scoreboard named "+name+", because the config file does not exists!");
 			return;
@@ -124,7 +124,7 @@ public class ScoreboardManager {
 	
 	// ---- Start the animations ---- //
 	private void startTitleAnimation(int speed) {
-		if(title.size() == 0) {
+		if(title.isEmpty()) {
 			pl.getLogger().severe("Could not load scoreboard title for scoreboard \""+name+"\"!");
 			pl.getLogger().severe("Disabling plugin...");
 			pl.getServer().getPluginManager().disablePlugin(pl);
@@ -143,7 +143,7 @@ public class ScoreboardManager {
 				pl.getLogger().info("Scoreboard-Title (Name: "+name+"): animation started");
 		
 		// Check for config errors
-		if(title.size() == 0) {
+		if(title.isEmpty()) {
 			pl.getLogger().severe("You have an error in your scoreboard config! ("+name+".yml - title)");
 			return;
 		}
@@ -154,7 +154,7 @@ public class ScoreboardManager {
 				int count = 0;
 				@Override
 				public void run() {
-					if(players.size() != 0) {
+					if(!players.isEmpty()) {
 						String s = title.get(count); // get the current score (text)
 						currentTitle = s;
 						for(Player p : players)
@@ -181,12 +181,12 @@ public class ScoreboardManager {
 				pl.getLogger().info("Scoreboard-Score (ID: "+id+", Name: "+name+"): animation started");
 		
 		// Check for config errors
-		if(scores.size() == 0) {
+		if(scores.isEmpty()) {
 			pl.getLogger().severe("You have an error in your scoreboard config! Please check it for any typing errors. Even a simple space can create this error. Look closely. ("+name+".yml - scores)");
 			return;
 		}
 		for(Entry<Integer, ArrayList<String>> e : scores.entrySet()) {
-			if(e.getValue().size() == 0) {
+			if(e.getValue().isEmpty()) {
 				pl.getLogger().severe("You have an error in your scoreboard config! Please check it for any typing errors. Even a simple space can create this error. Look closely. ("+name+".yml - scores)");
 				return;
 			}
@@ -197,7 +197,7 @@ public class ScoreboardManager {
 				int count = 0;
 				@Override
 				public void run() {
-					if(players.size() != 0) {
+					if(!players.isEmpty()) {
 						String score = scores.get(id).get(count); // get the current score (text)
 						int i = scores.size()-id-1;
 						currentScores.replace(id, score);
@@ -245,13 +245,8 @@ public class ScoreboardManager {
 		ArrayList<String> boards = new ArrayList<>();
 
 		// Get all scoreboards from the scoreboard folder
-		File f = new File(PowerBoard.pluginfolder+"/scoreboards/");
-		FilenameFilter filter = new FilenameFilter() {
-			@Override
-			public boolean accept(File f, String name) {
-				return name.endsWith(".yml") && !name.equals("scoreboard-blacklist.yml");
-			}
-		};
+		File f = new File(Config.getConfigFolder() + "/scoreboards/");
+		FilenameFilter filter = (f1, name) -> name.endsWith(".yml") && !name.equals("scoreboard-blacklist.yml");
 		File[] files = f.listFiles(filter);
 		if(files != null) {
 			for (File file : files) {
@@ -265,7 +260,7 @@ public class ScoreboardManager {
 			pl.getLogger().info("Registered scoreboard '"+board+"'.");
 		}
 
-		File sbBlacklist = new File(PowerBoard.pluginfolder+"/scoreboards/scoreboard-blacklist.yml");
+		File sbBlacklist = new File(Config.getConfigFolder() + "/scoreboards/scoreboard-blacklist.yml");
 		YamlConfiguration cfg = Config.loadConfiguration(sbBlacklist);
 		if(cfg != null)
 			scoreboardBlacklistConditions.addAll(cfg.getStringList("conditions"));

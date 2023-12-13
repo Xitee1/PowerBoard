@@ -25,12 +25,13 @@ import org.bukkit.configuration.InvalidConfigurationException;
 
 public class Config {
 	static PowerBoard pl = PowerBoard.pl;
-	
+	private static final String configFolder = "plugins/PowerBoard";
+
 	public static boolean loadConfig() {
 		pl.getLogger().info(" ");
 		pl.getLogger().info("Loading configs..");
 		
-		File folder = new File(PowerBoard.pluginfolder);
+		File folder = new File(configFolder);
 		if(!folder.isDirectory())
 			folder.mkdirs();
 		
@@ -53,7 +54,7 @@ public class Config {
 		loadHEXColorSyntax(hexSyntax);
 		
 		// Create scoreboard folder if not exists
-		File sbfolder = new File(PowerBoard.pluginfolder+"/scoreboards/");
+		File sbfolder = new File(configFolder +"/scoreboards/");
 		if(!sbfolder.exists() || !sbfolder.isDirectory())
 			sbfolder.mkdir();
 		
@@ -115,7 +116,7 @@ public class Config {
 	}
 
 	private static void loadHEXColorSyntax(String syntax) {
-		if(syntax != null && syntax.length() != 0) {
+		if(syntax != null && !syntax.isEmpty()) {
 			if(syntax.contains("000000")) {
 				syntax = syntax.replace("{", "").replace("}", "").replace("(", "").replace(")", "");
 				String[] s2 = syntax.split("000000");
@@ -197,5 +198,9 @@ public class Config {
 		if(s instanceof Player)
 			s.sendMessage(PowerBoard.pr+"Config: "+message);
 		pl.getLogger().info("Config: "+message);
+	}
+
+	public static String getConfigFolder() {
+		return configFolder;
 	}
 }

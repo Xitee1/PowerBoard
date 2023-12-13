@@ -16,39 +16,41 @@ import de.xite.scoreboard.utils.Teams;
 import de.xite.scoreboard.utils.Updater;
 
 public class JoinQuitListener implements Listener {
-	// TODO: 03/06/2023 Remove this
-	PowerBoard pl = PowerBoard.pl;
+	private static final PowerBoard instance = PowerBoard.getInstance();
+	private static final Updater updater = PowerBoard.getUpdater();
+	
 	@EventHandler
 	public void onJoin(PlayerJoinEvent e) {
 		Player p = e.getPlayer();
 		if(p.hasPermission("powerboard.update") || p.isOp()) {
-			Bukkit.getScheduler().runTaskAsynchronously(pl, () -> {
-				if(Updater.checkVersion()) {
-					if(pl.getConfig().getBoolean("update.notification")) {
-						p.sendMessage(PowerBoard.pr+ChatColor.RED+"A new update is available ("+ChatColor.AQUA+"v"+Updater.getVersion()+ChatColor.RED+")! Installed version: "+ChatColor.AQUA+"v"+pl.getDescription().getVersion());
+			Bukkit.getScheduler().runTaskAsynchronously(instance, () -> {
+				if(updater.isUpdateAvailable()) {
+					if(updater.infoMessageEnabled()) {
+						p.sendMessage(PowerBoard.pr+ChatColor.RED+"A new update is available ("+ChatColor.AQUA+"v"+updater.getLatestVersion()+ChatColor.RED+")! Installed version: "+ChatColor.AQUA+"v"+updater.getCurrentVersion());
 						p.sendMessage(PowerBoard.pr+ChatColor.RED+"You can download the newest version here: https://www.spigotmc.org/resources/powerboard-scoreboard-tablist-prefix-chat-animated.73854/");
 					}
 				}
 			});
 		}
 		// Set a new scoreboard for the player to prevent bugs
-		if((pl.getConfig().getBoolean("tablist.ranks") || pl.getConfig().getBoolean("scoreboard")) && !pl.getConfig().getBoolean("scoreboard-advanced-settings.use-existing-scoreboard")) {
+		if((instance.getConfig().getBoolean("tablist.ranks") || instance.getConfig().getBoolean("scoreboard"))
+				&& !instance.getConfig().getBoolean("scoreboard-advanced-settings.use-existing-scoreboard")) {
 			p.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
 		}
 		
-		Bukkit.getScheduler().runTaskLaterAsynchronously(pl, () -> {
+		Bukkit.getScheduler().runTaskLaterAsynchronously(instance, () -> {
 			// Register Teams if chat ranks or tablist ranks are used
-			if(pl.getConfig().getBoolean("chat.ranks") || pl.getConfig().getBoolean("tablist.ranks"))
+			if(instance.getConfig().getBoolean("chat.ranks") || instance.getConfig().getBoolean("tablist.ranks"))
 				if(Teams.get(p) == null) {
 					RankManager.register(p);
-					if(pl.getConfig().getBoolean("tablist.ranks"))
+					if(instance.getConfig().getBoolean("tablist.ranks"))
 						RankManager.setTablistRanks(p);
 				}
 
-			if(pl.getConfig().getBoolean("scoreboard"))
+			if(instance.getConfig().getBoolean("scoreboard"))
 				ScoreboardPlayer.setScoreboard(p, false, null);
 
-			if(pl.getConfig().getBoolean("tablist.text"))
+			if(instance.getConfig().getBoolean("tablist.text"))
 				TablistPlayer.addPlayer(p, null);
 
 		}, 3);

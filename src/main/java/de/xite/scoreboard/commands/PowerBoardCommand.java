@@ -16,11 +16,13 @@ import de.xite.scoreboard.utils.Updater;
 import net.md_5.bungee.api.ChatColor;
 
 public class PowerBoardCommand implements CommandExecutor, TabCompleter {
-	String designLine = PowerBoard.pr+ChatColor.GRAY+"X"+ChatColor.YELLOW+""+ChatColor.STRIKETHROUGH+"-----"+ChatColor.GOLD+"PowerBoard"+ChatColor.YELLOW+""+ChatColor.STRIKETHROUGH+"-----"+ChatColor.GRAY+"X";
-	// String designLine = PowerBoard.pr+"§7X§e§m-----§6Scoreboard§e§m-----§7X";
+	private static final PowerBoard instance = PowerBoard.getInstance();
+	private static final Updater updater = PowerBoard.getUpdater();
+	private static final String permPrefix = PowerBoard.getPermissionPrefix();
 
-	// TODO: 03/06/2023 Remove this
-	PowerBoard pl = PowerBoard.pl;
+	private static final String designLine = PowerBoard.pr+ChatColor.GRAY+"X"+ChatColor.YELLOW+""+ChatColor.STRIKETHROUGH+"-----"+ChatColor.GOLD+"PowerBoard"+ChatColor.YELLOW+""+ChatColor.STRIKETHROUGH+"-----"+ChatColor.GRAY+"X";
+
+	// String designLine = PowerBoard.pr+"§7X§e§m-----§6Scoreboard§e§m-----§7X";
 	
 	@Override
 	public boolean onCommand(CommandSender s, Command cmd, String arg2, String[] args) {
@@ -28,9 +30,9 @@ public class PowerBoardCommand implements CommandExecutor, TabCompleter {
 			// PowerBoard info
 
 			s.sendMessage(designLine);
-			s.sendMessage(PowerBoard.pr+ChatColor.YELLOW+"Installed version: "+ChatColor.DARK_AQUA+"v"+PowerBoard.pl.getDescription().getVersion());
-			s.sendMessage(PowerBoard.pr+ChatColor.YELLOW+"Newest version: "+ChatColor.DARK_AQUA+"v"+Updater.getVersion());
-			s.sendMessage(PowerBoard.pr+ChatColor.YELLOW+"Author: "+ChatColor.DARK_AQUA+"Xitee");
+			s.sendMessage(PowerBoard.pr+ChatColor.YELLOW+"Installed version: "+ChatColor.DARK_AQUA+"v"+updater.getCurrentVersion());
+			s.sendMessage(PowerBoard.pr+ChatColor.YELLOW+"Newest version: "+ChatColor.DARK_AQUA+"v"+updater.getLatestVersion());
+			s.sendMessage(PowerBoard.pr+ChatColor.YELLOW+"Author: "+ChatColor.DARK_AQUA+instance.getDescription().getAuthors());
 			s.sendMessage(designLine);
 
 			return true;
@@ -44,11 +46,11 @@ public class PowerBoardCommand implements CommandExecutor, TabCompleter {
 			}
 
 			// check if sender has permission for this command
-			if(!checkPermission(s, "powerboard.toggle.scoreboard"))
+			if(!checkPermission(s, permPrefix+"toggle.scoreboard"))
 				return true;
 
 			// check if the scoreboard is enabled before trying to toggle it
-			if(!pl.getConfig().getBoolean("scoreboard")) {
+			if(!instance.getConfig().getBoolean("scoreboard")) {
 				s.sendMessage(PowerBoard.pr+ChatColor.RED+"Sorry, but the scoreboard is disabled on this server.");
 				return true;
 			}
@@ -69,7 +71,7 @@ public class PowerBoardCommand implements CommandExecutor, TabCompleter {
 			// PowerBoard reload
 
 			// check if sender has permission for this command
-			if(!checkPermission(s, "powerboard.reload"))
+			if(!checkPermission(s, permPrefix+"reload"))
 				return true;
 
 			// reload PB
@@ -78,7 +80,7 @@ public class PowerBoardCommand implements CommandExecutor, TabCompleter {
 			return true;
 		}else if((args.length == 1 || args.length == 2) && args[0].equalsIgnoreCase("update")) {
 			// PowerBoard update (download newest jar)
-			if(!checkPermission(s, "powerboard.update"))
+			if(!checkPermission(s, permPrefix+"update"))
 				return true;
 
 			if(args.length == 1) {
@@ -92,7 +94,7 @@ public class PowerBoardCommand implements CommandExecutor, TabCompleter {
 				s.sendMessage(PowerBoard.pr+ChatColor.GREEN+"Downloading the newest version...");
 
 				if(args[1].equalsIgnoreCase("confirm")) {
-					if(Updater.downloadFile(false)) {
+					if(updater.downloadFile(false)) {
 						s.sendMessage(PowerBoard.pr+ChatColor.GREEN+"Download finished. Please restart your server as soon as possible!");
 					}else {
 						s.sendMessage(PowerBoard.pr+ChatColor.RED+"Download failed! Please try it later again. More infos are available in the console.");
@@ -102,7 +104,7 @@ public class PowerBoardCommand implements CommandExecutor, TabCompleter {
 				}
 
 				if(args[1].equalsIgnoreCase("force")) {
-					if(Updater.downloadFile(true)) {
+					if(updater.downloadFile(true)) {
 						s.sendMessage(PowerBoard.pr+ChatColor.GREEN+"Download finished. Please restart your server as soon as possible!");
 					}else {
 						s.sendMessage(PowerBoard.pr+ChatColor.RED+"Sorry, force update did not work. Please manually update the plugin.");
@@ -118,7 +120,7 @@ public class PowerBoardCommand implements CommandExecutor, TabCompleter {
 			// scoreboard debug (temporarily enable debug until next restart)
 
 			// check if sender has permission for this command
-			if(!checkPermission(s, "powerboard.debug"))
+			if(!checkPermission(s, permPrefix+".debug"))
 				return true;
 
 			PowerBoard.debug = !PowerBoard.debug;
@@ -140,16 +142,16 @@ public class PowerBoardCommand implements CommandExecutor, TabCompleter {
 		s.sendMessage(designLine);
 		s.sendMessage(PowerBoard.pr+ChatColor.RED+"/pb info "+ChatColor.DARK_GRAY+"- "+ChatColor.GRAY+"Shows all infos about the plugin.");
 
-		if(isPlayer && s.hasPermission("powerboard.toggle.scoreboard"))
+		if(isPlayer && s.hasPermission(permPrefix+"toggle.scoreboard"))
 			s.sendMessage(PowerBoard.pr+ChatColor.RED+"/pb toggle "+ChatColor.DARK_GRAY+"- "+ChatColor.GRAY+"Toggle the scoreboard.");
 
-		if(s.hasPermission("powerboard.reload"))
+		if(s.hasPermission(permPrefix+"reload"))
 			s.sendMessage(PowerBoard.pr+ChatColor.RED+"/pb reload "+ChatColor.DARK_GRAY+"- "+ChatColor.GRAY+"Reload all configs.");
 
-		if(s.hasPermission("powerboard.update"))
+		if(s.hasPermission(permPrefix+"update"))
 			s.sendMessage(PowerBoard.pr+ChatColor.RED+"/pb update "+ChatColor.DARK_GRAY+"- "+ChatColor.GRAY+"Download the newest version.");
 
-		if(s.hasPermission("powerboard.debug"))
+		if(s.hasPermission(permPrefix+"debug"))
 			s.sendMessage(PowerBoard.pr+ChatColor.RED+"/pb debug "+ChatColor.DARK_GRAY+"- "+ChatColor.GRAY+"Toggle the debug (temporarily).");
 
 		s.sendMessage(designLine);
@@ -171,16 +173,16 @@ public class PowerBoardCommand implements CommandExecutor, TabCompleter {
 		if(args.length == 1) {
 			list.add("info");
 
-			if(isPlayer && s.hasPermission("powerboard.toggle.scoreboard"))
+			if(isPlayer && s.hasPermission(permPrefix+"toggle.scoreboard"))
 				list.add("toggle");
 
-			if(s.hasPermission("powerboard.reload"))
+			if(s.hasPermission(permPrefix+"reload"))
 				list.add("reload");
 
-			if(s.hasPermission("powerboard.update"))
+			if(s.hasPermission(permPrefix+"update"))
 				list.add("update");
 
-			if(s.hasPermission("powerboard.debug"))
+			if(s.hasPermission(permPrefix+"debug"))
 				list.add("debug");
 		}
 		return list;

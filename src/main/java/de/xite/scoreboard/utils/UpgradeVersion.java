@@ -3,36 +3,27 @@ package de.xite.scoreboard.utils;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
-import org.bukkit.Bukkit;
+import de.xite.scoreboard.main.Config;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import de.xite.scoreboard.main.PowerBoard;
 
 public class UpgradeVersion {
-	static PowerBoard pl = PowerBoard.pl;
-	public static void rename() {
-		File newFolder = new File(PowerBoard.pluginfolder);
-		File oldFolder = new File("plugins/Scoreboard");
-		if(!newFolder.exists() && oldFolder.exists()) {
-			oldFolder.renameTo(newFolder);
-		}
-		File jarFile = new File("plugins/Scoreboard.jar");
-		if(jarFile.exists()) {
-			Bukkit.getPluginManager().disablePlugin(Bukkit.getPluginManager().getPlugin("Scoreboard"));
-			jarFile.delete();
-		}
-	}
+	private final static PowerBoard instance = PowerBoard.getInstance();
+	private final static Logger logger = PowerBoard.getInstance().getLogger();
+	private final static String configFolder = Config.getConfigFolder();
 	
 	public static void updateMultipleScoreboards() {
-		if(!new File(PowerBoard.pluginfolder+"/scoreboard.yml").exists())
+		if(!new File(configFolder + "/scoreboard.yml").exists())
 			return;
 		
-		pl.getLogger().info("Upgrading multiple scoreboard support.");
-		pl.getLogger().info("Moving files..");
+		logger.info("Upgrading multiple scoreboard support.");
+		logger.info("Moving files..");
 		
-		File oldFile = new File(PowerBoard.pluginfolder+"/scoreboard.yml");
-		File file = new File(PowerBoard.pluginfolder+"/scoreboards/scoreboard.yml");
+		File oldFile = new File(configFolder + "/scoreboard.yml");
+		File file = new File(configFolder + "/scoreboards/scoreboard.yml");
 		oldFile.renameTo(file);
 		
 		YamlConfiguration cfg = YamlConfiguration.loadConfiguration(file);
@@ -50,21 +41,21 @@ public class UpgradeVersion {
 			cfg.save(file);
 		} catch (IOException e) {e.printStackTrace();}
 		
-		pl.getLogger().info("----- Upgrade successful! -----");
-		pl.getLogger().info("Done! The scoreboard.yml file is now located in "+file.getPath()+". To add new scoreboards, just copy the scoreboard.yml and rename it to what you want. "
+		logger.info("----- Upgrade successful! -----");
+		logger.info("Done! The scoreboard.yml file is now located in "+file.getPath()+". To add new scoreboards, just copy the scoreboard.yml and rename it to what you want. "
 				+ "The filename of the copied scoreboard will be the scoreboard name. To set the conditions when the scoreboard should be applied, open the file and scroll down to the end. "
 				+ "There is a new option where you can set the conditions.");
-		pl.getLogger().info("----- Upgrade successful! -----");
+		logger.info("----- Upgrade successful! -----");
 	}
 	public static void upgradeDoubleTabConfig() {
 		// Migrate from tablist_footer.yml and tablist_header.yml 
-		File file = new File(PowerBoard.pluginfolder+"/tablist.yml");
-		File folder = new File(PowerBoard.pluginfolder);
+		File file = new File(configFolder + "/tablist.yml");
+		File folder = new File(configFolder);
 		File old_header = new File(folder, "tablist_header.yml");
 		File old_footer = new File(folder, "tablist_footer.yml");
 		if(old_header.exists() && old_footer.exists() && !file.exists()) {
 			YamlConfiguration cfg = YamlConfiguration.loadConfiguration(file);
-			pl.getLogger().warning("Old files detected - starting migration");
+			logger.warning("Old files detected - starting migration");
 			try {
 				file.createNewFile();
 				cfg.options().header("Here you can customize the tablist.\n"
@@ -78,8 +69,8 @@ public class UpgradeVersion {
 						cfg.set("header."+i+".speed", YamlConfiguration.loadConfiguration(old_header).getInt(i+".wait")*20);
 						cfg.set("header."+i+".lines", YamlConfiguration.loadConfiguration(old_header).getStringList(i+".lines"));
 					}catch (Exception e) {
-						PowerBoard.pl.getLogger().severe("Wrong tablist-header entry!");
-						PowerBoard.pl.getLogger().severe("Error in line: "+line);
+						logger.severe("Wrong tablist-header entry!");
+						logger.severe("Error in line: "+line);
 					}
 				}
 				//Footer
@@ -89,20 +80,20 @@ public class UpgradeVersion {
 						cfg.set("footer."+i+".speed", YamlConfiguration.loadConfiguration(old_footer).getInt(i+".wait")*20);
 						cfg.set("footer."+i+".lines", YamlConfiguration.loadConfiguration(old_footer).getStringList(i+".lines"));
 					}catch (Exception e) {
-						PowerBoard.pl.getLogger().severe("Wrong tablist-footer entry!");
-						PowerBoard.pl.getLogger().severe("Error in line: "+line);
+						logger.severe("Wrong tablist-footer entry!");
+						logger.severe("Error in line: "+line);
 					}
 				}
 				
 			} catch (IOException e) {
 				e.printStackTrace();
-				pl.getLogger().severe("Could not create the tablist.yml file. Has the Plugin/Server write permissions?");
+				logger.severe("Could not create the tablist.yml file. Has the Plugin/Server write permissions?");
 			}
 			try {
 				cfg.save(file);
 				old_header.delete();
 				old_footer.delete();
-				pl.getLogger().info("Migration successful!");
+				logger.info("Migration successful!");
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
@@ -110,7 +101,7 @@ public class UpgradeVersion {
 	}
 	public static void updateTitelTitle(YamlConfiguration cfg, File f) {
 		if(cfg.contains("titel.titles")) {
-			PowerBoard.pl.getLogger().info("Migrating from \"titel\" (german) to \"title\"...");
+			logger.info("Migrating from \"titel\" (german) to \"title\"...");
 			cfg.set("title.titles", cfg.getStringList("titel.titles"));
 			cfg.set("title.speed", cfg.getInt("titel.speed"));
 			
@@ -125,7 +116,7 @@ public class UpgradeVersion {
 				e.printStackTrace();
 			}
 			
-			PowerBoard.pl.getLogger().info("Finished migrating!");
+			logger.info("Finished migrating!");
 		}
 	}
 }

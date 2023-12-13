@@ -25,30 +25,33 @@ import net.md_5.bungee.api.ChatColor;
 import java.util.logging.Logger;
 
 public class PowerBoard extends JavaPlugin {
-	public static PowerBoard pl;
-	
-	public static String pluginfolder = "plugins/PowerBoard"; // plugin folder
+	public static PowerBoard pl; // TODO make private
+	private final Logger logger = PowerBoard.pl.getLogger();
+	public static boolean aboveMC_1_13 = false; // TODO move to updater
+	private static final String permissionPrefix = "powerboard.";
+	private static final int spigotMCPluginID = 73854;
+
+	private static Updater updater;
+
 	public static String pr = ChatColor.GRAY+"["+ChatColor.YELLOW+"PowerBoard"+ChatColor.GRAY+"] "; // prefix
-	
-	public static boolean aboveMC_1_13 = false;
+
 	public static boolean debug = false;
 	
 	@Override
 	public void onEnable() {
 		// Initialize variables
-		pl = this;
-		Logger logger = getLogger();
+
 		logger.info("--------------------------------------------------");
 		logger.info("--------------- Loading PowerBoard ---------------");
+
+		pl = this;
+		updater = new Updater(spigotMCPluginID);
 		
 		// In 1.13+ a lot of things have changed. For example 128 Chars in the scoreboard instead of 32
 		if(Version.CURRENT.isAtLeast(Version.v1_13))
 			aboveMC_1_13 = true;
 
 		VersionSpecific.init();
-
-		// Migrate from old versions:
-		UpgradeVersion.rename(); // Rename Scoreboard to PowerBoard - migration will be removed on v3.7
 		
 		// Load the config - disable plugin if failed
 		if(!Config.loadConfig()) {
@@ -69,8 +72,8 @@ public class PowerBoard extends JavaPlugin {
 	    
 		// Check for updates
 		Bukkit.getScheduler().runTaskAsynchronously(pl, () -> {
-			if(Updater.checkVersion()) {
-				pl.getLogger().info("-> A new version (v."+Updater.getVersion()+") is available! Your version: "+pl.getDescription().getVersion());
+			if(updater.isUpdateAvailable()) {
+				pl.getLogger().info("-> A new version (v."+updater.getLatestVersion()+") is available! Your version: "+updater.getCurrentVersion());
 				pl.getLogger().info("-> Update me! :)");
 			}
 		});
@@ -139,7 +142,19 @@ public class PowerBoard extends JavaPlugin {
 
 		// Download the newest version if update is available & auto updater is enabled
 		if(pl.getConfig().getBoolean("update.autoupdater"))
-			if(Updater.checkVersion())
-				Updater.downloadFile(true);
+			if(updater.isUpdateAvailable())
+				updater.downloadFile(true);
+	}
+
+	public static PowerBoard getInstance() {
+		return pl;
+	}
+
+	public static Updater getUpdater() {
+		return updater;
+	}
+
+	public static String getPermissionPrefix() {
+		return permissionPrefix;
 	}
 }

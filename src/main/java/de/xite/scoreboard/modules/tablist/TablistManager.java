@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
-import de.xite.scoreboard.modules.board.ScoreboardManager;
+import de.xite.scoreboard.main.Config;
 import de.xite.scoreboard.versions.VersionSpecific;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -18,7 +18,7 @@ import de.xite.scoreboard.utils.Placeholders;
 import de.xite.scoreboard.utils.SelfCheck;
 
 public class TablistManager {
-	private static PowerBoard pl = PowerBoard.pl;
+	private static final PowerBoard instance = PowerBoard.getInstance();
 	// All registered scoreboards
 	public static HashMap<String, TablistManager> tablists = new HashMap<>();
 	
@@ -47,7 +47,7 @@ public class TablistManager {
 		this.name = name;
 		
 		// Get the config
-		File f = new File(PowerBoard.pluginfolder+"/"+name+".yml");
+		File f = new File(Config.getConfigFolder() + "/"+name+".yml");
 		if(!f.exists()) {
 			PowerBoard.pl.getLogger().severe("Could not load tablist named "+name+", because the config file does not exists!");
 			return;
@@ -124,7 +124,7 @@ public class TablistManager {
 			}, 20, interval)
 		);
 		if(PowerBoard.debug)
-			pl.getLogger().info("Tablist '"+name+"' loaded.");
+			instance.getLogger().info("Tablist '"+name+"' loaded.");
 	}
 
 
@@ -134,14 +134,14 @@ public class TablistManager {
 		
 		if(speed < 0 || speed >= 9999) {
 			if(PowerBoard.debug)
-				pl.getLogger().info("Tablist header line "+line+" (Name: "+name+"): no animation needed (speed higher than 9999 or negative)");
+				instance.getLogger().info("Tablist header line "+line+" (Name: "+name+"): no animation needed (speed higher than 9999 or negative)");
 			return false;
 		}else
 			if(PowerBoard.debug)
-				pl.getLogger().info("Tablist header line "+line+" (Name: "+name+"): animation started");
+				instance.getLogger().info("Tablist header line "+line+" (Name: "+name+"): animation started");
 		
 		scheduler.add(
-			Bukkit.getScheduler().runTaskTimerAsynchronously(pl, new Runnable() {
+			Bukkit.getScheduler().runTaskTimerAsynchronously(instance, new Runnable() {
 				int step = 0;
 
 				@Override
@@ -163,14 +163,14 @@ public class TablistManager {
 		
 		if(speed < 0 || speed >= 9999) {
 			if(PowerBoard.debug)
-				pl.getLogger().info("Tablist footer line "+line+" (Name: "+name+"): no animation needed (speed higher than 9999 or negative)");
+				instance.getLogger().info("Tablist footer line "+line+" (Name: "+name+"): no animation needed (speed higher than 9999 or negative)");
 			return false;
 		}else
 			if(PowerBoard.debug)
-				pl.getLogger().info("Tablist footer line "+line+" (Name: "+name+"): animation started");
+				instance.getLogger().info("Tablist footer line "+line+" (Name: "+name+"): animation started");
 		
 		scheduler.add(
-			Bukkit.getScheduler().runTaskTimerAsynchronously(pl, new Runnable() {
+			Bukkit.getScheduler().runTaskTimerAsynchronously(instance, new Runnable() {
 				int step = 0;
 
 				@Override
@@ -196,9 +196,9 @@ public class TablistManager {
 			footer += e.getValue()+"\n";
 
 		// Remove the empty line at the end
-		if(header.length() > 0)
+		if(!header.isEmpty())
 			header = header.substring(0, header.length()-1);
-		if(footer.length() > 0)
+		if(!footer.isEmpty())
 			footer = footer.substring(0, footer.length()-1);
 		
 		// Placeholders
@@ -248,8 +248,8 @@ public class TablistManager {
 		}
 		*/
 
-		TablistManager.get(pl.getConfig().getString("tablist.text-default"));
-		pl.getLogger().info("Registered tablist.");
+		TablistManager.get(instance.getConfig().getString("tablist.text-default"));
+		instance.getLogger().info("Registered tablist.");
 	}
 	
 	public void addPlayer(Player p) {
