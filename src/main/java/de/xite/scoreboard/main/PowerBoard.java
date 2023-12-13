@@ -15,10 +15,9 @@ import de.xite.scoreboard.modules.board.ScoreboardPlayer;
 import de.xite.scoreboard.modules.ranks.RankManager;
 import de.xite.scoreboard.modules.tablist.TablistManager;
 import de.xite.scoreboard.modules.tablist.TablistPlayer;
-import de.xite.scoreboard.utils.TPS;
+import de.xite.scoreboard.utils.TPSCalc;
 import de.xite.scoreboard.utils.Teams;
 import de.xite.scoreboard.utils.Updater;
-import de.xite.scoreboard.utils.UpgradeVersion;
 import de.xite.scoreboard.utils.Version;
 import net.md_5.bungee.api.ChatColor;
 
@@ -26,12 +25,13 @@ import java.util.logging.Logger;
 
 public class PowerBoard extends JavaPlugin {
 	public static PowerBoard pl; // TODO make private
-	private final Logger logger = PowerBoard.pl.getLogger();
-	public static boolean aboveMC_1_13 = false; // TODO move to updater
+	public static PowerBoard instance;
+	private final Logger logger = pl.getLogger();
 	private static final String permissionPrefix = "powerboard.";
 	private static final int spigotMCPluginID = 73854;
 
 	private static Updater updater;
+	private static TPSCalc tpsCalc;
 
 	public static String pr = ChatColor.GRAY+"["+ChatColor.YELLOW+"PowerBoard"+ChatColor.GRAY+"] "; // prefix
 
@@ -39,17 +39,14 @@ public class PowerBoard extends JavaPlugin {
 	
 	@Override
 	public void onEnable() {
-		// Initialize variables
-
 		logger.info("--------------------------------------------------");
 		logger.info("--------------- Loading PowerBoard ---------------");
 
+		// Initialize variables
 		pl = this;
+		instance = this;
 		updater = new Updater(spigotMCPluginID);
-		
-		// In 1.13+ a lot of things have changed. For example 128 Chars in the scoreboard instead of 32
-		if(Version.CURRENT.isAtLeast(Version.v1_13))
-			aboveMC_1_13 = true;
+		tpsCalc = new TPSCalc();
 
 		VersionSpecific.init();
 		
@@ -65,10 +62,6 @@ public class PowerBoard extends JavaPlugin {
 		
 		// Load all external plugin APIs
 		ExternalPlugins.initializePlugins();
-		
-		// Start TPS calculator
-		Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(this, new TPS(), 100L, 1L);
-		TPS.start();
 	    
 		// Check for updates
 		Bukkit.getScheduler().runTaskAsynchronously(pl, () -> {
@@ -147,11 +140,15 @@ public class PowerBoard extends JavaPlugin {
 	}
 
 	public static PowerBoard getInstance() {
-		return pl;
+		return instance;
 	}
 
 	public static Updater getUpdater() {
 		return updater;
+	}
+
+	public static TPSCalc getTPSCalc() {
+		return tpsCalc;
 	}
 
 	public static String getPermissionPrefix() {

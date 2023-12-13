@@ -3,7 +3,6 @@ package de.xite.scoreboard.depend;
 import org.bukkit.entity.Player;
 
 import de.xite.scoreboard.main.PowerBoard;
-import de.xite.scoreboard.utils.TPS;
 import de.xite.scoreboard.utils.Teams;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 
@@ -39,7 +38,7 @@ public class PlaceholderAPIExpansion extends PlaceholderExpansion {
     @Override
     public String onPlaceholderRequest(Player p, String placeholder) {
 	    if(placeholder.equalsIgnoreCase("tps"))
-		    return String.valueOf(TPS.getTPS());
+		    return String.valueOf(PowerBoard.getTPSCalc().getCurrentTPS());
 
 	    if(playerPlaceholders.contains(placeholder)) {
 		    if(p == null)

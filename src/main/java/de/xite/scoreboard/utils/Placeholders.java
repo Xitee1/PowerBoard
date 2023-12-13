@@ -76,7 +76,7 @@ public class Placeholders {
 		// TPS
 		ph = "%server_tps%";
 		if(s.contains(ph)) {
-			s = s.replace(ph, String.valueOf(TPS.getTPS()));
+			s = s.replace(ph, String.valueOf(PowerBoard.getTPSCalc().getCurrentTPS()));
 		}
 		
 		// Players on server

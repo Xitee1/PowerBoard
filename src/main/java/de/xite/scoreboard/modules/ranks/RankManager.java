@@ -3,6 +3,7 @@ package de.xite.scoreboard.modules.ranks;
 import java.util.ArrayList;
 
 import de.xite.scoreboard.depend.LuckPermsAPI;
+import de.xite.scoreboard.utils.Version;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -114,7 +115,7 @@ public class RankManager {
 					
 					setPrefixSuffix(p, t, teams.getPrefix(), teams.getSuffix(), teams.getPlayerListName());
 					
-					if(PowerBoard.aboveMC_1_13 && nameColor != null)
+					if(Version.isAbove_1_13() && nameColor != null)
 						t.setColor(nameColor);
 						
 					t.addEntry(all.getName());
@@ -143,7 +144,7 @@ public class RankManager {
 				
 				setPrefixSuffix(p, t, teams.getPrefix(), teams.getSuffix(), teams.getPlayerListName());
 				
-				if(nameColor != null && PowerBoard.aboveMC_1_13)
+				if(nameColor != null && Version.isAbove_1_13())
 					t.setColor(nameColor);
 				
 				t.addEntry(p.getName());
@@ -190,7 +191,7 @@ public class RankManager {
 					
 					setPrefixSuffix(p, t, teams.getPrefix(), teams.getSuffix(), teams.getPlayerListName());
 					
-					if(nameColor != null && PowerBoard.aboveMC_1_13)
+					if(nameColor != null && Version.isAbove_1_13())
 						t.setColor(nameColor);
 					t.addEntry(p.getName());
 				}

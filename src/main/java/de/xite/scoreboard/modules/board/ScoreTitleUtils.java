@@ -2,6 +2,7 @@ package de.xite.scoreboard.modules.board;
 
 import java.util.ArrayList;
 
+import de.xite.scoreboard.utils.Version;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
@@ -96,7 +97,7 @@ public class ScoreTitleUtils {
 			
 			// ---- Set all scores ---- //
 			int limit = 16;
-			if(PowerBoard.aboveMC_1_13) // In version 1.13 you can use up to 64 chars in prefix and suffix
+			if(Version.isAbove_1_13()) // In version 1.13 you can use up to 64 chars in prefix and suffix
 				limit = 64;
 
 			String[] s = getScorePrefixSuffix(score, limit);

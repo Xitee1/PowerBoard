@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Objects;
 
+import de.xite.scoreboard.utils.Version;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
@@ -52,7 +53,7 @@ public class ScoreboardPlayer {
 		
 		Objective obj = board.getObjective(DisplaySlot.SIDEBAR);
 		if(obj == null) {
-			if(PowerBoard.aboveMC_1_13) {
+			if(Version.isAbove_1_13()) {
 				obj = board.registerNewObjective("aaa", "bbb", "PowerBoard");
 			}else
 				obj = board.registerNewObjective("aaa", "bbb");
