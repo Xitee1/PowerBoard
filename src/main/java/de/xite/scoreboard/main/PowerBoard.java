@@ -24,8 +24,8 @@ import java.util.logging.Logger;
 
 public class PowerBoard extends JavaPlugin {
 	public static PowerBoard pl; // TODO make private
-	public static PowerBoard instance;
-	private final Logger logger = pl.getLogger();
+	private static PowerBoard instance;
+	private static Logger logger;
 	private static final String permissionPrefix = "powerboard.";
 	private static final int spigotMCPluginID = 73854;
 
@@ -38,6 +38,7 @@ public class PowerBoard extends JavaPlugin {
 	
 	@Override
 	public void onEnable() {
+		logger = this.getLogger();
 		logger.info("--------------------------------------------------");
 		logger.info("--------------- Loading PowerBoard ---------------");
 
