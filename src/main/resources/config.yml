@@ -47,8 +47,8 @@ ranks:
   options:
     show-prefix-in-tab: true # In case you have another plugin for the tablist prefix.
     show-suffix-in-tab: true
-    use-player-list-name: false # This allows you to use hex colors for the player name. It also disables the prefix/suffix above the player's head.
-    try-player-head-with-pln: false # Only active if 'use-player-list-name' is true. This option shows the prefix/suffix above the player's head again if it doesn't exceed the char limit.
+    use-player-list-name: false # This allows you to use hex colors for the players name. As a side-effect, it disables the prefix/suffix above the player's head.
+    try-player-head-with-pln: false # Show the prefix/suffix even if the option 'use-player-list-name' is enabled if possible.
   
   # If you want to sync all your prefixes with all your servers or just want to use the prefixes that you have set for the groups in
   # LuckPerms, enable this setting. But make sure that you have configured the LuckPerms groups properly! More infos are in the wiki.
