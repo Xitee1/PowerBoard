@@ -26,17 +26,19 @@ public class PowerBoardCommand implements CommandExecutor, TabCompleter {
 	
 	@Override
 	public boolean onCommand(CommandSender s, Command cmd, String arg2, String[] args) {
-		if(args.length == 1 && args[0].equalsIgnoreCase("info")) {
+		int len = args.length;
+
+		if(len == 1 && args[0].equalsIgnoreCase("info")) {
 			// PowerBoard info
 
 			s.sendMessage(designLine);
 			s.sendMessage(PowerBoard.pr+ChatColor.YELLOW+"Installed version: "+ChatColor.DARK_AQUA+"v"+updater.getCurrentVersion());
 			s.sendMessage(PowerBoard.pr+ChatColor.YELLOW+"Newest version: "+ChatColor.DARK_AQUA+"v"+updater.getLatestVersion());
-			s.sendMessage(PowerBoard.pr+ChatColor.YELLOW+"Author: "+ChatColor.DARK_AQUA+instance.getDescription().getAuthors());
+			s.sendMessage(PowerBoard.pr+ChatColor.YELLOW+"Author: "+ChatColor.DARK_AQUA+String.join(",", instance.getDescription().getAuthors()));
 			s.sendMessage(designLine);
 
 			return true;
-		} else if((args.length == 1 || args.length == 2) && args[0].equalsIgnoreCase("toggle")) {
+		} else if(len == 1 && args[0].equalsIgnoreCase("toggle")) {
 			// scoreboard toggle
 
 			// check if sender is a player
@@ -46,7 +48,7 @@ public class PowerBoardCommand implements CommandExecutor, TabCompleter {
 			}
 
 			// check if sender has permission for this command
-			if(checkPermission(s, permPrefix + "toggle.scoreboard"))
+			if(!checkPermission(s, permPrefix + "toggle.scoreboard"))
 				return true;
 
 			// check if the scoreboard is enabled before trying to toggle it
@@ -67,30 +69,30 @@ public class PowerBoardCommand implements CommandExecutor, TabCompleter {
 			}
 
 			return true;
-		}else if(args.length == 1 && (args[0].equalsIgnoreCase("reload") || args[0].equalsIgnoreCase("rl"))) {
+		}else if(len == 1 && (args[0].equalsIgnoreCase("reload") || args[0].equalsIgnoreCase("rl"))) {
 			// PowerBoard reload
 
 			// check if sender has permission for this command
-			if(checkPermission(s, permPrefix + "reload"))
+			if(!checkPermission(s, permPrefix + "reload"))
 				return true;
 
 			// reload PB
 			Config.reloadConfigs(s);
 
 			return true;
-		}else if((args.length == 1 || args.length == 2) && args[0].equalsIgnoreCase("update")) {
+		}else if((len == 1 || len == 2) && args[0].equalsIgnoreCase("update")) {
 			// PowerBoard update (download newest jar)
-			if(checkPermission(s, permPrefix + "update"))
+			if(!checkPermission(s, permPrefix + "update"))
 				return true;
 
-			if(args.length == 1) {
+			if(len == 1) {
 				s.sendMessage(PowerBoard.pr+ChatColor.RED+"Warning: After successful update, you have to restart your server as soon as possible!" +
 						"This command also can cause glitches. It is recommended to update the plugin manually."
 						+ "Please type "+ChatColor.YELLOW+"/"+cmd.getName()+" update confirm"+ChatColor.RED+" to confirm.");
 				return true;
 			}
 
-			if(args.length == 2) {
+			if(len == 2) {
 				s.sendMessage(PowerBoard.pr+ChatColor.GREEN+"Downloading the newest version...");
 
 				if(args[1].equalsIgnoreCase("confirm")) {
@@ -116,11 +118,11 @@ public class PowerBoardCommand implements CommandExecutor, TabCompleter {
 			}
 
 			return true;
-		}else if(args.length == 1 && args[0].equalsIgnoreCase("debug")) {
+		}else if(len == 1 && args[0].equalsIgnoreCase("debug")) {
 			// scoreboard debug (temporarily enable debug until next restart)
 
 			// check if sender has permission for this command
-			if(checkPermission(s, permPrefix + ".debug"))
+			if(!checkPermission(s, permPrefix + ".debug"))
 				return true;
 
 			PowerBoard.debug = !PowerBoard.debug;
