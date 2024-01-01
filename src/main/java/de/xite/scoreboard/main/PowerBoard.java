@@ -32,7 +32,8 @@ public class PowerBoard extends JavaPlugin {
 	private static Updater updater;
 	private static TPSCalc tpsCalc;
 
-	public static String pr = ChatColor.GRAY+"["+ChatColor.YELLOW+"PowerBoard"+ChatColor.GRAY+"] "; // prefix
+	public final static String pr = ChatColor.GRAY+"["+ChatColor.YELLOW+"PowerBoard"+ChatColor.GRAY+"] "; // prefix
+	public final static String scoreTeamPrefix = "pb-sc";
 
 	public static boolean debug = false;
 	

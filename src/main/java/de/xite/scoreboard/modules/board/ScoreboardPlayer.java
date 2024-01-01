@@ -122,7 +122,7 @@ public class ScoreboardPlayer {
 		}
 		
 		for(Team t : p.getScoreboard().getTeams()) {
-			if(t.getName().startsWith("score-"))
+			if(t.getName().startsWith(PowerBoard.scoreTeamPrefix))
 				t.unregister();
 		}
 		

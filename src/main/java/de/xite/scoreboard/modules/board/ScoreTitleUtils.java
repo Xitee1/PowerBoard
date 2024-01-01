@@ -82,11 +82,11 @@ public class ScoreTitleUtils {
 				colorcode = "§e";
 		}
 		// If the scoreboard switches too fast (especially blacklisted) sometimes there will this error in the console: IllegalStateException: Unregistered scoreboard component
-		// We can just ignore it because it doesn't seem like it has no effect other than that this error is beeing displayed.
+		// We can just ignore it because it seems like it has no effect on functionality.
 		try {
-			Team team = board.getTeam("score-"+scoreId);
+			Team team = board.getTeam(PowerBoard.scoreTeamPrefix+scoreId);
 			if(team == null) {
-				team = board.registerNewTeam("score-"+scoreId);
+				team = board.registerNewTeam(PowerBoard.scoreTeamPrefix+scoreId);
 				team.addEntry(colorcode);
 				obj.getScore(colorcode).setScore(scoreId);
 			}
