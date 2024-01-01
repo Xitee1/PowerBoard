@@ -45,8 +45,11 @@ public class Placeholders {
 		for(CustomPlaceholders ph : ph) {
 			String output = ph.replace(p, s);
 			if(output == null) {
-				pl.getLogger().severe("Output of CustomPlaceholders#replace cannot be null!" +
-						"This is NOT a bug in PowerBoard! It is caused by a CustomPlaceholder which was registered from another plugin.");
+				PowerBoard.getRateLimitedLogger().addSevere(
+						"Output of CustomPlaceholders#replace cannot be null! This is NOT a bug in PowerBoard! " +
+								"It is caused by a CustomPlaceholder that was registered by another plugin.",
+						true
+				);
 			}else
 				s = output;
 		}
@@ -57,9 +60,12 @@ public class Placeholders {
 			try {
 				s = PlaceholderAPI.setPlaceholders(p, s);
 			}catch (Exception e) {
-				pl.getLogger().severe("Could not replace PAPI Placeholders in String "+s+". This is NOT a bug of PowerBoard!"
-						+ "Instead it is caused by an external plugin that provides placeholders to PAPI."
-						+ "It just says PowerBoard there, because PB requests these placeholders from PAPI and therefore is the root cause.");
+				PowerBoard.getRateLimitedLogger().addSevere(
+						"Could not replace PAPI Placeholders in String "+s+". This is NOT a bug of PowerBoard!"
+								+ "Instead it is caused by an external plugin that provides placeholders to PAPI."
+								+ "It just says PowerBoard there, because PB requests these placeholders from PAPI and therefore is the root cause.",
+						true
+				);
 				if(PowerBoard.debug) {
 					e.printStackTrace();
 				}
@@ -72,7 +78,10 @@ public class Placeholders {
 			String newPH = ph.getValue();
 			if(s.contains(oldPH)) {
 				s = s.replace(oldPH, newPH);
-				pl.getLogger().warning("You are using deprecated placeholders! Change "+oldPH+" to "+newPH+" - The old placeholders will be removed soon.");
+				PowerBoard.getRateLimitedLogger().addWarn(
+						"You are using deprecated placeholders! Change "+oldPH+" to "+newPH+" - The old placeholders will be removed soon.",
+						true
+				);
 			}
 		}
 		

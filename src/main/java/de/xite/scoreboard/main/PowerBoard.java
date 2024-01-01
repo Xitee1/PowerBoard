@@ -1,5 +1,6 @@
 package de.xite.scoreboard.main;
 
+import de.xite.scoreboard.utils.RateLimitedLogger;
 import de.xite.scoreboard.versions.VersionSpecific;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -29,6 +30,7 @@ public class PowerBoard extends JavaPlugin {
 
 	private static Updater updater;
 	private static TPSCalc tpsCalc;
+	private static RateLimitedLogger rateLimitedLogger;
 
 	public static final String permissionPrefix = "powerboard.";
 	public static final int spigotMCPluginID = 73854;
@@ -48,6 +50,7 @@ public class PowerBoard extends JavaPlugin {
 		instance = this;
 		updater = new Updater(spigotMCPluginID);
 		tpsCalc = new TPSCalc();
+		rateLimitedLogger = new RateLimitedLogger(this);
 
 		VersionSpecific.init();
 		
@@ -150,6 +153,10 @@ public class PowerBoard extends JavaPlugin {
 
 	public static TPSCalc getTPSCalc() {
 		return tpsCalc;
+	}
+
+	public static RateLimitedLogger getRateLimitedLogger() {
+		return rateLimitedLogger;
 	}
 
 	public static String getPermissionPrefix() {
