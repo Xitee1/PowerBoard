@@ -41,12 +41,19 @@ public class Placeholders {
 	};
 	
 	public static String replace(Player p, String s) {
-		// Import placeholders from APIs
-		for(CustomPlaceholders ph : ph)
-			s = ph.replace(p, s);
-		
-		// First replace with PAPI if preferred
-		if(ExternalPlugins.hasPapi && !pl.getConfig().getBoolean("prefer-plugin-placeholders"))
+		// Replace all custom placeholders first
+		for(CustomPlaceholders ph : ph) {
+			String output = ph.replace(p, s);
+			if(output == null) {
+				pl.getLogger().severe("Output of CustomPlaceholders#replace cannot be null!" +
+						"This is NOT a bug in PowerBoard! It is caused by a CustomPlaceholder which was registered from another plugin.");
+			}else
+				s = output;
+		}
+
+		// Replace all PAPI placeholders
+		boolean preferPBPlaceholders = pl.getConfig().getBoolean("prefer-plugin-placeholders");
+		if(!preferPBPlaceholders && ExternalPlugins.hasPapi)
 			try {
 				s = PlaceholderAPI.setPlaceholders(p, s);
 			}catch (Exception e) {
@@ -60,7 +67,6 @@ public class Placeholders {
   			
 		
 		// ---- Deprecated ---- //
-
 		for(Map.Entry<String, String> ph : deprecatedPlaceholders.entrySet()) {
 			String oldPH = ph.getKey();
 			String newPH = ph.getValue();
@@ -70,7 +76,7 @@ public class Placeholders {
 			}
 		}
 		
-		// ---- Placeholders from PowerBoard Plugin ---- //
+		// ---- Placeholders from PowerBoard ---- //
 		String ph;
 
 		// TPS
@@ -260,7 +266,7 @@ public class Placeholders {
   		//s = IridiumColorAPI.process(s);
 
   		// Replace PAPI if plugin preferred
-  		if(ExternalPlugins.hasPapi && pl.getConfig().getBoolean("prefer-plugin-placeholders"))
+  		if(preferPBPlaceholders && ExternalPlugins.hasPapi)
   			s = PlaceholderAPI.setPlaceholders(p, s);
   		
 		return s;
