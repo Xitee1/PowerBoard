@@ -26,14 +26,14 @@ public class PowerBoard extends JavaPlugin {
 	public static PowerBoard pl; // TODO make private
 	private static PowerBoard instance;
 	private static Logger logger;
-	private static final String permissionPrefix = "powerboard.";
-	private static final int spigotMCPluginID = 73854;
 
 	private static Updater updater;
 	private static TPSCalc tpsCalc;
 
-	public final static String pr = ChatColor.GRAY+"["+ChatColor.YELLOW+"PowerBoard"+ChatColor.GRAY+"] "; // prefix
-	public final static String scoreTeamPrefix = "pb-sc";
+	public static final String permissionPrefix = "powerboard.";
+	public static final int spigotMCPluginID = 73854;
+	public static final String pbChatPrefix = ChatColor.GRAY+"["+ChatColor.YELLOW+"PowerBoard"+ChatColor.GRAY+"] "; // prefix
+	public static final String scoreTeamPrefix = "pb-sc";
 
 	public static boolean debug = false;
 	

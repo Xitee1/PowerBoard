@@ -26,8 +26,8 @@ public class JoinQuitListener implements Listener {
 			Bukkit.getScheduler().runTaskAsynchronously(instance, () -> {
 				if(updater.isUpdateAvailable()) {
 					if(updater.infoMessageEnabled()) {
-						p.sendMessage(PowerBoard.pr+ChatColor.RED+"A new update is available ("+ChatColor.AQUA+"v"+updater.getLatestVersion()+ChatColor.RED+")! Installed version: "+ChatColor.AQUA+"v"+updater.getCurrentVersion());
-						p.sendMessage(PowerBoard.pr+ChatColor.RED+"You can download the newest version here: https://www.spigotmc.org/resources/powerboard-scoreboard-tablist-prefix-chat-animated.73854/");
+						p.sendMessage(PowerBoard.pbChatPrefix +ChatColor.RED+"A new update is available ("+ChatColor.AQUA+"v"+updater.getLatestVersion()+ChatColor.RED+")! Installed version: "+ChatColor.AQUA+"v"+updater.getCurrentVersion());
+						p.sendMessage(PowerBoard.pbChatPrefix +ChatColor.RED+"You can download the newest version here: https://www.spigotmc.org/resources/powerboard-scoreboard-tablist-prefix-chat-animated.73854/");
 					}
 				}
 			});

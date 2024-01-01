@@ -136,7 +136,7 @@ public class Config {
 		Bukkit.getScheduler().runTaskAsynchronously(pl, () -> {
 			// Reload delay
 			if(reloadDelay) {
-				s.sendMessage(PowerBoard.pr+ChatColor.RED+"Please wait 2 seconds before you reload again.");
+				s.sendMessage(PowerBoard.pbChatPrefix +ChatColor.RED+"Please wait 2 seconds before you reload again.");
 				return;
 			}
 			reloadDelay = true;
@@ -189,14 +189,14 @@ public class Config {
 
 			sendConfigReloadMessage(s, ChatColor.GREEN+"Plugin reloaded!");
 			if(s instanceof Player)
-				s.sendMessage(PowerBoard.pr+ChatColor.DARK_GRAY+"Possible errors aren't displayed here. You should check the console.");
+				s.sendMessage(PowerBoard.pbChatPrefix +ChatColor.DARK_GRAY+"Possible errors aren't displayed here. You should check the console.");
 			pl.getLogger().info(" ");
 		});
 	}
 
 	private static void sendConfigReloadMessage(CommandSender s, String message) {
 		if(s instanceof Player)
-			s.sendMessage(PowerBoard.pr+"Config: "+message);
+			s.sendMessage(PowerBoard.pbChatPrefix +"Config: "+message);
 		pl.getLogger().info("Config: "+message);
 	}
 
