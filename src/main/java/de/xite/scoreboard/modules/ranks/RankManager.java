@@ -58,12 +58,13 @@ public class RankManager {
 		}else {
 			//--- PB's rank system ---//
 			int weight = 0;
+			String permissionSystem = pl.getConfig().getString("ranks.permissionsystem");
 			for(String line : pl.getConfig().getConfigurationSection("ranks.list").getValues(false).keySet()) {
 				if(!line.contains(".")) {
 					String permission = pl.getConfig().getString("ranks.list."+line+".permission");
 
 					boolean luckperms = false;
-					if(LuckPermsAPI.isActive() && pl.getConfig().getString("ranks.permissionsystem").equalsIgnoreCase("luckperms"))
+					if(LuckPermsAPI.isActive() && permissionSystem.equalsIgnoreCase("luckperms"))
 						if(LuckPermsRanks.isPlayerInGroup(p, permission))
 							luckperms = true;
 					
@@ -88,7 +89,7 @@ public class RankManager {
 					weight++;
 				}
 			}
-			if(Teams.get(p) == null && !pl.getConfig().getString("ranks.permissionsystem").equalsIgnoreCase("api")) {
+			if(Teams.get(p) == null && !permissionSystem.equalsIgnoreCase("api")) {
 				Teams.addPlayer(p, "", "", "f", "noRank", null, null, 0);
 				pl.getLogger().warning("The player "+p.getName()+" has no Rank! Make sure that he has the correct permissions.");
 			}
