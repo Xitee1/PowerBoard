@@ -51,10 +51,10 @@ public abstract class VersionSpecific {
         } else {
             current = new VersionSpecific() {
                 public void sendTab(Player p, String header, String footer) {
-                    logger.warning("You are using a Minecraft version that does not support tablist header/footer!");
+					PowerBoard.getRateLimitedLogger().addWarn("You are using a Minecraft version that does not support tablist header/footer!", true);
                 }
             };
-            logger.warning("You are using a unsupported Minecraft version!");
+			PowerBoard.getRateLimitedLogger().addWarn("You are using an unsupported Minecraft version!", true);
         }
 		if(PowerBoard.debug)
             logger.info("Detected Server Version (NMS): " + NMS_VERSION);
