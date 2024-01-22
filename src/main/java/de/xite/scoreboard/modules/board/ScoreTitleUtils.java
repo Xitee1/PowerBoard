@@ -57,10 +57,14 @@ public class ScoreTitleUtils {
 		Objective obj = board.getObjective(DisplaySlot.SIDEBAR);
 		if(obj == null)
 			return false;
+
+		PowerBoard.pl.getLogger().info("-- Settings scores for player "+p.getName()+" (sb: "+sm.getName()+"): --");
 		for(int i = 0; i < scores.size(); i++) {
 			int id = scores.size()-i-1;
+			PowerBoard.pl.getLogger().info(id+": "+scores.get(id));
 			setScore(p, scores.get(id), i, usePlaceholders, sm);
 		}
+		PowerBoard.pl.getLogger().info("--     --");
 		return true;
 	}
 	public static boolean setScore(Player p, String score, int scoreId, boolean usePlaceholders, ScoreboardManager sm) {
