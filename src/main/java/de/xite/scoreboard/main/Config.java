@@ -146,6 +146,7 @@ public class Config {
 			// General config
 			sendConfigReloadMessage(s, ChatColor.DARK_AQUA+"Reloading "+ChatColor.YELLOW+"config"+ChatColor.GRAY+"...");
 			Config.loadConfig();
+			PowerBoard.getUpdater().loadConfig();
 
 			// Load all external plugin APIs
 			sendConfigReloadMessage(s, ChatColor.DARK_AQUA+"Initializing "+ChatColor.YELLOW+"external plugins"+ChatColor.GRAY+"...");

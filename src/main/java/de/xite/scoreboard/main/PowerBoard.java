@@ -48,7 +48,6 @@ public class PowerBoard extends JavaPlugin {
 		// Initialize variables
 		pl = this;
 		instance = this;
-		updater = new Updater(spigotMCPluginID);
 		tpsCalc = new TPSCalc();
 		rateLimitedLogger = new RateLimitedLogger(this);
 
@@ -66,22 +65,7 @@ public class PowerBoard extends JavaPlugin {
 		
 		// Load all external plugin APIs
 		ExternalPlugins.initializePlugins();
-	    
-		// Check for updates
-		if(updater.isUpdateCheckEnabled()) {
-			Bukkit.getScheduler().runTaskAsynchronously(pl, () -> {
-				if(updater.isUpdateAvailable()) {
-					pl.getLogger().info("-> A new version (v."+updater.getLatestVersion()+") is available! Your version: "+updater.getCurrentVersion());
-					pl.getLogger().info("-> Update me! :)");
-				}else {
-					pl.getLogger().info("-> You are running the latest version! :)");
-				}
-			});
-		}else {
-			pl.getLogger().info("-> You are running PowerBoard version "+updater.getCurrentVersion()+"." +
-					"You should check if there is a new version available from time to time since you've disabled the automatic update check.");
-		}
-
+		initializeUpdater();
 		
 		// ---- Register commands and events ---- //
 		getCommand("pb").setExecutor(new PowerBoardCommand());
@@ -147,6 +131,25 @@ public class PowerBoard extends JavaPlugin {
 		if(pl.getConfig().getBoolean("update.autoupdater"))
 			if(updater.isUpdateAvailable())
 				updater.downloadFile(true);
+	}
+
+	public static void initializeUpdater() {
+		updater = new Updater(spigotMCPluginID);
+
+		// Check for updates
+		if(updater.isUpdateCheckEnabled()) {
+			Bukkit.getScheduler().runTaskAsynchronously(pl, () -> {
+				if(updater.isUpdateAvailable()) {
+					pl.getLogger().info("-> A new version (v."+updater.getLatestVersion()+") is available! Your version: "+updater.getCurrentVersion());
+					pl.getLogger().info("-> Update me! :)");
+				}else {
+					pl.getLogger().info("-> You are running the latest version! :)");
+				}
+			});
+		}else {
+			pl.getLogger().info("-> You are running PowerBoard version "+updater.getCurrentVersion()+"." +
+					"You should check if there is a new version available from time to time since you've disabled the automatic update check.");
+		}
 	}
 
 	public static PowerBoard getInstance() {

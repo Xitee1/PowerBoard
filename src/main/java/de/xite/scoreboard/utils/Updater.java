@@ -18,27 +18,29 @@ public class Updater {
 	private static final String updaterPrefix = "Updater -> ";
 	private static final PowerBoard instance = PowerBoard.getInstance();
 	private static final Logger logger = PowerBoard.getInstance().getLogger();
-	
-	final private int pluginID;
-	private Date lastUpdated;
+	private static Date lastUpdated;
+
+	private final int pluginID;
 	private String latestVersion;
 	private final String currentVersion;
-	private final boolean updateCheckEnabled;
-	private final boolean infoMessageEnabled;
+	private boolean updateCheckEnabled;
+	private boolean infoMessageEnabled;
 	private boolean updateSuccessful = false;
 
 	public Updater(int pluginID) {
 		this.pluginID = pluginID;
 		latestVersion = null;
 		currentVersion = instance.getDescription().getVersion();
-		updateCheckEnabled = instance.getConfig().getBoolean("update.checkForUpdates");
-		infoMessageEnabled = instance.getConfig().getBoolean("update.notification");
+		loadConfig();
 	}
 
 	private void updateVersion() {
+		if(lastUpdated == null)
+			lastUpdated = new Date();
+
 		if(!updateCheckEnabled) {
 			latestVersion = getCurrentVersion();
-		}else if(latestVersion == null || new Date().getTime() - lastUpdated.getTime() > 1000*60*60*12) { // TODO needs testing
+		}else if(latestVersion == null || new Date().getTime() - lastUpdated.getTime() > 1000*60*60*12) {
 			lastUpdated = new Date();
 			try(InputStream inputStream = new URL("https://api.spigotmc.org/legacy/update.php?resource=" + pluginID).openStream(); Scanner scanner = new Scanner(inputStream)) {
 				if(scanner.hasNext()) {
@@ -163,5 +165,10 @@ public class Updater {
 		updateSuccessful = true;
 		logger.info(updaterPrefix+"Update finished! To apply the new update, you have to restart your server.");
 		return true;
+	}
+
+	public void loadConfig() {
+		updateCheckEnabled = instance.getConfig().getBoolean("update.checkForUpdates");
+		infoMessageEnabled = instance.getConfig().getBoolean("update.notification");
 	}
 }
