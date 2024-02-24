@@ -23,6 +23,7 @@ public class Updater {
 	private Date lastUpdated;
 	private String latestVersion;
 	private final String currentVersion;
+	private final boolean updateCheckEnabled;
 	private final boolean infoMessageEnabled;
 	private boolean updateSuccessful = false;
 
@@ -30,11 +31,14 @@ public class Updater {
 		this.pluginID = pluginID;
 		latestVersion = null;
 		currentVersion = instance.getDescription().getVersion();
+		updateCheckEnabled = instance.getConfig().getBoolean("update.checkForUpdates");
 		infoMessageEnabled = instance.getConfig().getBoolean("update.notification");
 	}
 
 	private void updateVersion() {
-		if(latestVersion == null || new Date().getTime() - lastUpdated.getTime() > 1000*60*60*12) { // TODO needs testing
+		if(!updateCheckEnabled) {
+			latestVersion = getCurrentVersion();
+		}else if(latestVersion == null || new Date().getTime() - lastUpdated.getTime() > 1000*60*60*12) { // TODO needs testing
 			lastUpdated = new Date();
 			try(InputStream inputStream = new URL("https://api.spigotmc.org/legacy/update.php?resource=" + pluginID).openStream(); Scanner scanner = new Scanner(inputStream)) {
 				if(scanner.hasNext()) {
@@ -63,6 +67,10 @@ public class Updater {
 
 	public boolean infoMessageEnabled() {
 		return infoMessageEnabled;
+	}
+
+	public boolean isUpdateCheckEnabled() {
+		return updateCheckEnabled;
 	}
 
 	public boolean downloadFile(boolean forceUpdate) {

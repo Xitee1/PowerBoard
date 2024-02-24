@@ -68,13 +68,19 @@ public class PowerBoard extends JavaPlugin {
 		ExternalPlugins.initializePlugins();
 	    
 		// Check for updates
-		Bukkit.getScheduler().runTaskAsynchronously(pl, () -> {
-			if(updater.isUpdateAvailable()) {
-				pl.getLogger().info("-> A new version (v."+updater.getLatestVersion()+") is available! Your version: "+updater.getCurrentVersion());
-				pl.getLogger().info("-> Update me! :)");
-			}
-		});
-		
+		if(updater.isUpdateCheckEnabled()) {
+			Bukkit.getScheduler().runTaskAsynchronously(pl, () -> {
+				if(updater.isUpdateAvailable()) {
+					pl.getLogger().info("-> A new version (v."+updater.getLatestVersion()+") is available! Your version: "+updater.getCurrentVersion());
+					pl.getLogger().info("-> Update me! :)");
+				}else {
+					pl.getLogger().info("-> You are running the latest version! :)");
+				}
+			});
+		}else {
+			pl.getLogger().info("-> You are running PowerBoard version "+updater.getCurrentVersion()+"." +
+					"You should check if there is a new version available from time to time since you've disabled the automatic update check.");
+		}
 
 		
 		// ---- Register commands and events ---- //
