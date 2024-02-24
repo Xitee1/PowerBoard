@@ -104,6 +104,7 @@ placeholder:
 ### Plugin Updater ###
 ######################
 update:
+  checkForUpdates: true # Set to false to prevent any version checks
   notification: true # Send a message to all Admins on join if a new update is available
   autoupdater: false # With this option, the plugin will be automatically updated (No longer recommended because of some glitches)
 
