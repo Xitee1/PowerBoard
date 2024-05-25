@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.logging.Logger;
 
 public abstract class VersionSpecific {
-	public static final String NMS_VERSION = Bukkit.getServer().getClass().getPackage().getName().substring(23);
+	public static String NMS_VERSION;
 	protected static final Logger logger = PowerBoard.pl.getLogger();
 
 	public static VersionSpecific current;
@@ -28,6 +28,12 @@ public abstract class VersionSpecific {
 
 
     public static void init() {
+	    String packageVersion = Bukkit.getServer().getClass().getPackage().getName();
+		if(!packageVersion.equals("org.bukkit.craftbukkit")) {
+			// Minecraft 1.20.4 and below
+			NMS_VERSION = Bukkit.getServer().getClass().getPackage().getName().substring(23);
+		}
+
         if (Version.CURRENT.isAtLeast(Version.v1_17)) {
             current = new version_1_17_later();
         } else if (Version.CURRENT.isAtLeast(Version.v1_16)) {
@@ -63,17 +69,17 @@ public abstract class VersionSpecific {
 
     // ------------------------------ Reflection / NMS stuff ------------------------------
 
-    protected final Class<?> craftPlayer;
-
-    {
-        try {
-            craftPlayer = Class.forName("org.bukkit.craftbukkit." + NMS_VERSION + ".entity.CraftPlayer");
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-    }
+    protected Class<?> craftPlayer = null;
 
     protected final Object nmsPlayer(Player p) {
+		if(craftPlayer == null) {
+			try {
+				craftPlayer = Class.forName("org.bukkit.craftbukkit." + NMS_VERSION + ".entity.CraftPlayer");
+			} catch (ClassNotFoundException e) {
+				throw new RuntimeException(e);
+			}
+		}
+
         try {
             return craftPlayer.getMethod("getHandle").invoke(p);
         } catch (ReflectiveOperationException ex) {
