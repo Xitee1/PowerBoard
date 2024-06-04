@@ -55,12 +55,14 @@ public class Teams {
 	public static Teams addPlayer(Player p, String prefix, String suffix, String nameColor, String chatPrefix, String placeholderName, String playerListName, int weight) {
 		nameColor = nameColor.replace("&", "").replace("§", "");
 		ChatColor nameColorChat = ChatColor.WHITE;
-		try {
-			nameColorChat = ChatColor.getByChar(nameColor);
-		}catch (Exception e) {
-			PowerBoard.pl.getLogger().warning("Could not read "+p.getName()+"'s name color."
-					+ "The player's name will be white in the tablist."
-					+ "To avoid this, make sure, you have a valid colorcode at the end of your prefix.");
+		if(PowerBoard.pl.getConfig().getBoolean("tablist.ranks")) {
+			try {
+				nameColorChat = ChatColor.getByChar(nameColor);
+			}catch (Exception e) {
+				PowerBoard.pl.getLogger().warning("Could not read "+p.getName()+"'s name color."
+						+ "The player's name will be white in the tablist."
+						+ "To avoid this, make sure, you have a valid colorcode at the end of your prefix.");
+			}
 		}
 		return addPlayer(p, prefix, suffix, nameColorChat, chatPrefix, placeholderName, playerListName, weight);
 	}
