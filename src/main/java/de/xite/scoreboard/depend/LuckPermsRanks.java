@@ -48,7 +48,7 @@ public class LuckPermsRanks {
 		}else {
 			PowerBoard.pl.getLogger().severe("---------------------------------------------------------------------------------------------------------------------------");
 			PowerBoard.pl.getLogger().severe("The group \""+group.getName()+"\" has no weight! Please set the weight with /lp group <group> setweight <weight>");
-			PowerBoard.pl.getLogger().severe("Read the wiki to see which weights you have to set: https://github.com/Xitee1/PowerBoard/wiki#configure-the-ranks-optional");
+			PowerBoard.pl.getLogger().severe("Visit the wiki to learn more about using weights: https://github.com/Xitee1/PowerBoard/wiki#luckperms-api-recommended");
 			PowerBoard.pl.getLogger().severe("---------------------------------------------------------------------------------------------------------------------------");
 			return false;
 		}
