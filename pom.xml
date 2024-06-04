@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>PowerBoard</groupId>
   <artifactId>PowerBoard</artifactId>
-  <version>3.6.1</version>
+  <version>3.6.2</version>
 
 	<properties>
 		<java.version>1.8</java.version>
