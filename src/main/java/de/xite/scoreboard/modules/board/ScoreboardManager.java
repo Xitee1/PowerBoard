@@ -19,7 +19,7 @@ import de.xite.scoreboard.utils.UpgradeVersion;
 
 public class ScoreboardManager {
 	static PowerBoard pl = PowerBoard.pl;
-	
+
 	// All registered scoreboards
 	public static HashMap<String, ScoreboardManager> scoreboards = new HashMap<>();
 	public static ArrayList<String> scoreboardBlacklistConditions = new ArrayList<>();
@@ -44,20 +44,26 @@ public class ScoreboardManager {
 	
 	// Current title & scores
 	String currentTitle;
-	HashMap<Integer, String> currentScores = new HashMap<>();
-	
+	HashMap<Integer, String> currentScores = new HashMap<>(); // <score ID,  current text>
+
+	/**
+	 * Register a new scoreboard manager by name.
+	 * The name must match the config file name (without file extension).
+	 *
+	 * @param name
+	 */
 	private ScoreboardManager(String name) {
 		this.name = name;
-		
+
 		if(name.equals("blacklisted")) {
 			pl.getLogger().severe("Sorry, but the scoreboard name 'blacklisted' is reserved for the system. Please use another name.");
 			return;
 		}
-		
+
 		// Get the config
 		File f = new File(Config.getConfigFolder() + "/scoreboards/"+name+".yml");
 		if(!f.exists()) {
-			pl.getLogger().severe("Could not load scoreboard named "+name+", because the config file does not exists!");
+			pl.getLogger().severe("Could not load scoreboard named "+name+" because the config file does not exist!");
 			return;
 		}
 		YamlConfiguration cfg = Config.loadConfiguration(f);
@@ -65,16 +71,23 @@ public class ScoreboardManager {
 			unregister(this);
 			return;
 		}
-		
+
 		// --- Migrate from "titel" to "title" ---
 		UpgradeVersion.updateTitelTitle(cfg, f);
-		// ---								  ---
-		
-		
+		// ---------------------------------------
+
 		conditions = cfg.getStringList("conditions");
 		importScores(cfg); // Import all scores
 		importTitle(cfg); // Import the title
 	}
+
+	/**
+	 * Gets a scoreboard manager by its name.
+	 * The scoreboard will be registered automatically if not done yet.
+	 *
+	 * @param name scoreboard name
+	 * @return
+	 */
 	public static ScoreboardManager get(String name) {
 		if(!scoreboards.containsKey(name))
 			scoreboards.put(name, new ScoreboardManager(name));
@@ -93,36 +106,44 @@ public class ScoreboardManager {
 				List<String> list = cfg.getStringList(id+".scores");
 				if(!list.isEmpty()) {
 					int speed = cfg.getInt(id+".speed");
-					
+
 					// Check if the numbers are in the correct order and begin with 0
 					if(id != i) {
 						pl.getLogger().warning("Your scores of scoreboard '"+name+"' do not begin with 0 or have an incorrect order. Please check that the numbers begin with 0 (not 1) and are sequentially. This could cause problems with your scoreboard!");
 						id = i;
 					}
 					i++;
-					
+
 					// Add all animations
 					scores.put(id, new ArrayList<>());
 					scores.get(id).addAll(list);
-					
+
 					// Start the animation
 					startScoreAnimation(id, speed);
 				}
-				
+
 			}catch (IllegalStateException | NumberFormatException ignored) {
 			}
 		}
 		if(scores.size() > 14) // Check if more than 14 scores
 			pl.getLogger().warning("You have more than 14 scores in you scoreboard! Some scores cannot be displayed! This is a limitation of Minecraft.");
-		
 	}
-	private void importTitle(YamlConfiguration cfg) {		
+
+	/**
+	 * Imports the title from the config file to this sb manager.
+	 *
+	 * @param cfg
+	 */
+	private void importTitle(YamlConfiguration cfg) {
 		title.addAll(cfg.getStringList("title.titles"));
 		startTitleAnimation(cfg.getInt("title.speed"));
 	}
-	
-	
-	// ---- Start the animations ---- //
+
+	/**
+	 * Starts the title animation scheduler.
+	 *
+	 * @param speed animation speed
+	 */
 	private void startTitleAnimation(int speed) {
 		if(title.isEmpty()) {
 			pl.getLogger().severe("Could not load scoreboard title for scoreboard \""+name+"\"!");
@@ -139,9 +160,9 @@ public class ScoreboardManager {
 				pl.getLogger().info("Scoreboard-Title (Name: "+name+"): no animation needed (speed higher than 9999 or negative)");
 			return;
 		}else
-			if(PowerBoard.debug)
-				pl.getLogger().info("Scoreboard-Title (Name: "+name+"): animation started");
-		
+		if(PowerBoard.debug)
+			pl.getLogger().info("Scoreboard-Title (Name: "+name+"): animation started");
+
 		// Check for config errors
 		if(title.isEmpty()) {
 			pl.getLogger().severe("You have an error in your scoreboard config! ("+name+".yml - title)");
@@ -168,18 +189,24 @@ public class ScoreboardManager {
 			}, 20, speed));
 	}
 
+	/**
+	 * Starts the score animation scheduler.
+	 *
+	 * @param id the score id
+	 * @param speed animation speed
+	 */
 	private void startScoreAnimation(int id, int speed) {
 		currentScores.put(id, scores.get(id).get(0));
-		
+
 		// check if scheduler is needed (don't schedule if higher than '9999')
 		if(speed >= 9999 || speed < 0) {
 			if(PowerBoard.debug)
 				pl.getLogger().info("Scoreboard-Score (ID: "+id+", Name: "+name+"): no animation needed (speed higher than 9999 or negative)");
 			return;
 		}else
-			if(PowerBoard.debug)
-				pl.getLogger().info("Scoreboard-Score (ID: "+id+", Name: "+name+"): animation started");
-		
+		if(PowerBoard.debug)
+			pl.getLogger().info("Scoreboard-Score (ID: "+id+", Name: "+name+"): animation started");
+
 		// Check for config errors
 		if(scores.isEmpty()) {
 			pl.getLogger().severe("You have an error in your scoreboard config! Please check it for any typing errors. Even a simple space can create this error. Look closely. ("+name+".yml - scores)");
@@ -214,22 +241,52 @@ public class ScoreboardManager {
 				}
 			}, 20, speed));
 	}
+
+	/**
+	 * Adds a player to this scoreboard.
+	 *
+	 * @param p the player
+	 */
 	public void addPlayer(Player p) {
 		if(!players.contains(p))
 			players.add(p);
 		ScoreboardPlayer.players.put(p, name);
 	}
+
+	/**
+	 * Removes a player from this scoreboard.
+	 *
+	 * @param p the player
+	 */
 	public void removePlayer(Player p) {
 		// containsKey removed because it's not necessary.
 		players.remove(p);
 		ScoreboardPlayer.players.remove(p);
 	}
+
+	/**
+	 * Returns the current title of the scoreboard.
+	 *
+	 * @return
+	 */
 	public String getCurrentTitle() {
 		return currentTitle;
 	}
+
+	/**
+	 * Returns the current scores of the scoreboard.
+	 *
+	 * @return
+	 */
 	public ArrayList<String> getCurrentScores() {
 		return new ArrayList<>(currentScores.values());
 	}
+
+	/**
+	 * Returns the name of the scoreboard.
+	 *
+	 * @return
+	 */
 	public String getName() {
 		return this.name;
 	}
@@ -265,6 +322,10 @@ public class ScoreboardManager {
 		if(cfg != null)
 			scoreboardBlacklistConditions.addAll(cfg.getStringList("conditions"));
 	}
+
+	/**
+	 * Unregister all currently loaded scoreboard managers.
+	 */
 	public static void unregisterAllScoreboards() {
 		for(Iterator<ScoreboardManager> iterator = scoreboards.values().iterator(); iterator.hasNext();) {
 			ScoreboardManager sm = iterator.next();
