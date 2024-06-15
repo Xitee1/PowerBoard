@@ -75,6 +75,12 @@ public class Updater {
 		return updateCheckEnabled;
 	}
 
+	/**
+	 * Downloads the latest release from GitHub and replaces the scoreboard jar inside the "plugins" folder.
+	 *
+	 * @param forceUpdate
+	 * @return
+	 */
 	public boolean downloadFile(boolean forceUpdate) {
 		if(this.updateSuccessful) {
 			logger.info("Ignoring update request. Plugin has already been updated.");

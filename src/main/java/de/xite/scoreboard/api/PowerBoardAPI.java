@@ -110,6 +110,7 @@ public class PowerBoardAPI {
 	// ----------------//
 
 	/**
+	 * Gets the players' prefix.
 	 *
 	 * @param p the player
 	 * @return the player's prefix
@@ -144,9 +145,10 @@ public class PowerBoardAPI {
 
 
 	/**
+	 * Gets the players' suffix.
 	 *
 	 * @param p the player
-	 * @return the player's suffix
+	 * @return the players' suffix
 	 */
 	public String getSuffix(Player p) {
 		Validate.notNull(p, "The player cannot be null!");
