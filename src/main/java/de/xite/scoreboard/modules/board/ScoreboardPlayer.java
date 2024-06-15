@@ -16,9 +16,8 @@ import de.xite.scoreboard.main.PowerBoard;
 
 public class ScoreboardPlayer {
 	static PowerBoard pl = PowerBoard.pl;
-	
-	// All players with scoreboards
-	public static HashMap<Player, String> players = new HashMap<>(); // Player; Scoreboard config file name
+
+	public static HashMap<Player, String> players = new HashMap<>(); // players with a scoreboard <player, scoreboard name>
 
 	/**
 	 * Sets a new scoreboard for the player.
@@ -29,8 +28,8 @@ public class ScoreboardPlayer {
 	 */
 	public static void setScoreboard(Player p, boolean API, ScoreboardManager sm) {
 		Scoreboard board = p.getScoreboard();
-		
-		// ---- Scoreboard ---- //
+
+		// Remove scoreboard if player matches blacklisted scoreboard
 		if(ConditionListener.checkConditions(p, ScoreboardManager.scoreboardBlacklistConditions)) {
 			removeScoreboard(p, false);
 			if(!API)
@@ -39,7 +38,11 @@ public class ScoreboardPlayer {
 				pl.getLogger().info("Removed "+p.getName()+"'s scoreboard because blacklist-conditions match.");
 			return;
 		}
-		if(!API) {
+
+		if(API) {
+			// remove scoreboard from scoreboard manager if dev API is used
+			removeScoreboard(p, false);
+		}else {
 			if(sm == null)
 				sm = getMatchingScoreboard(p);
 
@@ -56,8 +59,6 @@ public class ScoreboardPlayer {
 						pl.getLogger().info("Changing "+p.getName()+"'s scoreboard to "+sm.getName());
 					removeScoreboard(p, true);
 				}
-		}else {
-			removeScoreboard(p, false);
 		}
 
 		Objective obj = board.getObjective(DisplaySlot.SIDEBAR);
@@ -80,8 +81,8 @@ public class ScoreboardPlayer {
 					ScoreboardManager.get(players.get(p)).removePlayer(p);
 			}
 			sm.addPlayer(p);
-			ScoreTitleUtils.setTitle(p, sm.getCurrentTitle(), true, sm);
-			ScoreTitleUtils.setScores(p, sm.getCurrentScores(), true, sm);
+			ScoreTitleUtils.setTitle(p, sm.getCurrentTitle(), true);
+			ScoreTitleUtils.setScores(p, sm.getCurrentScores(), true, sm.getName());
 		}
 
 
@@ -146,19 +147,24 @@ public class ScoreboardPlayer {
 	 */
 	public static void removeScoreboard(Player p, boolean removeFromSBManager) {
 		if(removeFromSBManager) {
-			if(players.containsKey(p) && !players.get(p).equals("blacklisted"))
+			if(players.containsKey(p) && !players.get(p).equals("blacklisted")) {
 				ScoreboardManager.get(players.get(p)).removePlayer(p);
+			}
 		}
-		
+
 		for(Team t : p.getScoreboard().getTeams()) {
-			if(t.getName().startsWith(PowerBoard.scoreTeamPrefix))
+			if(t.getName().startsWith(PowerBoard.scoreTeamPrefix)) {
 				t.unregister();
+			}
 		}
-		
+
 		Objective obj = p.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
-		if(obj != null)
+		if(obj != null) {
 			obj.unregister();
-		if(PowerBoard.debug)
+		}
+
+		if(PowerBoard.debug) {
 			pl.getLogger().info("Removed "+p.getName()+"'s (old) scoreboard");
+		}
 	}
 }

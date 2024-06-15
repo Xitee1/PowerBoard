@@ -23,25 +23,14 @@ public class ScoreboardManager {
 	// All registered scoreboards
 	public static HashMap<String, ScoreboardManager> scoreboards = new HashMap<>();
 	public static ArrayList<String> scoreboardBlacklistConditions = new ArrayList<>();
-	
-	// The name of the scoreboard
-	String name;
-	
-	// Conditions
-	List<String> conditions;
 
-	// the title with all animations
-	ArrayList<String> title = new ArrayList<>(); // <animations>
-	
-	// all scores with all animations
-	HashMap<Integer, ArrayList<String>> scores = new HashMap<>(); // <score ID, <animations>>
-	
-	// Store all schedulers to stop them later
-	ArrayList<BukkitTask> scheduler = new ArrayList<>();
-	
-	// All players that have this scoreboard
-	ArrayList<Player> players = new ArrayList<>();
-	
+	String name; // scoreboard name
+	List<String> conditions; // scoreboards conditions
+	ArrayList<String> title = new ArrayList<>(); // scoreboard title list <animations>
+	HashMap<Integer, ArrayList<String>> scores = new HashMap<>(); // scoreboard scores list <score ID, <animations>>
+	ArrayList<Player> players = new ArrayList<>(); // players currently having this scoreboard
+	ArrayList<BukkitTask> scheduler = new ArrayList<>(); // used schedulers by this sb manager
+
 	// Current title & scores
 	String currentTitle;
 	HashMap<Integer, String> currentScores = new HashMap<>(); // <score ID,  current text>
@@ -91,14 +80,30 @@ public class ScoreboardManager {
 	public static ScoreboardManager get(String name) {
 		if(!scoreboards.containsKey(name))
 			scoreboards.put(name, new ScoreboardManager(name));
-			
+
 		return scoreboards.get(name);
 	}
-	
-	// Import
+
+	/**
+	 * Unregisters a scoreboard manager.
+	 * All animation schedulers will be stopped automatically.
+	 *
+	 * @param sm
+	 */
+	public static void unregister(ScoreboardManager sm) {
+		for(BukkitTask task : sm.scheduler)
+			task.cancel();
+		scoreboards.remove(sm.getName());
+	}
+
+	/**
+	 * Imports the scores from the config file to this sb manager.
+	 *
+	 * @param cfg
+	 */
 	private void importScores(YamlConfiguration cfg) {
 		int i = 0;
-		
+
 		for(String s : cfg.getConfigurationSection("").getValues(false).keySet()) {
 			try {
 				int id = Integer.parseInt(s);
@@ -146,14 +151,14 @@ public class ScoreboardManager {
 	 */
 	private void startTitleAnimation(int speed) {
 		if(title.isEmpty()) {
-			pl.getLogger().severe("Could not load scoreboard title for scoreboard \""+name+"\"!");
+			pl.getLogger().severe("Could not load the title for scoreboard \""+name+"\"!");
 			pl.getLogger().severe("Disabling plugin...");
 			pl.getServer().getPluginManager().disablePlugin(pl);
 			return;
 		}
-		
+
 		currentTitle = title.get(0);
-		
+
 		// check if scheduler is needed (don't schedule if higher than '9999' or negative)
 		if(speed > 9999 || speed < 0) {
 			if(PowerBoard.debug)
@@ -171,22 +176,22 @@ public class ScoreboardManager {
 
 		// Start animation scheduler
 		scheduler.add(
-			Bukkit.getScheduler().runTaskTimerAsynchronously(pl, new Runnable() {
-				int count = 0;
-				@Override
-				public void run() {
-					if(!players.isEmpty()) {
-						String s = title.get(count); // get the current score (text)
-						currentTitle = s;
-						for(Player p : players)
-							ScoreTitleUtils.setTitle(p, s, true, get(name)); // set the score
-						if(count >= title.size()-1) {
-							count = 0;
-						}else
-							count++;
+				Bukkit.getScheduler().runTaskTimerAsynchronously(pl, new Runnable() {
+					int count = 0;
+					@Override
+					public void run() {
+						if(!players.isEmpty()) {
+							String s = title.get(count); // get the current score (text)
+							currentTitle = s;
+							for(Player p : players)
+								ScoreTitleUtils.setTitle(p, s, true); // set the score
+							if(count >= title.size()-1) {
+								count = 0;
+							}else
+								count++;
+						}
 					}
-				}
-			}, 20, speed));
+				}, 20, speed));
 	}
 
 	/**
@@ -220,26 +225,26 @@ public class ScoreboardManager {
 		}
 		// Start animation scheduler
 		scheduler.add(
-			Bukkit.getScheduler().runTaskTimerAsynchronously(pl, new Runnable() {
-				int count = 0;
-				@Override
-				public void run() {
-					if(!players.isEmpty()) {
-						String score = scores.get(id).get(count); // get the current score (text)
-						int i = scores.size()-id-1;
-						currentScores.replace(id, score);
+				Bukkit.getScheduler().runTaskTimerAsynchronously(pl, new Runnable() {
+					int count = 0;
+					@Override
+					public void run() {
+						if(!players.isEmpty()) {
+							String score = scores.get(id).get(count); // get the current score (text)
+							int i = scores.size()-id-1;
+							currentScores.replace(id, score);
 
-						List<Player> all = new ArrayList<>(players);
-						for(Player p : all)
-							ScoreTitleUtils.setScore(p, score, i, true, get(name)); // set the score
-						
-						if(count >= scores.get(id).size()-1) {
-							count = 0;
-						}else
-							count ++;
+							List<Player> all = new ArrayList<>(players);
+							for(Player p : all)
+								ScoreTitleUtils.setScore(p, score, i, true, name); // set the score
+
+							if(count >= scores.get(id).size()-1) {
+								count = 0;
+							}else
+								count ++;
+						}
 					}
-				}
-			}, 20, speed));
+				}, 20, speed));
 	}
 
 	/**
@@ -290,14 +295,10 @@ public class ScoreboardManager {
 	public String getName() {
 		return this.name;
 	}
-	
-	public static void unregister(ScoreboardManager sm) {
-		for(BukkitTask task : sm.scheduler)
-			task.cancel();
-		scoreboards.remove(sm.getName());
-	}
-	
-	
+
+	/**
+	 * Loads all config files from the scoreboard config folder and registers (starts) the scoreboard managers for these.
+	 */
 	public static void registerAllScoreboards() {
 		ArrayList<String> boards = new ArrayList<>();
 

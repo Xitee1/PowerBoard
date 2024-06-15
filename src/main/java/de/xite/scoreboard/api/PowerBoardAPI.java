@@ -68,8 +68,8 @@ public class PowerBoardAPI {
 	public static void setScoreboardTitle(Player p, String title, boolean usePlaceholders) {
 		Validate.notNull(p, "The player cannot be null!");
 
-		if(!ScoreTitleUtils.setTitle(p, title, usePlaceholders, null))
-				PowerBoard.pl.getLogger().severe("Failed to set the Scoreboard-Title! "+p.getName()+"'s scoreboard is not registered yet - please set the scoreboard first!");
+		if(!ScoreTitleUtils.setTitle(p, title, usePlaceholders))
+			PowerBoard.pl.getLogger().severe("Failed to set the Scoreboard-Title! "+p.getName()+"'s scoreboard is not registered yet - please set the scoreboard first!");
 	}
 
 	/**
