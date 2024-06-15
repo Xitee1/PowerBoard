@@ -185,9 +185,9 @@ public class PowerBoardCommand implements CommandExecutor, TabCompleter {
 			if(args[1].equalsIgnoreCase("confirm")) {
 				s.sendMessage(PowerBoard.pbChatPrefix +ChatColor.GREEN+"Downloading the latest version...");
 				if(updater.downloadFile(false)) {
-					s.sendMessage(PowerBoard.pbChatPrefix +ChatColor.GREEN+"Download finished. Please restart your server as soon as possible!");
+					s.sendMessage(PowerBoard.pbChatPrefix +ChatColor.GREEN+"Update finished. Please restart your server as soon as possible!");
 				}else {
-					s.sendMessage(PowerBoard.pbChatPrefix +ChatColor.RED+"Download failed! More infos are available in the console.");
+					s.sendMessage(PowerBoard.pbChatPrefix +ChatColor.RED+"Update failed! More infos are available in the console.");
 					s.sendMessage(PowerBoard.pbChatPrefix +ChatColor.RED+"You can also try it with '/"+cmd.getName()+" update force'");
 				}
 				return;
@@ -196,9 +196,9 @@ public class PowerBoardCommand implements CommandExecutor, TabCompleter {
 			if(args[1].equalsIgnoreCase("force")) {
 				s.sendMessage(PowerBoard.pbChatPrefix +ChatColor.GREEN+"Downloading the latest version...");
 				if(updater.downloadFile(true)) {
-					s.sendMessage(PowerBoard.pbChatPrefix +ChatColor.GREEN+"Download finished. Please restart your server as soon as possible!");
+					s.sendMessage(PowerBoard.pbChatPrefix +ChatColor.GREEN+"Update finished. Please restart your server as soon as possible!");
 				}else {
-					s.sendMessage(PowerBoard.pbChatPrefix +ChatColor.RED+"Sorry, force update did not work. Please manually update the plugin.");
+					s.sendMessage(PowerBoard.pbChatPrefix +ChatColor.RED+"Sorry, force update did not work. Please update the plugin manually.");
 				}
 				return;
 			}
