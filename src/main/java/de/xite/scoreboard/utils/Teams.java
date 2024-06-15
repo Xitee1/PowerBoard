@@ -59,8 +59,8 @@ public class Teams {
 			try {
 				nameColorChat = ChatColor.getByChar(nameColor);
 			}catch (Exception e) {
-				PowerBoard.pl.getLogger().warning("Could not read "+p.getName()+"'s name color."
-						+ "The player's name will be white in the tablist."
+				PowerBoard.pl.getLogger().warning("Could not read "+p.getName()+"'s name color. "
+						+ "The player's name will be white in the tablist. "
 						+ "To avoid this, make sure, you have a valid colorcode at the end of your prefix.");
 			}
 		}
