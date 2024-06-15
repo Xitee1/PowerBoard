@@ -173,26 +173,28 @@ public class PowerBoardCommand implements CommandExecutor, TabCompleter {
 		int len = args.length;
 
 		if(len == 1) {
-			s.sendMessage(PowerBoard.pbChatPrefix +ChatColor.RED+"Warning: After successful update, you have to restart your server as soon as possible!" +
-					"This command also can cause glitches. It is recommended to update the plugin manually."
-					+ "Please type "+ChatColor.YELLOW+"/"+cmd.getName()+" update confirm"+ChatColor.RED+" to confirm.");
+			s.sendMessage(PowerBoard.pbChatPrefix +ChatColor.RED+"Warning: "+ChatColor.GRAY+
+					"Please "+ChatColor.GOLD+"restart your server"+ChatColor.GRAY+" as soon as possible after updating! " +ChatColor.GOLD+
+					"Use the updater with caution!"+ChatColor.GRAY+" The built in updater can cause various bugs and unexpected behavior. " +
+					"If possible, manually update the plugin. " +
+					"Please type "+ChatColor.YELLOW+"/"+cmd.getName()+" update confirm"+ChatColor.GRAY+" to "+ChatColor.GOLD+"accept the risks.");
 			return;
 		}
 
 		if(len == 2) {
-			s.sendMessage(PowerBoard.pbChatPrefix +ChatColor.GREEN+"Downloading the newest version...");
-
 			if(args[1].equalsIgnoreCase("confirm")) {
+				s.sendMessage(PowerBoard.pbChatPrefix +ChatColor.GREEN+"Downloading the latest version...");
 				if(updater.downloadFile(false)) {
 					s.sendMessage(PowerBoard.pbChatPrefix +ChatColor.GREEN+"Download finished. Please restart your server as soon as possible!");
 				}else {
-					s.sendMessage(PowerBoard.pbChatPrefix +ChatColor.RED+"Download failed! Please try it later again. More infos are available in the console.");
+					s.sendMessage(PowerBoard.pbChatPrefix +ChatColor.RED+"Download failed! More infos are available in the console.");
 					s.sendMessage(PowerBoard.pbChatPrefix +ChatColor.RED+"You can also try it with '/"+cmd.getName()+" update force'");
 				}
 				return;
 			}
 
 			if(args[1].equalsIgnoreCase("force")) {
+				s.sendMessage(PowerBoard.pbChatPrefix +ChatColor.GREEN+"Downloading the latest version...");
 				if(updater.downloadFile(true)) {
 					s.sendMessage(PowerBoard.pbChatPrefix +ChatColor.GREEN+"Download finished. Please restart your server as soon as possible!");
 				}else {
