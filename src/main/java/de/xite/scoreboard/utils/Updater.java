@@ -20,6 +20,7 @@ public class Updater {
 	private static final Logger logger = PowerBoard.getInstance().getLogger();
 	private static Date lastUpdated;
 
+	private final String repo;
 	private final int pluginID;
 	private String latestVersion;
 	private final String currentVersion;
@@ -27,7 +28,8 @@ public class Updater {
 	private boolean infoMessageEnabled;
 	private boolean updateSuccessful = false;
 
-	public Updater(int pluginID) {
+	public Updater(String repo, int pluginID) {
+		this.repo = repo;
 		this.pluginID = pluginID;
 		latestVersion = null;
 		currentVersion = instance.getDescription().getVersion();
@@ -75,13 +77,24 @@ public class Updater {
 		return updateCheckEnabled;
 	}
 
+	/**
+	 * Downloads the latest release from GitHub and replaces the scoreboard jar inside the "plugins" folder.
+	 *
+	 * @param forceUpdate
+	 * @return
+	 */
 	public boolean downloadFile(boolean forceUpdate) {
 		if(this.updateSuccessful) {
-			logger.info("Ignoring update request. Plugin has already been updated.");
+			logger.warning("Updater -> Ignoring update request. The plugin has already been updated. Please restart your server for the update to take affect.");
 			return false;
 		}
 
 		String pluginName = PowerBoard.pl.getDescription().getName();
+
+		if(!new File("plugins/" + pluginName + ".jar").exists()) {
+			logger.severe("Updater -> Built in plugin updater only works if the jar file is named 'PowerBoard.jar'");
+			return false;
+		}
 
 		try {
 			// Download new PowerBoard.jar to plugins/PowerBoard.update.jar
@@ -90,7 +103,7 @@ public class Updater {
 			if(forceUpdate)
 				file = new File("plugins/" + pluginName + ".jar");
 
-			if (!file.exists()) {
+			if(!file.exists()) {
 				try {
 					file.createNewFile();
 				} catch (IOException e) {
@@ -98,7 +111,8 @@ public class Updater {
 					return false;
 				}
 			}
-			String url = "https://github.com/Xitee1/PowerBoard/releases/latest/download/" + pluginName + ".jar";
+
+			String url = "https://github.com/"+repo+"/releases/latest/download/" + pluginName + ".jar";
 			HttpURLConnection connection = (HttpURLConnection) (new URL(url)).openConnection();
 			connection.connect();
 			FileOutputStream outputStream = new FileOutputStream(file);
@@ -129,7 +143,7 @@ public class Updater {
 		// Delete PowerBoard.old.jar if exists
 		if (oldFile.exists()) {
 			if (!oldFile.delete()) {
-				logger.severe(updaterPrefix+"Could not delete PowerBoard.old.jar even tough it exists!");
+				logger.severe(updaterPrefix+"Could not delete 'PowerBoard.jar.old'!");
 				return false;
 			}
 		}
@@ -154,12 +168,6 @@ public class Updater {
 			}
 		}else {
 			logger.severe(updaterPrefix+"Old file still exists. Could not update PowerBoard!");
-		}
-
-
-		// Clear files
-		if(!newFile.delete()) {
-			logger.warning(updaterPrefix+"Could not delete update-file. Please manually delete plugins/"+pluginName+".update.jar");
 		}
 
 		updateSuccessful = true;

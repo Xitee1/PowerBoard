@@ -68,8 +68,8 @@ public class PowerBoardAPI {
 	public static void setScoreboardTitle(Player p, String title, boolean usePlaceholders) {
 		Validate.notNull(p, "The player cannot be null!");
 
-		if(!ScoreTitleUtils.setTitle(p, title, usePlaceholders, null))
-				PowerBoard.pl.getLogger().severe("Failed to set the Scoreboard-Title! "+p.getName()+"'s scoreboard is not registered yet - please set the scoreboard first!");
+		if(!ScoreTitleUtils.setTitle(p, title, usePlaceholders))
+			PowerBoard.pl.getLogger().severe("Failed to set the Scoreboard-Title! "+p.getName()+"'s scoreboard is not registered yet - please set the scoreboard first!");
 	}
 
 	/**
@@ -110,6 +110,7 @@ public class PowerBoardAPI {
 	// ----------------//
 
 	/**
+	 * Gets the players' prefix.
 	 *
 	 * @param p the player
 	 * @return the player's prefix
@@ -144,9 +145,10 @@ public class PowerBoardAPI {
 
 
 	/**
+	 * Gets the players' suffix.
 	 *
 	 * @param p the player
-	 * @return the player's suffix
+	 * @return the players' suffix
 	 */
 	public String getSuffix(Player p) {
 		Validate.notNull(p, "The player cannot be null!");

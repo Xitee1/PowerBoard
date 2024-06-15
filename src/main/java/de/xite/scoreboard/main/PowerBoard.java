@@ -34,11 +34,12 @@ public class PowerBoard extends JavaPlugin {
 
 	public static final String permissionPrefix = "powerboard.";
 	public static final int spigotMCPluginID = 73854;
+	public static final String repo = "Xitee1/PowerBoard";
 	public static final String pbChatPrefix = ChatColor.GRAY+"["+ChatColor.YELLOW+"PowerBoard"+ChatColor.GRAY+"] "; // prefix
 	public static final String scoreTeamPrefix = "pb-sc";
 
 	public static boolean debug = false;
-	
+
 	@Override
 	public void onEnable() {
 		logger = this.getLogger();
@@ -52,7 +53,7 @@ public class PowerBoard extends JavaPlugin {
 		rateLimitedLogger = new RateLimitedLogger(this);
 
 		VersionSpecific.init();
-		
+
 		// Load the config - disable plugin if failed
 		if(!Config.loadConfig()) {
 			logger.severe("There were severe errors when loading the configuration! You should see more information above. Disabling plugin...");
@@ -62,11 +63,11 @@ public class PowerBoard extends JavaPlugin {
 			Bukkit.getPluginManager().disablePlugin(this);
 			return;
 		}
-		
+
 		// Load all external plugin APIs
 		ExternalPlugins.initializePlugins();
 		initializeUpdater();
-		
+
 		// ---- Register commands and events ---- //
 		getCommand("pb").setExecutor(new PowerBoardCommand());
 		getCommand("pb").setTabCompleter(new PowerBoardCommand());
@@ -78,19 +79,19 @@ public class PowerBoard extends JavaPlugin {
 		pm.registerEvents(new JoinQuitListener(), this);
 		pm.registerEvents(new ChatListener(), this);
 		pm.registerEvents(new ConditionListener(), this);
-		
+
 		// ---- Load modules ---- //
 		// scoreboard
 		if(pl.getConfig().getBoolean("scoreboard"))
 			ScoreboardManager.registerAllScoreboards();
-		
+
 		// tablist
 		if(pl.getConfig().getBoolean("tablist.text"))
 			TablistManager.registerAllTablists();
 
 		if(pl.getConfig().getBoolean("tablist.ranks"))
 			RankManager.startTablistRanksUpdateScheduler();
-		
+
 		Bukkit.getScheduler().runTaskLater(pl, () -> {
 			pl.getLogger().info("Registering players...");
 			for(Player all : Bukkit.getOnlinePlayers()) {
@@ -122,7 +123,7 @@ public class PowerBoard extends JavaPlugin {
 			Teams.removePlayer(all);
 		}
 		ScoreboardManager.unregisterAllScoreboards();
-		
+
 		// Unregister tablist
 		if(pl.getConfig().getBoolean("tablist.text"))
 			TablistManager.unregisterAllTablists();
@@ -134,7 +135,7 @@ public class PowerBoard extends JavaPlugin {
 	}
 
 	public static void initializeUpdater() {
-		updater = new Updater(spigotMCPluginID);
+		updater = new Updater(repo, spigotMCPluginID);
 
 		// Check for updates
 		if(updater.isUpdateCheckEnabled()) {

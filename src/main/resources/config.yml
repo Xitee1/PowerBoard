@@ -56,7 +56,7 @@ ranks:
     enable: false
     prefix-suffix-space: false # Set a space behind the prefix and in front of the suffix
     chat-layout: '%prefix% %player_name% &7» ' # This is the fallback chat-prefix if there is no specific for the rank
-    chat-prefix:
+    chat-prefix: # if you want to change the chat-prefix only for a specific rank (don't want to use the default chat-layout), you can define that here:
       owner: '&4Owner &7| &4%player_name% &7» '
       admin: '&cAdmin &7| &c%player_name% &7» '
       player: '&7Player | %player_name% » '

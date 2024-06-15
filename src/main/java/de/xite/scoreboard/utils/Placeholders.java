@@ -339,7 +339,7 @@ public class Placeholders {
             }
             return matcher.appendTail(buffer).toString();
     	}catch (Exception e) {
-    		pl.getLogger().severe("You have an invalid HEX-Color-Code! Please check the syntax! Text: "+message);
+    		pl.getLogger().severe("You have an invalid HEX-Color-Code! Please check the syntax. Enable debug mode for more details. String to convert: "+message);
 			if(PowerBoard.debug)
 				e.printStackTrace();
     		return "Invalid_Color";
