@@ -55,7 +55,7 @@ public class Placeholders {
 		}
 
 		// Replace all PAPI placeholders
-		boolean preferPBPlaceholders = pl.getConfig().getBoolean("prefer-plugin-placeholders");
+		boolean preferPBPlaceholders = pl.getConfig().getBoolean("placeholder.prefer-plugin-placeholders");
 		if(!preferPBPlaceholders && ExternalPlugins.hasPapi)
 			try {
 				s = PlaceholderAPI.setPlaceholders(p, s);
