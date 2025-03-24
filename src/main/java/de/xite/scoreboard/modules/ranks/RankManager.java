@@ -267,16 +267,18 @@ public class RankManager {
 		}
 	}
 
-	private static void delay(Player p, int i) {
-		if(!tablistRankUpdateDelay.contains(p))
-			tablistRankUpdateDelay.add(p);
+	private static void delay(Player p, int ticks) {
+		Bukkit.getScheduler().runTask(pl, () -> {
+			if(!tablistRankUpdateDelay.contains(p))
+				tablistRankUpdateDelay.add(p);
+		});
 
-		Bukkit.getScheduler().runTaskLaterAsynchronously(pl, () -> {
+		Bukkit.getScheduler().runTaskLater(pl, () -> {
 			tablistRankUpdateDelay.remove(p);
 			if(tablistRankUpdateWaiting.contains(p)) {
 				tablistRankUpdateWaiting.remove(p);
 				updateTablistRanks(p, false);
 			}
-		}, i);
+		}, ticks);
 	}
 }
