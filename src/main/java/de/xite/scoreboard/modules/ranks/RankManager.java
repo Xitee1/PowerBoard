@@ -1,6 +1,7 @@
 package de.xite.scoreboard.modules.ranks;
 
-import java.util.ArrayList;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.Set;
 
 import de.xite.scoreboard.depend.LuckPermsAPI;
 import de.xite.scoreboard.utils.Version;
@@ -18,8 +19,8 @@ import de.xite.scoreboard.utils.Teams;
 public class RankManager {
 	static PowerBoard pl = PowerBoard.pl;
 	
-	private static final ArrayList<Player> tablistRankUpdateDelay = new ArrayList<>();
-	private static final ArrayList<Player> tablistRankUpdateWaiting = new ArrayList<>();
+	private static final Set<Player> tablistRankUpdateDelay = ConcurrentHashMap.newKeySet();
+	private static final Set<Player> tablistRankUpdateWaiting = ConcurrentHashMap.newKeySet();
 
 	private static BukkitTask tablistRanksUpdateScheduler = null;
 
