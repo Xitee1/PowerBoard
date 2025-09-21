@@ -146,21 +146,57 @@ public class ScoreboardPlayer {
 	 * @param removeFromSBManager
 	 */
 	public static void removeScoreboard(Player p, boolean removeFromSBManager) {
-		if(removeFromSBManager) {
-			if(players.containsKey(p) && !players.get(p).equals("blacklisted")) {
-				ScoreboardManager.get(players.get(p)).removePlayer(p);
+		// Add null checks to prevent errors when player is offline or invalid
+		if(p == null || !p.isOnline()) {
+			if(PowerBoard.debug && p != null) {
+				PowerBoard.pl.getLogger().warning("Attempted to remove scoreboard from offline player: " + p.getName());
+			}
+			return;
+		}
+		
+		try {
+			if(removeFromSBManager) {
+				if(players.containsKey(p) && !players.get(p).equals("blacklisted")) {
+					ScoreboardManager.get(players.get(p)).removePlayer(p);
+				}
+			}
+		} catch (Exception e) {
+			if(PowerBoard.debug) {
+				PowerBoard.pl.getLogger().warning("Failed to remove player from ScoreboardManager: " + e.getMessage());
 			}
 		}
 
-		for(Team t : p.getScoreboard().getTeams()) {
-			if(t.getName().startsWith(PowerBoard.scoreTeamPrefix)) {
-				t.unregister();
+		try {
+			// Safely iterate over teams - may fail if scoreboard is in invalid state
+			for(Team t : p.getScoreboard().getTeams()) {
+				if(t.getName().startsWith(PowerBoard.scoreTeamPrefix)) {
+					try {
+						t.unregister();
+					} catch (Exception e) {
+						// Team might already be unregistered or in invalid state
+						if(PowerBoard.debug) {
+							PowerBoard.pl.getLogger().warning("Failed to unregister team " + t.getName() + " for player " + p.getName() + ": " + e.getMessage());
+						}
+					}
+				}
+			}
+		} catch (Exception e) {
+			// Handle cases where getTeams() fails due to corrupted scoreboard state
+			if(PowerBoard.debug) {
+				PowerBoard.pl.getLogger().warning("Failed to iterate over teams for player " + p.getName() + ": " + e.getMessage());
 			}
 		}
 
-		Objective obj = p.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
-		if(obj != null) {
-			obj.unregister();
+		try {
+			Objective obj = p.getScoreboard().getObjective(DisplaySlot.SIDEBAR);
+			if(obj != null) {
+				obj.unregister();
+			}
+		} catch (Exception e) {
+			// Handle cases where objective operations fail
+			if(PowerBoard.debug) {
+				PowerBoard.pl.getLogger().warning("Failed to unregister objective for player " + p.getName() + ": " + e.getMessage());
+			}
 		}
 
 		if(PowerBoard.debug) {
