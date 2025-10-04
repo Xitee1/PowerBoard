@@ -56,20 +56,9 @@ public class Placeholders {
 
 		// Replace all PAPI placeholders
 		boolean preferPBPlaceholders = pl.getConfig().getBoolean("placeholder.prefer-plugin-placeholders");
-		if(!preferPBPlaceholders && ExternalPlugins.hasPapi)
-			try {
-				s = PlaceholderAPI.setPlaceholders(p, s);
-			}catch (Exception e) {
-				PowerBoard.getRateLimitedLogger().addSevere(
-						"Could not replace PAPI Placeholders in String "+s+". This is NOT a bug of PowerBoard!"
-								+ "Instead it is caused by an external plugin that provides placeholders to PAPI."
-								+ "It just says PowerBoard there, because PB requests these placeholders from PAPI and therefore is the root cause.",
-						true
-				);
-				if(PowerBoard.debug) {
-					e.printStackTrace();
-				}
-			}
+		if(!preferPBPlaceholders && ExternalPlugins.hasPapi) {
+			s = replacePapi(p, s);
+		}
   			
 		
 		// ---- Deprecated ---- //
@@ -275,8 +264,9 @@ public class Placeholders {
   		//s = IridiumColorAPI.process(s);
 
   		// Replace PAPI if plugin preferred
-  		if(preferPBPlaceholders && ExternalPlugins.hasPapi)
-  			s = PlaceholderAPI.setPlaceholders(p, s);
+  		if(preferPBPlaceholders && ExternalPlugins.hasPapi) {
+			s = replacePapi(p, s);
+		}
   		
 		return s;
 	}
@@ -321,6 +311,21 @@ public class Placeholders {
 	    return s;
 	}
 	
+	private static String replacePapi(Player p, String s) {
+		try {
+			return PlaceholderAPI.setPlaceholders(p, s);
+		}catch (Exception e) {
+			PowerBoard.getRateLimitedLogger().addSevere(
+					"Could not replace PAPI Placeholders in String "+s+". This is NOT a bug of PowerBoard!"
+							+ "Instead it is caused by an external plugin that provides the used placeholders to PAPI. You may report this to the developer of that plugin. To get more details about this error, enable the debug mode in PowerBoard.",
+					true
+			);
+			if(PowerBoard.debug) {
+				e.printStackTrace();
+			}
+			return s;
+		}
+	}
 	
     // Credit to https://www.spigotmc.org/threads/hex-color-code-translate.449748/#post-3867804
     public final static char COLOR_CHAR = ChatColor.COLOR_CHAR;
