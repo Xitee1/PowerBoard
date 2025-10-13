@@ -164,7 +164,7 @@ public class RankManager {
 	 * @param queueIfDelayed if the player should be added to the queue if delayed
 	 */
 	public static void updateTablistRanks(Player p, boolean queueIfDelayed) {
-		// Only let it update every 3 seconds
+		// Only let it update every 5 seconds
 		if(tablistRankUpdateDelay.contains(p)) {
 			if(queueIfDelayed && !tablistRankUpdateWaiting.contains(p))
 				tablistRankUpdateWaiting.add(p);
@@ -179,31 +179,39 @@ public class RankManager {
 		
 		// Update the team info
 		RankManager.register(p);
-		
-		// Apply the new team info's to the prefix & suffix
-		try {
-			Teams teams = Teams.get(p);
-			if(teams != null) {
-				ChatColor nameColor = teams.getNameColor();
-				
-				for(Player all : Bukkit.getOnlinePlayers()) {
-					Team t = all.getScoreboard().getTeam(teams.getTeamName());
-					if(t == null)
-						t = all.getScoreboard().registerNewTeam(teams.getTeamName());
-					
-					setPrefixSuffix(p, t, teams.getPrefix(), teams.getSuffix(), teams.getPlayerListName());
-					
-					if(nameColor != null && Version.isAbove_1_13())
-						t.setColor(nameColor);
-					t.addEntry(p.getName());
-				}
-			}
 
-		}catch (Exception e) {
-			pl.getLogger().warning("There was an error whilst updating "+p.getName()+"'s rank!");
-		}
-		if(PowerBoard.debug)
-			pl.getLogger().info(p.getName() + "'s rank has been updated.");
+		// Because the scoreboard methods are not threadsafe, we need to run it in a synchronous task.
+		Bukkit.getScheduler().runTask(pl, () -> {
+			// Apply the new team info's to the prefix & suffix
+			try {
+				if (p == null || !p.isOnline()) {
+					pl.getLogger().warning("Could not update the rank of a player because he's probably already offline.");
+					return;
+				}
+
+				Teams teams = Teams.get(p);
+				if(teams != null) {
+					ChatColor nameColor = teams.getNameColor();
+
+					for(Player all : Bukkit.getOnlinePlayers()) {
+						Team t = all.getScoreboard().getTeam(teams.getTeamName());
+						if(t == null)
+							t = all.getScoreboard().registerNewTeam(teams.getTeamName());
+
+						setPrefixSuffix(p, t, teams.getPrefix(), teams.getSuffix(), teams.getPlayerListName());
+
+						if(nameColor != null && Version.isAbove_1_13())
+							t.setColor(nameColor);
+						t.addEntry(p.getName());
+					}
+				}
+
+			}catch (Exception e) {
+				pl.getLogger().warning("There was an error whilst updating "+p.getName()+"'s rank!");
+			}
+			if(PowerBoard.debug)
+				pl.getLogger().info(p.getName() + "'s rank has been updated.");
+		});
 	}
 	
 	public static void startTablistRanksUpdateScheduler() {
