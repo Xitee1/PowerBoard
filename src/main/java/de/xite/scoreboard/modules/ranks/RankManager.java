@@ -164,7 +164,7 @@ public class RankManager {
 	 * @param queueIfDelayed if the player should be added to the queue if delayed
 	 */
 	public static void updateTablistRanks(Player p, boolean queueIfDelayed) {
-		// Only let it update every 5 seconds
+		// Rate-limit rank updates to once every 5 seconds per player (managed by the delay() method)
 		if(tablistRankUpdateDelay.contains(p)) {
 			if(queueIfDelayed && !tablistRankUpdateWaiting.contains(p))
 				tablistRankUpdateWaiting.add(p);
