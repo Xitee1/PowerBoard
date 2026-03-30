@@ -256,7 +256,7 @@ public class Placeholders {
   		}
   			
   		// -------------------------------------//
-  		// Replace unicode escapes (\uXXXX)
+  		// Replace unicode escapes (e.g. backslash-u followed by 4 hex digits)
   		s = translateUnicodeEscapes(s);
 
   		// Replace colors (MC color codes)
