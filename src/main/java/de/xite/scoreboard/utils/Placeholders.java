@@ -20,6 +20,7 @@ import me.clip.placeholderapi.PlaceholderAPI;
 public class Placeholders {
 	static PowerBoard pl = PowerBoard.pl;
 	public static String hexColorBegin = "", hexColorEnd = ""; // hex color Syntax
+	private static final Pattern UNICODE_PATTERN = Pattern.compile("\\\\u([A-Fa-f0-9]{4})");
 
 	// All registered custom placeholders
 	public static Set<CustomPlaceholders> ph = new HashSet<>();
@@ -330,16 +331,15 @@ public class Placeholders {
 		}
 	}
 	
-    private static final Pattern UNICODE_PATTERN = Pattern.compile("\\\\u([A-Fa-f0-9]{4})");
-    public static String translateUnicodeEscapes(String message) {
-        Matcher matcher = UNICODE_PATTERN.matcher(message);
-        StringBuffer buffer = new StringBuffer(message.length());
-        while (matcher.find()) {
-            char unicode = (char) Integer.parseInt(matcher.group(1), 16);
-            matcher.appendReplacement(buffer, Matcher.quoteReplacement(String.valueOf(unicode)));
-        }
-        return matcher.appendTail(buffer).toString();
-    }
+	public static String translateUnicodeEscapes(String message) {
+		Matcher matcher = UNICODE_PATTERN.matcher(message);
+		StringBuffer buffer = new StringBuffer(message.length());
+		while (matcher.find()) {
+			char unicode = (char) Integer.parseInt(matcher.group(1), 16);
+			matcher.appendReplacement(buffer, Matcher.quoteReplacement(String.valueOf(unicode)));
+		}
+		return matcher.appendTail(buffer).toString();
+	}
 
     // Credit to https://www.spigotmc.org/threads/hex-color-code-translate.449748/#post-3867804
     public final static char COLOR_CHAR = ChatColor.COLOR_CHAR;
