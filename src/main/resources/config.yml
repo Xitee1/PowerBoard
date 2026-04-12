@@ -20,6 +20,7 @@ scoreboard: true # enable/disable the scoreboard
 scoreboard-default: 'scoreboard' # The scoreboard that will be set after a player joins the server
 scoreboard-advanced-settings:
   use-existing-scoreboard: false # Always leave this false unless you use another scoreboard/rank plugin and have issues. In this case the option might fix issues with other plugins.
+  hide-score-numbers: false # Hides the red score numbers on the right side of the sidebar. Requires Paper 1.20.3+.
 
 tablist:
   text: true # enable/disable the header/footers
