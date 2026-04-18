@@ -16,7 +16,7 @@ import de.xite.scoreboard.utils.Placeholders;
 import de.xite.scoreboard.utils.SelfCheck;
 import de.xite.scoreboard.utils.Teams;
 import de.xite.scoreboard.utils.UpgradeVersion;
-import net.md_5.bungee.api.ChatColor;
+import org.bukkit.ChatColor;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
