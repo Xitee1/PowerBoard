@@ -3,13 +3,13 @@ package de.xite.scoreboard.utils;
 import de.xite.scoreboard.main.PowerBoard;
 import org.bukkit.Bukkit;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.logging.Logger;
 
 public class Version implements Comparable<Version> {
 	private final String version;
 
-	public Version(@Nonnull String version) {
+	public Version(@NotNull String version) {
 		if(!version.matches("[0-9]+(\\.[0-9]+)*"))
 			throw new IllegalArgumentException("Invalid version format");
 		this.version = version;
@@ -59,7 +59,7 @@ public class Version implements Comparable<Version> {
 	 * int = -1: a is older than b
 	 */
 	@Override
-	public int compareTo(@Nonnull Version that) {
+	public int compareTo(@NotNull Version that) {
 		String[] thisParts = this.version.split("\\.");
 		String[] thatParts = that.version.split("\\.");
 

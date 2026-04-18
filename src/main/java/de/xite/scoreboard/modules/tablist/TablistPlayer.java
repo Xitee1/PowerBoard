@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 
 import de.xite.scoreboard.main.PowerBoard;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class TablistPlayer {
 	static PowerBoard pl = PowerBoard.pl;
