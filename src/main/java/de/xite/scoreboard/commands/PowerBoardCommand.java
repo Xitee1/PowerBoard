@@ -13,7 +13,7 @@ import de.xite.scoreboard.main.Config;
 import de.xite.scoreboard.main.PowerBoard;
 import de.xite.scoreboard.modules.board.ScoreboardPlayer;
 import de.xite.scoreboard.utils.Updater;
-import net.md_5.bungee.api.ChatColor;
+import org.bukkit.ChatColor;
 
 public class PowerBoardCommand implements CommandExecutor, TabCompleter {
 	private static final PowerBoard instance = PowerBoard.getInstance();

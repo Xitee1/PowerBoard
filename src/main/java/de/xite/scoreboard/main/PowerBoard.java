@@ -19,7 +19,7 @@ import de.xite.scoreboard.modules.tablist.TablistPlayer;
 import de.xite.scoreboard.utils.TPSCalc;
 import de.xite.scoreboard.utils.Teams;
 import de.xite.scoreboard.utils.Updater;
-import net.md_5.bungee.api.ChatColor;
+import org.bukkit.ChatColor;
 
 import java.util.logging.Logger;
 
