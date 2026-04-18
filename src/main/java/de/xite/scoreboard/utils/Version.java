@@ -49,7 +49,9 @@ public class Version implements Comparable<Version> {
 	public static final Version v1_16 = new Version("1.16");
 	public static final Version v1_17 = new Version("1.17");
 	public static final Version v1_18 = new Version("1.18");
+	public static final Version v1_20_3 = new Version("1.20.3");
 	private static boolean isAbove_1_13 = Version.CURRENT.isAtLeast(Version.v1_13);
+	private static boolean isAbove_1_20_3 = Version.CURRENT.isAtLeast(Version.v1_20_3);
 
 	/**
 	 * int = 1: a is newer than b;
@@ -86,5 +88,9 @@ public class Version implements Comparable<Version> {
 
 	public static boolean isAbove_1_13() {
 		return isAbove_1_13;
+	}
+
+	public static boolean isAbove_1_20_3() {
+		return isAbove_1_20_3;
 	}
 }

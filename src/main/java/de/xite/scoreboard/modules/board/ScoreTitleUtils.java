@@ -1,5 +1,6 @@
 package de.xite.scoreboard.modules.board;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -178,5 +179,43 @@ public class ScoreTitleUtils {
 		}
 
 		return s;
+	}
+
+	// ---- Hide score numbers (Paper 1.20.3+) ---- //
+	private static Boolean numberFormatSupported = null;
+	private static Object blankFormat = null;
+	private static Method objectiveNumberFormatMethod = null;
+
+	/**
+	 * Hides the red score numbers on the right side of the sidebar.
+	 * This uses Paper's NumberFormat API via reflection and requires Paper 1.20.3+.
+	 *
+	 * @param obj the sidebar objective
+	 */
+	public static void hideScoreNumbers(Objective obj) {
+		if(numberFormatSupported != null && !numberFormatSupported)
+			return;
+
+		if(!Version.isAbove_1_20_3()) {
+			numberFormatSupported = false;
+			PowerBoard.pl.getLogger().warning("hide-score-numbers requires Paper 1.20.3 or newer. This feature will be disabled.");
+			return;
+		}
+
+		try {
+			if(blankFormat == null) {
+				Class<?> numberFormatClass = Class.forName("io.papermc.paper.scoreboard.numbers.NumberFormat");
+				blankFormat = numberFormatClass.getMethod("blank").invoke(null);
+				objectiveNumberFormatMethod = Objective.class.getMethod("numberFormat", numberFormatClass);
+			}
+			objectiveNumberFormatMethod.invoke(obj, blankFormat);
+			numberFormatSupported = true;
+		} catch (ClassNotFoundException e) {
+			numberFormatSupported = false;
+			PowerBoard.pl.getLogger().warning("hide-score-numbers requires a Paper server (1.20.3+). Spigot does not support this feature.");
+		} catch (Exception e) {
+			numberFormatSupported = false;
+			PowerBoard.pl.getLogger().warning("hide-score-numbers could not be applied: " + e.getMessage());
+		}
 	}
 }

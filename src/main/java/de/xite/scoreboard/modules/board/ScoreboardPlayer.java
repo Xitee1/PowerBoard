@@ -70,6 +70,9 @@ public class ScoreboardPlayer {
 		}
 		obj.setDisplaySlot(DisplaySlot.SIDEBAR);
 
+		if(pl.getConfig().getBoolean("scoreboard-advanced-settings.hide-score-numbers"))
+			ScoreTitleUtils.hideScoreNumbers(obj);
+
 		//p.setScoreboard(board); // Set the scoreboard
 
 		// Set the scores if the API isn't used
